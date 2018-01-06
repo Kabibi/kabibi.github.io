@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="kabibi.github.io">
-  <title>Archives: 2018 | 风果树的博客</title>
+  <title>Python实现的图片按时间归类 | 风果树的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="南京航空航天大学研究生在读。研究方向：机器学习，深度学习">
-<meta name="keywords" content="编程">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风果树的博客">
-<meta property="og:url" content="kabibi.github.io/archives/2018/index.html">
+  <meta name="description" content="來到臺灣之後四處遊學，照片真是越來越多了，怎麼也有幾千張了吧。再加上和前幾年的照片混雜在一起，有時候想看看5年前自己長什麼蠢樣，無奈卻找不到照片～ 於是就像不如用Python寫一個腳本，把所有的照片按照時間進行分類。 一、背景安裝exifread模塊我們將會使用到exifread模塊，在Ubuntu下，它的安裝命令如下： 1sudo pip install exifread 什麼是Exif?現在我">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python实现的图片按时间归类">
+<meta property="og:url" content="kabibi.github.io/2016/04/28/2016-04-28-python-categirized-photos/index.html">
 <meta property="og:site_name" content="风果树的博客">
-<meta property="og:description" content="南京航空航天大学研究生在读。研究方向：机器学习，深度学习">
+<meta property="og:description" content="來到臺灣之後四處遊學，照片真是越來越多了，怎麼也有幾千張了吧。再加上和前幾年的照片混雜在一起，有時候想看看5年前自己長什麼蠢樣，無奈卻找不到照片～ 於是就像不如用Python寫一個腳本，把所有的照片按照時間進行分類。 一、背景安裝exifread模塊我們將會使用到exifread模塊，在Ubuntu下，它的安裝命令如下： 1sudo pip install exifread 什麼是Exif?現在我">
+<meta property="og:updated_time" content="2018-01-06T04:58:40.191Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风果树的博客">
-<meta name="twitter:description" content="南京航空航天大学研究生在读。研究方向：机器学习，深度学习">
+<meta name="twitter:title" content="Python实现的图片按时间归类">
+<meta name="twitter:description" content="來到臺灣之後四處遊學，照片真是越來越多了，怎麼也有幾千張了吧。再加上和前幾年的照片混雜在一起，有時候想看看5年前自己長什麼蠢樣，無奈卻找不到照片～ 於是就像不如用Python寫一個腳本，把所有的照片按照時間進行分類。 一、背景安裝exifread模塊我們將會使用到exifread模塊，在Ubuntu下，它的安裝命令如下： 1sudo pip install exifread 什麼是Exif?現在我">
   
     <link rel="alternative" href="/atom.xml" title="风果树的博客" type="application/atom+xml">
   
@@ -141,60 +142,211 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-2016-04-28-python-categirized-photos" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/blog/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2018/01/05/2018-01-05-reading-note-001/" class="archive-article-date">
-  	<time datetime="2018-01-05T01:40:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-05</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2018/01/05/2018-01-05-reading-note-001/">《小狗钱钱》——一只狗带领你全家致富</a>
+    <h1 class="article-title" itemprop="name">
+      Python实现的图片按时间归类
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/blog/2016/04/28/2016-04-28-python-categirized-photos/" class="archive-article-date">
+  	<time datetime="2016-04-28T03:10:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-04-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>來到臺灣之後四處遊學，照片真是越來越多了，怎麼也有幾千張了吧。再加上和前幾年的照片混雜在一起，有時候想看看5年前自己長什麼蠢樣，無奈卻找不到照片～</p>
+<p>於是就像不如用Python寫一個腳本，把所有的照片按照時間進行分類。</p>
+<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><h2 id="安裝exifread模塊"><a href="#安裝exifread模塊" class="headerlink" title="安裝exifread模塊"></a>安裝exifread模塊</h2><p>我們將會使用到exifread模塊，在Ubuntu下，它的安裝命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install exifread</span><br></pre></td></tr></table></figure>
+<h2 id="什麼是Exif"><a href="#什麼是Exif" class="headerlink" title="什麼是Exif?"></a>什麼是Exif?</h2><p>現在我們用手機/數碼相機進行拍照，一般可以直接從文件的名稱就可以看出這張照片的拍照時間，但是如果我們修改了文件的名稱，是不是就不知道這張照片什麼時候拍的了？</p>
+<p>顯然不是。通常我們查看照片的屬性，就可以直接看到Width, Height, Maker, Flash, ISO, White balance, Focal length這些參數信息。這些信息顯然一定存儲在照片的某個位置。我們實現對照片進行分類，就要通過某種方法，獲得這些信息。</p>
+<p>這些信息就存儲在Exif中，至於Exif是什麼，我們來看Wiki的解釋。</p>
+<blockquote>
+<p>可交换图像文件格式常被简称为Exif（Exchangeable image file format），是专门为数码相机的照片设定的，可以记录数码照片的属性信&gt;息和拍摄数据。</p>
+<p>Exif可以附加于JPEG、TIFF、RIFF等文件之中，为其增加有关数码相机&gt;拍摄信息的内容和索引图或图像处理软件的版本信息。</p>
+<p>Windows7操作系统具备对Exif的原生支持，通过鼠标右键点击图片打开&gt;菜单，点击属性并切换到详细信息标签下即可直接查看Exif信息。</p>
+<p>Exif信息是可以被任意编辑的，因此只有参考的功能。</p>
+<p>Exif信息以0xFFE1作为开头标记，后两个字节表示Exif信息的长度。所以Exif信息最大为64 kB，而内部采用TIFF格式。</p>
+</blockquote>
+<h1 id="二、其他的一些小問題"><a href="#二、其他的一些小問題" class="headerlink" title="二、其他的一些小問題"></a>二、其他的一些小問題</h1><p>編程之前，我們還有一些小問題需要解決～</p>
+<h2 id="1-如何獲得照片的屬性？"><a href="#1-如何獲得照片的屬性？" class="headerlink" title="1. 如何獲得照片的屬性？"></a>1. 如何獲得照片的屬性？</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> exifread</span><br><span class="line">file = open(<span class="string">'1.jpg'</span>)</span><br><span class="line">tags = exifread.process_file(file)</span><br><span class="line"><span class="keyword">print</span> tags.keys()</span><br></pre></td></tr></table></figure>
+<p>輸出如下：</p>
+<blockquote>
+<p>[‘EXIF ApertureValue’, ‘Image ExifOffset’, ‘EXIF ComponentsConfiguration’, ‘EXIF FlashPixVersion’, ‘EXIF ColorSpace’, ‘EXIF ExifVersion’, ‘Thumbnail ResolutionUnit’, ‘Thumbnail YResolution’, ‘Interoperability InteroperabilityVersion’, ‘GPS GPSDate’, ‘EXIF DateTimeOriginal’, ‘Image YCbCrPositioning’, ‘EXIF InteroperabilityOffset’, ‘Thumbnail JPEGInterchangeFormat’, ‘EXIF ExifImageLength’, ‘Image ResolutionUnit’, ‘EXIF ExposureTime’, ‘Thumbnail XResolution’, ‘Image GPSInfo’, ‘Thumbnail JPEGInterchangeFormatLength’, ‘Thumbnail Compression’, ‘EXIF ExifImageWidth’, ‘JPEGThumbnail’, ‘GPS GPSTimeStamp’, ‘EXIF DateTimeDigitized’, ‘EXIF FocalLength’, ‘Image Model’, ‘Image XResolution’, ‘Image Make’, ‘EXIF ISOSpeedRatings’, ‘Image YResolution’, ‘Interoperability InteroperabilityIndex’]</p>
+</blockquote>
+<p>這個list就是照片中所有的參數，他們的值我們都可以通過獲得，比如我們想知道這張照片是什麼時候拍的，就可以下面的代碼獲得：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> tags[<span class="string">'EXIF DateTimeOriginal'</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="2-文件操作"><a href="#2-文件操作" class="headerlink" title="2. 文件操作"></a>2. 文件操作</h2><h3 id="複製"><a href="#複製" class="headerlink" title="複製"></a>複製</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutuil.copy(src, dst)</span><br></pre></td></tr></table></figure>
+<h3 id="剪切"><a href="#剪切" class="headerlink" title="剪切"></a>剪切</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutuil.move(src, dst)</span><br></pre></td></tr></table></figure>
+<h3 id="新建目錄"><a href="#新建目錄" class="headerlink" title="新建目錄"></a>新建目錄</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">os.mkdir(path, mode)</span><br><span class="line"><span class="comment"># Super-mkdir;</span></span><br><span class="line"><span class="comment"># create a leaf directory and all intermediate ones.</span></span><br><span class="line"><span class="comment"># Works like mkdir, except that any intermediate path</span></span><br><span class="line"><span class="comment"># segment (not just the rightmost) will be created if it does not exist.</span></span><br><span class="line"><span class="comment"># This is recursive.</span></span><br><span class="line">os.makedirs(path, mode)</span><br></pre></td></tr></table></figure>
+<h3 id="重命名"><a href="#重命名" class="headerlink" title="重命名"></a>重命名</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os.rename(src, dst)</span><br></pre></td></tr></table></figure>
+<h3 id="使用os-system實現複製，剪切新建，重命名"><a href="#使用os-system實現複製，剪切新建，重命名" class="headerlink" title="使用os.system實現複製，剪切新建，重命名"></a>使用os.system實現複製，剪切新建，重命名</h3><p>可以直接調用os提供的函數實現文件的操作，比如下面的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.system(<span class="string">'mkdir /home/code'</span>) <span class="comment"># 新建文件夾</span></span><br><span class="line">os.system(<span class="string">'cp 1.jpg 2.jpg'</span>) <span class="comment"># 複製</span></span><br><span class="line">os.system(<span class="string">'mv 1.jpg 2.jpg'</span>) <span class="comment"># 重命名</span></span><br><span class="line">os.system(<span class="string">'mv 1.jpg /home/2.jpg'</span>) <span class="comment"># 剪切</span></span><br><span class="line">os.path.isdir(<span class="string">'/home'</span>)  <span class="comment"># 判斷是否是目錄</span></span><br><span class="line">os.path.isfile(<span class="string">'/home/1.jpg'</span>)  <span class="comment"># 判斷是否是文件</span></span><br></pre></td></tr></table></figure>
+<h3 id="遍歷目錄中的文件"><a href="#遍歷目錄中的文件" class="headerlink" title="遍歷目錄中的文件"></a>遍歷目錄中的文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># os.walk(top[, topdown=True[, onerror=None[, followlinks=False]]])</span></span><br><span class="line"><span class="comment"># root, dirs, files三者的順序不能改變！</span></span><br><span class="line"><span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(<span class="string">"/home/vinater/DATA/Pictures/"</span>):</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> files:  <span class="comment"># 遍歷文件</span></span><br><span class="line">        <span class="keyword">print</span> (os.path.join(root, name))</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> dirs:   <span class="comment"># 遍歷目錄中的文件</span></span><br><span class="line">        <span class="keyword">print</span> (os.path.join(root, name))</span><br></pre></td></tr></table></figure>
+<p>os.walk返回一個三元組，分別是根目錄root，文件files和文件夾dirs；</p>
+<h3 id="分離路徑名和基本名"><a href="#分離路徑名和基本名" class="headerlink" title="分離路徑名和基本名"></a>分離路徑名和基本名</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一種方法</span></span><br><span class="line">path = <span class="string">'/home/vinater/DATA/Pictures/background'</span></span><br><span class="line">basename = os.path.basename(path)</span><br><span class="line">dirname = os.path.dirname(path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二種方法</span></span><br><span class="line">dirname, basename = os.path.split(path)</span><br></pre></td></tr></table></figure>
+<h3 id="分離基本名和擴展名"><a href="#分離基本名和擴展名" class="headerlink" title="分離基本名和擴展名"></a>分離基本名和擴展名</h3><p>第一種方法直接使用splitext:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root, extension = os.path.splitext(fname)</span><br></pre></td></tr></table></figure>
+<p>第二種方法使用split</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> root,dirs,files <span class="keyword">in</span> os.walk(<span class="string">'/home/vinater/DATA/Pictures/background'</span>):</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> files:</span><br><span class="line">        <span class="comment"># 分別是前綴名和後綴名</span></span><br><span class="line">        <span class="keyword">print</span> str.split(name,<span class="string">'.'</span>)[<span class="number">0</span>], str.split(name,<span class="string">'.'</span>)[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> dirs:</span><br><span class="line">        <span class="keyword">print</span> str.split(name,<span class="string">'.'</span>)[<span class="number">0</span>], str.split(name,<span class="string">'.'</span>)[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<h1 id="三、開始編程"><a href="#三、開始編程" class="headerlink" title="三、開始編程"></a>三、開始編程</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> exifread</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Photo</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, fromPath, toPath)</span>:</span></span><br><span class="line">        <span class="comment"># source path where your photos are</span></span><br><span class="line">        self.fromPath = fromPath</span><br><span class="line">        <span class="comment"># destination path where put your photos to</span></span><br><span class="line">        self.toPath = toPath</span><br><span class="line">        <span class="comment"># counter</span></span><br><span class="line">        self.totalPhotos = <span class="number">1</span></span><br><span class="line">        self.md5List = []</span><br><span class="line">        self.samePhotos = <span class="number">0</span></span><br><span class="line">        self.picFormats = [<span class="string">'.jpg'</span>,<span class="string">'.JPG'</span>,<span class="string">'.jpeg'</span>,<span class="string">'.JPEG'</span>,<span class="string">'.png'</span>,<span class="string">'.PNG'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getYMD</span><span class="params">(self, filename)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Get year, month, day, hour, minute, second of the image</span></span><br><span class="line"><span class="string">        :param filename: file name of the image</span></span><br><span class="line"><span class="string">        :return: year, month, day, hour, minute, second</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        file = open(filename)</span><br><span class="line">        r,e = os.path.split(filename)</span><br><span class="line">        <span class="keyword">if</span> e <span class="keyword">in</span> self.picFormats:</span><br><span class="line">            md5 = hashlib.md5(open(filename).read()).hexdigest()</span><br><span class="line">            <span class="keyword">if</span>(md5 <span class="keyword">not</span> <span class="keyword">in</span> self.md5List):</span><br><span class="line">                self.md5List.append(md5)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">print</span> <span class="string">'!!Find the same files!!'</span></span><br><span class="line">                self.samePhotos += <span class="number">1</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">None</span>,<span class="keyword">None</span>,<span class="keyword">None</span>,<span class="keyword">None</span>,<span class="keyword">None</span>,<span class="keyword">None</span></span><br><span class="line">        <span class="comment"># tags is a dictionary stores image's exif information</span></span><br><span class="line">        tags = exifread.process_file(file)</span><br><span class="line">        <span class="comment"># if do not find exif information, set default date</span></span><br><span class="line">        <span class="keyword">if</span> len(tags) == <span class="number">0</span>:</span><br><span class="line">            date = <span class="string">'1970:01:01'</span></span><br><span class="line">            time = <span class="string">'00:00:00'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># temp has the format "1970:01:01 00:00:00"</span></span><br><span class="line">            <span class="keyword">if</span> tags.has_key(<span class="string">'EXIF DateTimeOriginal'</span>):</span><br><span class="line">                temp = str(tags[<span class="string">'EXIF DateTimeOriginal'</span>])</span><br><span class="line">            <span class="keyword">elif</span> tags.has_key(<span class="string">'Image DateTime'</span>):</span><br><span class="line">                temp = str(tags[<span class="string">'Image DateTime'</span>])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                temp = <span class="string">'1970:01:01 00:00:00'</span></span><br><span class="line">            date, time = str.split(temp, <span class="string">' '</span>)</span><br><span class="line">        year, month, day = date.split(<span class="string">':'</span>)</span><br><span class="line">        hour, minute, second = time.split(<span class="string">':'</span>)</span><br><span class="line">        <span class="keyword">return</span> year, month, day, hour, minute, second</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">renameAllFiles</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Rename all images and move to property location</span></span><br><span class="line"><span class="string">        :return: none</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(self.fromPath):</span><br><span class="line">            <span class="comment"># traversal all file in source path</span></span><br><span class="line">            <span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(self.fromPath):</span><br><span class="line">                <span class="keyword">for</span> name <span class="keyword">in</span> files:</span><br><span class="line">                    <span class="keyword">print</span> root, name</span><br><span class="line">                    <span class="keyword">if</span> (root[<span class="number">-1</span>] != <span class="string">'/'</span>):</span><br><span class="line">                        filename = str(root) + <span class="string">'/'</span> + str(name)</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        filename = str(root) + str(name)</span><br><span class="line">                    <span class="comment"># get root and extension name</span></span><br><span class="line">                    r, extension = os.path.splitext(filename)</span><br><span class="line">                    <span class="comment"># get date</span></span><br><span class="line">                    year, month, day, hour, min, sec = self.getYMD(filename)</span><br><span class="line">                    <span class="keyword">if</span> year == <span class="keyword">None</span>:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    <span class="comment"># get new file name</span></span><br><span class="line">                    newFileName = str(year) + <span class="string">'-'</span> + str(month) + <span class="string">'-'</span> + str(day) + <span class="string">'-'</span> + str(hour) + <span class="string">':'</span> + str(</span><br><span class="line">                        min) + <span class="string">'-'</span> + str(self.totalPhotos) + extension</span><br><span class="line">                    <span class="comment"># judge whether the folder exists, if not, make directory</span></span><br><span class="line">                    save2Path = self.toPath + <span class="string">'/'</span> + year + <span class="string">'/'</span> + year + <span class="string">'-'</span> + month</span><br><span class="line">                    <span class="keyword">if</span> (<span class="keyword">not</span> os.path.isdir(save2Path)):</span><br><span class="line">                        os.makedirs(save2Path)</span><br><span class="line">                    <span class="comment"># counter plus 1</span></span><br><span class="line">                    self.totalPhotos += <span class="number">1</span></span><br><span class="line">                    <span class="comment"># move file to property place</span></span><br><span class="line">                    shutil.move(filename, save2Path + <span class="string">'/'</span> + newFileName)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">removeEmptyFolders</span><span class="params">(self, path)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        remove empty folders</span></span><br><span class="line"><span class="string">        :param path: remove empty folder under path</span></span><br><span class="line"><span class="string">        :return: none</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(path):</span><br><span class="line">            <span class="keyword">for</span> dir <span class="keyword">in</span> dirs:</span><br><span class="line">                <span class="keyword">if</span> os.listdir(root + <span class="string">'/'</span> + dir) == []:</span><br><span class="line">                    os.rmdir(root + <span class="string">'/'</span> + dir)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getMd5</span><span class="params">(self,filename)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> hashlib.md5(open(filename,<span class="string">'rb'</span>).read()).hexdigest()</span><br><span class="line"></span><br><span class="line">src = raw_input(<span class="string">'Enter source path:'</span>).encode(<span class="string">'utf-8'</span>)</span><br><span class="line">dst = raw_input(<span class="string">'Enter destination path:'</span>).encode(<span class="string">'utf-8'</span>)</span><br><span class="line">p = Photo(src, dst)</span><br><span class="line">p.renameAllFiles()</span><br><span class="line">p.removeEmptyFolders(p.fromPath)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'Total images: %d \nTotal same images: %d'</span> % (p.totalPhotos, p.samePhotos)</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">读书</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http:kabibi.github.io/2016/04/28/2016-04-28-python-categirized-photos/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/blog/2016/04/28/2016-04-28-party/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          海盜之夜的聚會
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/blog/2016/04/25/2016-04-25-my-blog-time/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">我的六年博客時光</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -217,8 +369,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
