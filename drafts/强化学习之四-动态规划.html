@@ -122,7 +122,7 @@
 
 
 
-  <title>标签 | Aaron's blog</title>
+  <title>强化学习之四-动态规划 | Aaron's blog</title>
   
 
 
@@ -281,7 +281,7 @@
     <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">标签</h1>
+	<h1 class="post-title" itemprop="name headline">强化学习之四-动态规划</h1>
 
 
 
@@ -293,14 +293,10 @@
       <div class="post-body">
         
         
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-                目前共计 7 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/Python/" style="font-size: 12px; color: #ccc">Python</a> <a href="/tags/深度学习/" style="font-size: 30px; color: #111">深度学习</a> <a href="/tags/编程/" style="font-size: 12px; color: #ccc">编程</a> <a href="/tags/读书/" style="font-size: 12px; color: #ccc">读书</a>
-            </div>
-          </div>
+          <p><code>Dynamic Programming(DP)</code>: 给定一个关于环境的<strong>精确</strong>的MDP模型，动态规划是一系列能够用来计算这个环境中最优策略的一系列算法。</p>
+<p><code>Classical DP</code>: classical DP 方法使用范围有限，因为他们需要对环境的完美假设以及大量的计算开销，但经典DP算法在理论上依然有研究价值。其他的许多方法能够看做是经典DP方法的一个拓展：不需要对环境的完美假设以及大量的计算开销就能得到和经典DP同样的结果。</p>
+<p>本章中，我们经常假设环境是 finite MDP，也就是假定状态空间 $S$ ，动作空间 $A$ 以及奖赏集 $R$ 均有限, 使用动态规划方法来计算值函数 </p>
+<script type="math/tex; mode=display">v_* (s) = \max_a E[R_{t+1} + \gamma v_*(S_{t+1}) | S_t = s, A_t = a ]</script><h2 id="Policy-Evaluation"><a href="#Policy-Evaluation" class="headerlink" title="Policy Evaluation"></a>Policy Evaluation</h2><h2 id="Policy-Improvement"><a href="#Policy-Improvement" class="headerlink" title="Policy Improvement"></a>Policy Improvement</h2><h2 id="Policy-Iteration"><a href="#Policy-Iteration" class="headerlink" title="Policy Iteration"></a>Policy Iteration</h2><h2 id="Value-Iteration"><a href="#Value-Iteration" class="headerlink" title="Value Iteration"></a>Value Iteration</h2><h2 id="Asynchronous-Dynamic-Programming"><a href="#Asynchronous-Dynamic-Programming" class="headerlink" title="Asynchronous Dynamic Programming"></a>Asynchronous Dynamic Programming</h2><h2 id="Generalized-Policy-Iteration"><a href="#Generalized-Policy-Iteration" class="headerlink" title="Generalized Policy Iteration"></a>Generalized Policy Iteration</h2><h2 id="Efficiency-of-Dynamic-Programming"><a href="#Efficiency-of-Dynamic-Programming" class="headerlink" title="Efficiency of Dynamic Programming"></a>Efficiency of Dynamic Programming</h2>
         
       </div>
       
@@ -347,8 +343,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -440,6 +445,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Evaluation"><span class="nav-number">1.</span> <span class="nav-text">Policy Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Improvement"><span class="nav-number">2.</span> <span class="nav-text">Policy Improvement</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Iteration"><span class="nav-number">3.</span> <span class="nav-text">Policy Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Value-Iteration"><span class="nav-number">4.</span> <span class="nav-text">Value Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Asynchronous-Dynamic-Programming"><span class="nav-number">5.</span> <span class="nav-text">Asynchronous Dynamic Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Generalized-Policy-Iteration"><span class="nav-number">6.</span> <span class="nav-text">Generalized Policy Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Efficiency-of-Dynamic-Programming"><span class="nav-number">7.</span> <span class="nav-text">Efficiency of Dynamic Programming</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -636,6 +657,26 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 
