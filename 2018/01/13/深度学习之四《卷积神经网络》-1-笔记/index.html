@@ -75,16 +75,13 @@
 
 
 
-<meta name="description" content="热爱生活，喜爱书法，勤于健身，痴于阅读  本科在读  研究方向：机器学习，深度学习">
 <meta property="og:type" content="website">
-<meta property="og:title" content="关于博主">
-<meta property="og:url" content="kabibi.github.io/about/index.html">
+<meta property="og:title" content="分类">
+<meta property="og:url" content="kabibi.github.io/categories/index.html">
 <meta property="og:site_name" content="Aaron&#39;s blog">
-<meta property="og:description" content="热爱生活，喜爱书法，勤于健身，痴于阅读  本科在读  研究方向：机器学习，深度学习">
-<meta property="og:updated_time" content="2018-01-08T08:01:04.149Z">
+<meta property="og:updated_time" content="2018-01-15T06:13:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于博主">
-<meta name="twitter:description" content="热爱生活，喜爱书法，勤于健身，痴于阅读  本科在读  研究方向：机器学习，深度学习">
+<meta name="twitter:title" content="分类">
 
 
 
@@ -116,7 +113,7 @@
 
 
 
-  <link rel="canonical" href="kabibi.github.io/about/"/>
+  <link rel="canonical" href="kabibi.github.io/categories/"/>
 
 
 
@@ -476,6 +473,21 @@
 <li>连接的稀疏性：因为滤波器算子尺寸限制，每一层的每个输出只与输入部分区域内有关。</li>
 </ul>
 <p>除此之外，由于CNN参数数目较小，所需的训练样本就相对较少，从而一定程度上不容易发生过拟合现象。而且，CNN比较擅长捕捉区域位置偏移。也就是说CNN进行物体检测时，不太受物体所处图片位置的影响，增加检测的准确性和系统的健壮性。</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><hr>
+<p>本节中，我们首先提出CV领域的几个问题，分别是Image Classification，Object Detection以及 Neural Style Transfer;而这些问题都是与图像有关的，而如果图像的尺寸很大，那么需要解决的一个问题就是神经网络结构复杂与计算量大的这样一些问题。而我们之后将要提出的CNN，就是能够解决上述几个问题的方法。</p>
+<p>接下来我们又讨论了<strong>边缘检测</strong>，边缘检测分为 vertical edge detection 和 horizontal edge detection。图片的边缘检测可以通过将图片与相应的 filter 进行卷积实现。接着又说明了图片的渐变方式并不影响边缘检测的结果。另外如果我们想检测图片的其他边缘特征，那么filter的数值一般需要通过模型训练得到。</p>
+<p>另外一个问题就是，如果我们按照上面的方法进行卷积运算，卷积后图片的尺寸会缩小，而且图片边缘信息对输出的贡献很小，因此为了解决这个问题，我们需要对图片进行 <strong>padding</strong>，也就是在原图的周围打上一圈空白像素。如果要保证卷积后的图片尺寸，要保证 <script type="math/tex">p=\frac{f-1}{2}</script>。</p>
+<p>之前我们讨论的都是 filter 在原图中每次移动的步长都是1，然而实际的步长是可以改变的。另外需要注意的是，之前我们讨论的卷积操作并不是数学意义上的卷积。</p>
+<p>随后，我们又讲到如何在RGB图像上进行卷积运算，以及同时进行多个卷积运算。为了在RGB图像上进行卷积操作，我们的filter也必须是3通道的，卷积后得到的是二维的像素值；而如果我们设置了滤波器组，那么把原图与每一个filter卷积后得到的结果堆叠起来，最终得到的就是在RGB图像上同时进行多个卷积运算的结果。如下图所示：</p>
+<p><img src="/images/post_images/rgb_convolution2.jpg" alt="RGB convolution2"></p>
+<p>接着，我们给出了单层CNN的基本结构，在CNN中，滤波器组相当于权重W，这也是为什么参数数量被大量减少。于是我们给出了一个典型CNN结果示意图，除此之外，我们提出CNN有3种类型的layer：</p>
+<ul>
+<li>Convolution Layer</li>
+<li>Pooling Layer</li>
+<li>Fully Connected Layer</li>
+</ul>
+<p>其中，Pooling Layer中经常采用的是Max Pooling，Pooling Layer能够有效减小尺寸，过滤噪声。</p>
+<p>最后，我们介绍了一个简单数字识别的CNN例子并且给出了使用卷积神经网络的一些原因。</p>
 
       
     </div>
@@ -622,7 +634,7 @@
                 
                 <div class="site-state-item site-state-tags">
                   <a href="/tags/index.html">
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -683,7 +695,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Computer-Vision"><span class="nav-number">1.</span> <span class="nav-text">Computer Vision</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edge-detection-example"><span class="nav-number">2.</span> <span class="nav-text">Edge detection example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More-Edge-Detection"><span class="nav-number">3.</span> <span class="nav-text">More Edge Detection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图片边缘的渐变方式"><span class="nav-number">3.1.</span> <span class="nav-text">图片边缘的渐变方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几种滤波器算子"><span class="nav-number">3.2.</span> <span class="nav-text">几种滤波器算子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Padding"><span class="nav-number">4.</span> <span class="nav-text">Padding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Strided-Convolutions"><span class="nav-number">5.</span> <span class="nav-text">Strided Convolutions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cross-correlation-与-convolutions-的区别"><span class="nav-number">5.1.</span> <span class="nav-text">cross-correlation 与 convolutions 的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Convolutions-over-volumns"><span class="nav-number">6.</span> <span class="nav-text">Convolutions over volumns</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3通道卷积运算"><span class="nav-number">6.1.</span> <span class="nav-text">3通道卷积运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现多个卷积运算"><span class="nav-number">6.2.</span> <span class="nav-text">实现多个卷积运算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#One-Layer-of-a-Convolutional-Network"><span class="nav-number">7.</span> <span class="nav-text">One Layer of a Convolutional Network</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Structure-of-single-layer-CNN"><span class="nav-number">7.1.</span> <span class="nav-text">Structure of single layer CNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Notations-for-CNN"><span class="nav-number">7.2.</span> <span class="nav-text">Notations for CNN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple-Convolutional-Network-Example"><span class="nav-number">8.</span> <span class="nav-text">Simple Convolutional Network Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pooling-Layers"><span class="nav-number">9.</span> <span class="nav-text">Pooling Layers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Max-pooling"><span class="nav-number">9.1.</span> <span class="nav-text">Max pooling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Average-pooling"><span class="nav-number">9.2.</span> <span class="nav-text">Average pooling</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CNN-Example"><span class="nav-number">10.</span> <span class="nav-text">CNN Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Convolutions"><span class="nav-number">11.</span> <span class="nav-text">Why Convolutions</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Computer-Vision"><span class="nav-number">1.</span> <span class="nav-text">Computer Vision</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edge-detection-example"><span class="nav-number">2.</span> <span class="nav-text">Edge detection example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More-Edge-Detection"><span class="nav-number">3.</span> <span class="nav-text">More Edge Detection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图片边缘的渐变方式"><span class="nav-number">3.1.</span> <span class="nav-text">图片边缘的渐变方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几种滤波器算子"><span class="nav-number">3.2.</span> <span class="nav-text">几种滤波器算子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Padding"><span class="nav-number">4.</span> <span class="nav-text">Padding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Strided-Convolutions"><span class="nav-number">5.</span> <span class="nav-text">Strided Convolutions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cross-correlation-与-convolutions-的区别"><span class="nav-number">5.1.</span> <span class="nav-text">cross-correlation 与 convolutions 的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Convolutions-over-volumns"><span class="nav-number">6.</span> <span class="nav-text">Convolutions over volumns</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3通道卷积运算"><span class="nav-number">6.1.</span> <span class="nav-text">3通道卷积运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现多个卷积运算"><span class="nav-number">6.2.</span> <span class="nav-text">实现多个卷积运算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#One-Layer-of-a-Convolutional-Network"><span class="nav-number">7.</span> <span class="nav-text">One Layer of a Convolutional Network</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Structure-of-single-layer-CNN"><span class="nav-number">7.1.</span> <span class="nav-text">Structure of single layer CNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Notations-for-CNN"><span class="nav-number">7.2.</span> <span class="nav-text">Notations for CNN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple-Convolutional-Network-Example"><span class="nav-number">8.</span> <span class="nav-text">Simple Convolutional Network Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pooling-Layers"><span class="nav-number">9.</span> <span class="nav-text">Pooling Layers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Max-pooling"><span class="nav-number">9.1.</span> <span class="nav-text">Max pooling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Average-pooling"><span class="nav-number">9.2.</span> <span class="nav-text">Average pooling</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CNN-Example"><span class="nav-number">10.</span> <span class="nav-text">CNN Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Convolutions"><span class="nav-number">11.</span> <span class="nav-text">Why Convolutions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">12.</span> <span class="nav-text">Summary</span></a></li></ol></div>
             
 
           </div>
