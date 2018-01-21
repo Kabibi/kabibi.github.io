@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.0" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="热爱生活，喜爱书法，勤于健身，痴于阅读  本科在读  研究方向：机器学习，深度学习">
+<meta property="og:type" content="website">
+<meta property="og:title" content="关于博主">
+<meta property="og:url" content="kabibi.github.io/about/index.html">
+<meta property="og:site_name" content="Aaron&#39;s blog">
+<meta property="og:description" content="热爱生活，喜爱书法，勤于健身，痴于阅读  本科在读  研究方向：机器学习，深度学习">
+<meta property="og:updated_time" content="2018-01-15T06:13:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于博主">
+<meta name="twitter:description" content="热爱生活，喜爱书法，勤于健身，痴于阅读  本科在读  研究方向：机器学习，深度学习">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="kabibi.github.io/about/"/>
+
+
+
+
+
+  <title>深度学习之四《卷积神经网络》笔记(2) | Aaron's blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-112108000-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aaron's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">潇洒自在，任性逍遥。我就是我，不一样的烟火～</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+
+            
+              首页
+            
+
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+
+            
+              关于
+            
+
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+
+            
+              分类
+            
+
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+
+            
+              归档
+            
+
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="kabibi.github.io/2018/01/18/深度学习之四《卷积神经网络》笔记-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aaron">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aaron's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深度学习之四《卷积神经网络》笔记(2)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-18T17:23:51+08:00">2018-01-18</time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文为 Andrew NG 的深度学习课程四《卷积神经网络》第2周的对应学习笔记。</p>
+<a id="more"></a>
+<h2 id="Why-look-at-case-studies"><a href="#Why-look-at-case-studies" class="headerlink" title="Why look at case studies"></a>Why look at case studies</h2><hr>
+<p>本周课程将主要介绍几个典型的CNN案例。通过对具体CNN模型及案例的研究，来帮助我们理解知识并训练实际的模型。</p>
+<p>典型的CNN模型包括：</p>
+<ul>
+<li>LeNet-5</li>
+<li>AlexNet</li>
+<li>VGG<br>除了这些性能良好的CNN模型之外，我们还会介绍 Residual Network（ResNet）。其特点是可以构建很深很深的神经网络（目前最深的好像有152层）。</li>
+</ul>
+<p>另外，还会介绍Inception Neural Network。</p>
+<h2 id="Classic-Network"><a href="#Classic-Network" class="headerlink" title="Classic Network"></a>Classic Network</h2><hr>
+<h3 id="LeNet-5"><a href="#LeNet-5" class="headerlink" title="LeNet-5"></a>LeNet-5</h3><p>LeNet-5模型是第一个成功应用于<strong><em>数字识别</em></strong>问题的卷积神经网络。在MNIST数据中，它的准确率达到大约99.2%。典型的LeNet-5结构包含CONV layer，POOL layer和FC layer，顺序一般是CONV layer-&gt;POOL layer-&gt;CONV layer-&gt;POOL layer-&gt;FC layer-&gt;FC layer-&gt;OUTPUT layer，即 <script type="math/tex">\hat y</script>。<br>下图所示的是一个数字识别的LeNet-5的模型结构：</p>
+<p><img src="/images/post_images/C4W2_LeNet.jpg" alt="LeNet-5"></p>
+<p>该LeNet模型总共包含了大约6万个参数。值得一提的是，当时Yann LeCun提出的LeNet-5模型池化层使用的是average pool，而且各层激活函数一般是Sigmoid和tanh。现在，我们可以根据需要，做出改进，使用max pool和激活函数ReLU。</p>
+<h3 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h3><p>AlexNet模型是由Alex Krizhevsky、Ilya Sutskever和Geoffrey Hinton共同提出的，其结构如下所示：</p>
+<p><img src="/images/post_images/C4W2_AlexNet.jpg" alt="AlexNet"></p>
+<p>AlexNet模型与LeNet-5模型类似，只是要复杂一些，总共包含了大约6千万个参数。同样可以根据实际情况使用激活函数ReLU。原作者还提到了一种优化技巧，叫做<strong><em>Local Response Normalization(LRN)</em></strong>。 而在实际应用中，LRN的效果并不突出。</p>
+<h3 id="VGG-16"><a href="#VGG-16" class="headerlink" title="VGG-16"></a>VGG-16</h3><p>VGG-16模型更加复杂一些，一般情况下，其CONV layer和POOL layer设置如下：</p>
+<ul>
+<li>CONV = 3x3 filters, s = 1, same</li>
+<li>MAX-POOL = 2x2, s = 2</li>
+</ul>
+<p>VGG-16结构如下所示:</p>
+<p><img src="/images/post_images/C4W2_VGG16.jpg" alt="VGG16"></p>
+<p>VGG-16的参数多达1亿3千万。</p>
+<h2 id="Residual-Networks（ResNets）"><a href="#Residual-Networks（ResNets）" class="headerlink" title="Residual Networks（ResNets）"></a>Residual Networks（ResNets）</h2><hr>
+<h3 id="What’s-ResNets"><a href="#What’s-ResNets" class="headerlink" title="What’s ResNets?"></a>What’s ResNets?</h3><p>我们知道，如果神经网络层数越多，网络越深，源于梯度消失和梯度爆炸的影响，整个模型难以训练成功。解决的方法之一是人为地让神经网络某些层跳过下一层神经元的连接，隔层相连，弱化每层之间的强联系。这种神经网络被称为<strong>Residual Networks(ResNets)</strong>。Residual Networks由许多隔层相连的神经元子模块组成，我们称之为Residual block。单个Residual block的结构如下图所示：</p>
+<p><img src="/images/post_images/C4W2_residual_block.jpg" alt="Residual Block"></p>
+<p>上图中红色部分就是skip connection，直接建立 <script type="math/tex">a^{[l]}</script> 与 <script type="math/tex">a^{[l+2]}</script> 之间的隔层联系。相应的表达式如下：</p>
+<script type="math/tex; mode=display">a^{[l+2]} = g(z^{[l+2]}+a^{[l]})</script><p>$a^{[l]}$直接隔层与下一层的线性输出相连，与 <script type="math/tex">z^{[l+2]}</script> 共同通过激活函数（ReLU）输出<script type="math/tex">a^{[l+2]}</script> 。</p>
+<p>该模型由Kaiming He, Xiangyu Zhang, Shaoqing Ren和Jian Sun共同提出。由多个Residual block组成的神经网络就是<strong>Residual Network</strong>。实验表明，这种模型结构对于训练非常深的神经网络，效果很好。另外，为了便于区分，我们把非Residual Networks称为Plain Network。</p>
+<p><img src="/images/post_images/C4W2_residual_network.jpg" alt="Residual Network"></p>
+<p>Residual Network的结构如上图所示。</p>
+<h3 id="Residual-Network-VS-Plain-Network"><a href="#Residual-Network-VS-Plain-Network" class="headerlink" title="Residual Network VS. Plain Network"></a>Residual Network VS. Plain Network</h3><p>与Plain Network相比，Residual Network能够训练更深层的神经网络，有效避免发生发生梯度消失和梯度爆炸。从下面两张图的对比中可以看出，随着神经网络层数增加，Plain Network实际性能会变差，training error甚至会变大。然而，Residual Network的训练效果却很好，training error一直呈下降趋势。</p>
+<p><img src="/images/post_images/C4W2_residual_network_results.jpg" alt="Residual Network"></p>
+<h2 id="Why-ResNets-Work"><a href="#Why-ResNets-Work" class="headerlink" title="Why ResNets Work?"></a>Why ResNets Work?</h2><hr>
+<h3 id="Why-work"><a href="#Why-work" class="headerlink" title="Why work?"></a>Why work?</h3><p>下面用个例子来解释为什么ResNets能够训练更深层的神经网络。</p>
+<p><img src="/images/post_images/C4W2_ResNets.jpg" alt="ResNet"></p>
+<p>如上图所示，输入x经过很多层神经网络后输出 <script type="math/tex">a^{[l]}</script>， <script type="math/tex">a^{[l]}</script> 经过一个Residual block输出 <script type="math/tex">a^{[l+2]}</script>。<script type="math/tex">a^{[l+2]}</script>的表达式为：</p>
+<script type="math/tex; mode=display">a^{[l+2]}=g(z^{[l+2]}+a^{[l]})=g(W^{[l+2]}a^{[l+1]}+b^{[l+2]}+a^{[l]})</script><p>输入x经过Big NN后，若 <script type="math/tex">W^{[l+2]}\approx0</script>，<script type="math/tex">b^{[l+2]}\approx0</script>，则有：</p>
+<script type="math/tex; mode=display">a^{[l+2]}=g(a^{[l]})=ReLU(a^{[l]})=a^{[l]}\ \ \ \ when\ a^{[l]}\geq0</script><p>可以看出，<strong>即使发生了梯度消失，<script type="math/tex">W^{[l+2]}\approx0</script>，<script type="math/tex">b^{[l+2]}\approx0</script>，也能直接建立 <script type="math/tex">a^{[l+2]}</script>与<script type="math/tex">a^{[l]}</script>的线性关系</strong>，且<script type="math/tex">a^{[l+2]}=a^{[l]}</script> ，这其实就是identity function。<script type="math/tex">a^{[l]}</script> 直接连到 <script type="math/tex">a^{[l+2]}</script> ，从效果来说，相当于直接忽略了 <script type="math/tex">a^{[l]}</script> 之后的这两层神经层。这样，<strong> 看似很深的神经网络，其实由于许多Residual blocks的存在，弱化削减了某些神经层之间的联系，实现隔层线性传递，而不是一味追求非线性关系，模型本身也就能“容忍”更深层的神经网络了。</strong>而且从性能上来说，这两层额外的Residual blocks也不会降低Big NN的性能。</p>
+<p>当然，如果Residual blocks确实能训练得到非线性关系，那么也会忽略short cut，跟Plain Network起到同样的效果。</p>
+<h3 id="维度不同如何解决？"><a href="#维度不同如何解决？" class="headerlink" title="维度不同如何解决？"></a>维度不同如何解决？</h3><p>有一点需要注意的是，如果Residual blocks中 <script type="math/tex">a^{[l]}</script> 和 <script type="math/tex">a^{[l+2]}</script>的维度不同，通常可以引入矩阵<script type="math/tex">W_s</script>，与 <script type="math/tex">a^{[l]}</script> 相乘，使得 <script type="math/tex">W_s*a^{[l]}</script> 的维度与 <script type="math/tex">a^{[l+2]}</script> 一致。参数矩阵 <script type="math/tex">W_s</script> 有来两种方法得到：</p>
+<ul>
+<li>一种是将 <script type="math/tex">W_s</script> 作为学习参数，通过模型训练得到；</li>
+<li>另一种是固定 <script type="math/tex">W_s</script> 值（类似单位矩阵），不需要训练， <script type="math/tex">W_s</script> 与 <script type="math/tex">a^{[l]}</script> 的乘积仅仅使得 <script type="math/tex">a^{[l]}</script> 截断或者补零。</li>
+</ul>
+<p>这两种方法都可行。</p>
+<p>下图所示的是CNN中ResNets的结构：</p>
+<p><img src="/images/post_images/C4W2_CNN_ResNet.jpg" alt="ResNet"></p>
+<p>ResNets同类型层之间，例如CONV layers，大多使用same类型，保持维度相同。如果是不同类型层之间的连接，例如CONV layer与POOL layer之间，如果维度不同，则引入矩阵 <script type="math/tex">W_s</script>。</p>
+<h2 id="Network-in-Network-and-1×1-convolutions"><a href="#Network-in-Network-and-1×1-convolutions" class="headerlink" title="Network in Network and 1×1 convolutions"></a>Network in Network and 1×1 convolutions</h2><hr>
+<p>Min Lin, Qiang Chen等人提出了一种新的CNN结构，即1x1 Convolutions，也称Networks in Networks。这种结构的特点是滤波器算子filter的维度为1x1。对于单个filter，1x1的维度，意味着卷积操作等同于乘积操作。</p>
+<p><img src="/images/post_images/C4W2L5_1.jpg" alt="C4W2L5_1"></p>
+<p>那么，对于多个filters，1x1 Convolutions的作用实际上类似全连接层的神经网络结构。效果等同于Plain Network中 <script type="math/tex">a^{[l]}</script> 到 <script type="math/tex">a^{[l+1]}</script>的过程。这点还是比较好理解的。</p>
+<p><img src="/images/post_images/C4W2L5_2.jpg" alt="C4W2L5_2"></p>
+<p>1x1 Convolutions可以用来缩减输入图片的通道数目。方法如下图所示：</p>
+<p><img src="/images/post_images/C4W2L5_3.jpg" alt="C4W2L5_3"></p>
+<h2 id="Inception-Network-Motivation"><a href="#Inception-Network-Motivation" class="headerlink" title="Inception Network Motivation"></a>Inception Network Motivation</h2><hr>
+<h3 id="What’s-Inception-Network"><a href="#What’s-Inception-Network" class="headerlink" title="What’s Inception Network?"></a>What’s Inception Network?</h3><p>如下图所示:</p>
+<p><img src="/images/post_images/C4W2L6_1.jpg" alt="C4W2L6_1"></p>
+<p>我们可以使用不同尺寸的filters进行same convolutions，或者进行max-pool。只要保证输出是28×28即可, 然后将不同layer的结果堆叠起来，得到最后的结果。</p>
+<ul>
+<li>Convolution layer: 不同filter size的filters，比如1×1的filter(不需要padding), 或者3×3的fileter（需要padding）等等。</li>
+<li>Max-Pool Layer: 我们甚至可以使用MAX-POOL layer.</li>
+</ul>
+<h3 id="Inception-Network-的优势"><a href="#Inception-Network-的优势" class="headerlink" title="Inception Network 的优势"></a>Inception Network 的优势</h3><p>使用Inception Network而非传统的单一尺寸和功能的filter不同，Inception Network使用不同尺寸的filters并将CONV和POOL混合起来，将所有功能输出组合拼接，再由神经网络本身去学习参数并选择最好的模块, 可以大大地提高性能。</p>
+<h3 id="The-Problem-of-Computational-Cost"><a href="#The-Problem-of-Computational-Cost" class="headerlink" title="The Problem of Computational Cost"></a>The Problem of Computational Cost</h3><p>Inception Network在提升性能的同时，会带来计算量大的问题。例如下面这个例子：</p>
+<p><img src="/images/post_images/C4W2L6_3.jpg" alt="C4W2L6_3"></p>
+<p>此CONV layer需要的计算量为：28x28x32x5x5x192=120 million。可以看出但这一层的计算量都是很大的。为此，我们可以引入1x1 Convolutions来减少其计算量，结构如下图所示：</p>
+<p><img src="/images/post_images/C4W2L6_4.jpg" alt="C4W2L6_4"></p>
+<p>通常我们把该1x1 Convolution称为“瓶颈层”（bottleneck layer）。引入bottleneck layer之后，总共需要的计算量为：28x28x16x192+28x28x32x5x5x16=12.4 million。明显地，虽然多引入了1x1 Convolution层，但是总共的计算量减少了近90%，效果还是非常明显的。由此可见，1x1 Convolutions还可以有效减少CONV layer的计算量。</p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>总结一下：在构建神经网络的时候，不想决定Pooling layer的filter size大小，那么inception module就是最好的选择，我们可以使用各种类型的filters，只需要把输出连接起来。之后我们降到计算代价问题，我们可以使用1×1 ConV Layer构建bottleneck layer，从而大大降低计算量，通常，只要构建合理的bottleneck layer，既可以显著缩小表示层的规模，又不会降低网络的性能。</p>
+<h2 id="Inception-Network"><a href="#Inception-Network" class="headerlink" title="Inception Network"></a>Inception Network</h2><hr>
+<p>上一节我们使用1x1 Convolution来减少Inception Network计算量大的问题。引入1x1 Convolution后的Inception module如下图所示：</p>
+<p><img src="/images/post_images/C4W2L7_1.jpg" alt="C4W2L7_1"></p>
+<p>多个Inception modules组成Inception Network，效果如下图所示：</p>
+<p><img src="/images/post_images/C4W2L7_2.jpg" alt="C4W2L7_2"></p>
+<p>上述Inception Network除了由许多Inception modules组成之外，值得一提的是网络中间隐藏层也可以作为输出层Softmax，有利于防止发生过拟合。</p>
+<h2 id="Using-Open-Source-Implementation"><a href="#Using-Open-Source-Implementation" class="headerlink" title="Using Open-Source Implementation"></a>Using Open-Source Implementation</h2><hr>
+<p>介绍Github的使用，略。</p>
+<h2 id="Transfer-learning"><a href="#Transfer-learning" class="headerlink" title="Transfer learning"></a>Transfer learning</h2><hr>
+<h3 id="什么是transfer-learning？"><a href="#什么是transfer-learning？" class="headerlink" title="什么是transfer learning？"></a>什么是transfer learning？</h3><p><code>Transfer learning</code>: 深度学习非常强大的一个功能之一就是有时候你可以将已经训练好的模型的一部分知识（网络结构）直接应用到另一个类似模型中去。比如我们已经训练好一个猫类识别的神经网络模型，那么我们可以直接把该模型中的一部分网络结构应用到使用X光片预测疾病的模型中去。这种学习方法被称为迁移学习（Transfer Learning）。</p>
+<p>如果需要构建新模型的样本数量较少，可以只训练输出层的权重系数 $ W^{[L]} $, $ b^{[L]} $ 而保持其他层的权重参数保持不变。这种方法的优点在于做法比较简单，而且不需要很多的数据。而如果训练样本很多的话，那么也可以重新训练网络的权重系数，这样可以使得模型更加精确。采用那种方法通常根据数据量而定。</p>
+<p>如果重新训练所有权重系数，初始 $ W^{[l]} $, $ b^{[l]} $ 由之前的模型训练得到，这一过程称为<code>pre-training</code>。</p>
+<p><img src="/images/post_images/pre_train.jpg" alt="pre-train"></p>
+<p>之后，不断调试、优化 $ W^{[l]} $,$b^{[l]}$ 的过程称为<code>fine-tuning</code>。pre-training和fine-tuning分别对应上图中的黑色箭头和红色箭头。</p>
+<h3 id="transfer-learning-的应用场合"><a href="#transfer-learning-的应用场合" class="headerlink" title="transfer learning 的应用场合"></a>transfer learning 的应用场合</h3><p>总的来说，transfer learning的应用场合主要为：</p>
+<ul>
+<li>Task A and B have the same input x.</li>
+<li>You have a lot more data for Task A than Task B.</li>
+<li>Low level features from A could be helpful for learning B.</li>
+</ul>
+<h3 id="Why-transfer-learning-works？"><a href="#Why-transfer-learning-works？" class="headerlink" title="Why transfer learning works？"></a>Why transfer learning works？</h3><p>一个从Quora上摘抄的回答：<br>You have learned to differentiate between rotten potato and fresh potato. But now with your learning experience, you have to differentiate between rotten tomato and fresh tomato. During learning of rotten potato, you have extracted knowledge like- if any vegetable is rotten, liquid will come out from there body. So, if you can use this knowledge in your job of rotten tomato identification, you are using transfer learning technique.</p>
+<h2 id="Data-Augmentation"><a href="#Data-Augmentation" class="headerlink" title="Data Augmentation"></a>Data Augmentation</h2><hr>
+<p>有几种data augmentation的方法：</p>
+<ul>
+<li>常用的Data Augmentation方法是对已有的样本集进行<code>Mirroring</code>和<code>Random Cropping</code>。</li>
+<li>另一种Data Augmentation的方法是<code>color shifting</code>。color shifting就是对图片的RGB通道数值进行随意增加或者减少，改变图片色调。</li>
+<li>除了随意改变RGB通道数值外，还可以更有针对性地对图片的RGB通道进行<code>PCA color augmentation</code>，也就是对图片颜色进行主成分分析，对主要的通道颜色进行增加或减少，可以采用高斯扰动做法。这样也能增加有效的样本数量。具体的PCA color augmentation做法可以查阅AlexNet的相关论文。</li>
+</ul>
+<p>最后提一下，在构建大型神经网络的时候，data augmentation和training可以由两个不同的线程来进行。</p>
+<h2 id="State-of-Computer-Vision"><a href="#State-of-Computer-Vision" class="headerlink" title="State of Computer Vision"></a>State of Computer Vision</h2><hr>
+<p>神经网络需要数据，不同的网络模型所需的数据量是不同的。Object dection，Image recognition，Speech recognition所需的数据量依次增加。一般来说，如果data较少，那么就需要更多的hand-engineering，对已有data进行处理，比如上一节介绍的data augmentation。模型算法也会相对要复杂一些。如果data很多，可以构建深层神经网络，不需要太多的hand-engineering，模型算法也就相对简单一些。</p>
+<p><img src="/images/post_images/C4W2L11_1.jpg" alt="C4W2L11_1"></p>
+<p>值得一提的是hand-engineering是一项非常重要也比较困难的工作。很多时候，hand-engineering对模型训练效果影响很大，特别是在数据量不多的情况下。</p>
+<p>在模型研究或者竞赛方面，有一些方法能够有助于提升神经网络模型的性能：</p>
+<ul>
+<li><code>Ensembling</code>: Train several networks independently and average their outputs.</li>
+<li><code>Multi-crop at test time</code>: Run classifier on multiple versions of test images and average results.</li>
+</ul>
+<p>最后，我们还要灵活使用开源代码：</p>
+<ul>
+<li>Use archittectures of networks published in the literature</li>
+<li>Use open source implementations if possible</li>
+<li>Use pretrained models and fine-tune on your dataset</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/深度学习/" rel="tag"># 深度学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/14/强化学习之Policy-Gradient/" rel="next" title="强化学习之Policy Gradient">
+                <i class="fa fa-chevron-left"></i> 强化学习之Policy Gradient
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMzA0OS85NjEx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Aaron" />
+            
+              <p class="site-author-name" itemprop="name">Aaron</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kabibi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/vinater" target="_blank" title="微博">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>微博</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.zhihu.com/people/yang-zi-jiang-5" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/aaron.csie" target="_blank" title="FB Page">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-look-at-case-studies"><span class="nav-number">1.</span> <span class="nav-text">Why look at case studies</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Classic-Network"><span class="nav-number">2.</span> <span class="nav-text">Classic Network</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LeNet-5"><span class="nav-number">2.1.</span> <span class="nav-text">LeNet-5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AlexNet"><span class="nav-number">2.2.</span> <span class="nav-text">AlexNet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VGG-16"><span class="nav-number">2.3.</span> <span class="nav-text">VGG-16</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Residual-Networks（ResNets）"><span class="nav-number">3.</span> <span class="nav-text">Residual Networks（ResNets）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#What’s-ResNets"><span class="nav-number">3.1.</span> <span class="nav-text">What’s ResNets?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Residual-Network-VS-Plain-Network"><span class="nav-number">3.2.</span> <span class="nav-text">Residual Network VS. Plain Network</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-ResNets-Work"><span class="nav-number">4.</span> <span class="nav-text">Why ResNets Work?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-work"><span class="nav-number">4.1.</span> <span class="nav-text">Why work?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#维度不同如何解决？"><span class="nav-number">4.2.</span> <span class="nav-text">维度不同如何解决？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Network-in-Network-and-1×1-convolutions"><span class="nav-number">5.</span> <span class="nav-text">Network in Network and 1×1 convolutions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inception-Network-Motivation"><span class="nav-number">6.</span> <span class="nav-text">Inception Network Motivation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#What’s-Inception-Network"><span class="nav-number">6.1.</span> <span class="nav-text">What’s Inception Network?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Inception-Network-的优势"><span class="nav-number">6.2.</span> <span class="nav-text">Inception Network 的优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Problem-of-Computational-Cost"><span class="nav-number">6.3.</span> <span class="nav-text">The Problem of Computational Cost</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Summary"><span class="nav-number">6.4.</span> <span class="nav-text">Summary</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inception-Network"><span class="nav-number">7.</span> <span class="nav-text">Inception Network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Open-Source-Implementation"><span class="nav-number">8.</span> <span class="nav-text">Using Open-Source Implementation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transfer-learning"><span class="nav-number">9.</span> <span class="nav-text">Transfer learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是transfer-learning？"><span class="nav-number">9.1.</span> <span class="nav-text">什么是transfer learning？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transfer-learning-的应用场合"><span class="nav-number">9.2.</span> <span class="nav-text">transfer learning 的应用场合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-transfer-learning-works？"><span class="nav-number">9.3.</span> <span class="nav-text">Why transfer learning works？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Augmentation"><span class="nav-number">10.</span> <span class="nav-text">Data Augmentation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#State-of-Computer-Vision"><span class="nav-number">11.</span> <span class="nav-text">State of Computer Vision</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aaron</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a> v6.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
