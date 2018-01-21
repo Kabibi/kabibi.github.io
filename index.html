@@ -513,78 +513,14 @@
 
       
         
-          
-            <a id="more"></a>
-<h2 id="Policy-Gradient-方法简介"><a href="#Policy-Gradient-方法简介" class="headerlink" title="Policy Gradient 方法简介"></a>Policy Gradient 方法简介</h2><p>Policy Gradient 是一种 Model-free 的方法。</p>
-<h2 id="Policy-based-Approach-Learning-an-Actor"><a href="#Policy-based-Approach-Learning-an-Actor" class="headerlink" title="Policy-based Approach: Learning an Actor"></a>Policy-based Approach: Learning an Actor</h2><p>首先，我们知道对于深度学习问题，有三步：</p>
-<ul>
-<li>Define a set of functions.</li>
-<li>Evaluate the goodness of function.</li>
-<li>Pick the best function.</li>
-</ul>
-<p>下面，我将从这三个角度分别进行说明。</p>
-<h3 id="Define-a-set-of-functions"><a href="#Define-a-set-of-functions" class="headerlink" title="Define a set of functions"></a>Define a set of functions</h3><p>在Policy Gradient（PG）方法中，我们把Neural Network（NN）作为actor，这个actor就是我们的策略。这个NN的输入是机器所观察到的环境（比如游戏画面的pixels），而输出层的每一个neuron都对应于一个actor，neuron的值则是这个采取这个action的概率。如下图所示：</p>
-<p><img src="/images/post_images/PG_NN_as_actor.png" alt="NN as Actor"></p>
-<p>采取NN而不是传统的look-up table的好处在于：</p>
-<ul>
-<li>具有更好的泛化能力，能够举一反三。</li>
-</ul>
-<h3 id="Evaluate-the-goodness-of-actor"><a href="#Evaluate-the-goodness-of-actor" class="headerlink" title="Evaluate the goodness of actor"></a>Evaluate the goodness of actor</h3><p>既然我们使用NN定义模型，那么如何评估这个模型的好坏呢？</p>
-<p>我们需要一个公式去量化这个模型的好坏。在supervised learning中，我们经常用Cross Entropy来评估。在PG中，我们这样定义：</p>
-<p>首先，actor就是我们的策略，定义actor为： <script type="math/tex">\pi_\theta(s)</script>。其次，比如说用RL解决游戏问题，那么使用<script type="math/tex">\pi_\theta(s)</script> 打游戏，会得到一系列轨迹 <script type="math/tex">\tau = \{s_1, a_1, r_1, s_2, a_2, r_2, ...,s_T, a_T, r_T\}。</script>我们定义 <script type="math/tex">R_\theta = \sum_{t=1}^T r_t</script> 由于我们没有任何关于环境的知识，所以actor是一个随机性策略：给定某个状态和相应的动作，输出的是一个概率值，即 <script type="math/tex">\pi_\theta(s,a)</script> 输出的是概率。因此 <script type="math/tex">R_\theta</script> 其实是一个随机变量，我们的目的在于最大化其期望值 <script type="math/tex">\bar{R}_\theta</script>，因此，<script type="math/tex">\bar{R}_\theta</script> 是我们寻找的能够评估 actor 好坏的指标。</p>
-<h3 id="Pick-the-best-function"><a href="#Pick-the-best-function" class="headerlink" title="Pick the best function."></a>Pick the best function.</h3><p>既然我们已经找到了能够评估actor的指标了，那么下一步就是优化 <script type="math/tex">\overline{R}_\theta</script>，这需要一些数学上的推导。</p>
-<p>我们定义一个episode就是一个轨迹 <script type="math/tex">\tau</script>，其中<script type="math/tex">\tau = \{s_1, a_1, r_1, s_2, a_2, r_2, ...,s_T, a_T, r_T\}</script>，如果使用actor打N场游戏，就会有N条轨迹，某一条轨迹都有一定的概率被取样出来，我们假定这个概率被参数<script type="math/tex">\theta</script>控制，因此我们可以有下面的公式：</p>
-<script type="math/tex; mode=display">\overline{R}_\theta = \sum_\tau R(\tau)p(\tau|\theta) \approx \frac{1}{N} \sum_{n=1}^N R(\tau_n)</script><p>接下来就是使用Policy Ascent 求解 <script type="math/tex">\overline{R}_\theta</script> 的最大值。</p>
-<h4 id="Gradient-Ascent-优化"><a href="#Gradient-Ascent-优化" class="headerlink" title="Gradient Ascent 优化"></a>Gradient Ascent 优化</h4><p>Gradient Ascent的基本思路就是：</p>
-<script type="math/tex; mode=display">\theta_1\leftarrow\theta_0 + \eta\nabla\overline{R}_{\theta_0}</script><script type="math/tex; mode=display">\theta_2\leftarrow\theta_1 + \eta\nabla\overline{R}_{\theta_1}</script><script type="math/tex; mode=display">...</script><p>现在我们的目标是优化<script type="math/tex">\overline{R}_{\theta}</script>，即优化下式：</p>
-<script type="math/tex; mode=display">\theta^* = \underset{\theta}{argmax} \ \overline{R}_{\theta}</script><p>其中 <script type="math/tex">\theta = \{ w_1, w_2, ..., b_1, ...\}</script></p>
-<script type="math/tex; mode=display">
-\nabla \overline{R_\theta} = 
-\begin{bmatrix} \partial \overline{R}_\theta / \partial w_1 \\ 
-\partial \overline{R}_\theta / \partial w_2 \\ 
-\vdots \\ 
-\partial \overline{R}_\theta / \partial b_1 \\ 
-\vdots \\ 
-\end{bmatrix}</script><p>由于:</p>
-<script type="math/tex; mode=display">\overline{R}_{\theta} = \sum_{n=1}^N R(\tau_n)p(\tau_n|\theta)</script><p>故：</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\nabla\overline{R}_{\theta} &= \sum_{n=1}^N R(\tau_n) \nabla p(\tau_n|\theta) \\
-&= \sum_{n=1}^N R(\tau_n)p(\tau_n|\theta) \frac{\nabla p(\tau|\theta)}{p(\tau|\theta)} \\
-&= \sum_{n=1}^N R(\tau_n)p(\tau_n|\theta) \nabla logp(\tau|\theta) \qquad (注：p(\tau|\theta) = p(s_1)\prod_{t=1}^T p(a_t|s_t,\theta)p(r_t, s_{t+1}|s_t, a_t)) \\
-&= \sum_{n=1}^N [R(\tau_n)p(\tau_n|\theta) \nabla (log(p(s_1) \prod_{t=1}^T p(a_t|s_t,\theta)p(r_t, s_{t+1}|s_t, a_t)))] \\
-&= \sum_{n=1}^N [R(\tau_n)p(\tau_n|\theta) \nabla (logp(s_1) + \sum_{t=1}^T (logp(a_t|s_t,\theta) + logp(r_t, s_{t+1}|s_t, a_t))] \\
-&= \sum_{n=1}^N [R(\tau_n)p(\tau_n|\theta) \sum_{t=1}^T \nabla logp(a_t|s_t,\theta)] \\
-&= \sum_{n=1}^N \sum_{t=1}^T R(\tau_n)p(\tau_n|\theta) \nabla logp(a_t|s_t,\theta) \\
-&\approx \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^T R(\tau_n) \nabla log p(a_t|s_t, \theta)
-\end{align}</script><p>有几点需要注意：</p>
-<ul>
-<li>我们考虑的是累计奖赏<script type="math/tex">R(\tau^{(n)})</script> 而不是立即的奖赏<script type="math/tex">r_t^{(n)}</script></li>
-<li>如果在轨迹<script type="math/tex">\tau^{(n)}</script> 中，机器在<script type="math/tex">s_t^{(n)}</script>采取动作<script type="math/tex">a_t^{(n)}</script>：<ul>
-<li>如果<script type="math/tex">R(\tau^{n}) > 0</script>，调节<script type="math/tex">\theta</script> 以增加 <script type="math/tex">p(a_t^{(n)}|s_t^{(n)})</script></li>
-<li>如果<script type="math/tex">R(\tau^{n}) < 0</script>，调节<script type="math/tex">\theta</script> 以减少 <script type="math/tex">p(a_t^{(n)}|s_t^{(n)})</script></li>
-</ul>
-</li>
-</ul>
-<h2 id="Policy-Gradient实现"><a href="#Policy-Gradient实现" class="headerlink" title="Policy Gradient实现"></a>Policy Gradient实现</h2><p>给定参数 <script type="math/tex">\theta</script>，我们先用这个参数模拟出N条轨迹：</p>
-<script type="math/tex; mode=display">
-\tau^{(1)}: (s_1^{(1)}, a_1^{(1)}), (s_2^{(1)}, a_2^{(1)}), ...得到R(\tau^{(1)}) \\
-\tau^{(2)}: (s_1^{(2)}, a_1^{(2)}), (s_2^{(2)}, a_2^{(2)}), ...得到R(\tau^{(2)}) \\
-... \\
-\tau^{(N)}: (s_1^{(N)}, a_1^{(N)}), (s_2^{(N)}, a_2^{(N)}), ...得到R(\tau^{(N)})</script><p>然后通过</p>
-<script type="math/tex; mode=display">\nabla\overline{R}_{\theta} \approx \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^T R(\tau_n) \nabla log p(a_t|s_t, \theta)</script><p>计算出 <script type="math/tex">\nabla\overline{R}_{\theta}</script>，再通过下式更新 <script type="math/tex">\theta</script>：</p>
-<script type="math/tex; mode=display">\theta \leftarrow \theta + \eta \nabla \overline{R}_{\theta}</script><p>接着再用新的 <script type="math/tex">\theta</script> 再模拟出新的N条轨迹，用这N条轨迹得到新的<script type="math/tex">\theta</script>，如此反复进行下去～</p>
-<h3 id="Some-intuition"><a href="#Some-intuition" class="headerlink" title="Some intuition"></a>Some intuition</h3><h4 id="Intuition-1"><a href="#Intuition-1" class="headerlink" title="Intuition 1"></a>Intuition 1</h4><p>可是如何理解<script type="math/tex">\nabla\overline{R}_{\theta} \approx \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^T R(\tau_n) \nabla log p(a_t|s_t, \theta)</script> 中的<script type="math/tex">\nabla log p(a_t|s_t, \theta)</script> 这个东西呢？</p>
-<p>我们可以通过 Classification 问题来理解，如下图所示。</p>
-<p><img src="/images/post_images/PG_1.png" alt="PG"></p>
-<p>给定状态s，假如a=”left”，那么NN的输出层<script type="math/tex">y_i</script>应该与 <script type="math/tex">\hat{y_i}</script>越接近越好，我们通过Cross Entropy量化两者的接近程度并最小化，可以表示为：</p>
-<script type="math/tex; mode=display">Minimize \quad -\sum_{i=1}^3 \hat{y_i} log \ y_i</script><p>最小化上式也即最大化：</p>
-<script type="math/tex; mode=display">Maximize \quad log \ y_i = log \ P("left"|s)</script><p>于是我们对上式求梯度，就得到了 <script type="math/tex">\nabla log p(a_t|s_t, \theta)</script>。</p>
-<h4 id="Intuition-2"><a href="#Intuition-2" class="headerlink" title="Intuition 2"></a>Intuition 2</h4><p>但是<script type="math/tex">\nabla log p(a_t|s_t, \theta)</script>前的<script type="math/tex">R(\tau_n)</script> 又当如何理解呢？这是在说每一笔训练数据都具有<script type="math/tex">R(\tau^{(n)})</script>的权重，在实现的时候，比如<script type="math/tex">R(\tau^{(n)}) = 2</script>，那我们需要把这笔数据用两次。</p>
-<h3 id="Add-a-baseline"><a href="#Add-a-baseline" class="headerlink" title="Add a baseline"></a>Add a baseline</h3><p>通常我们在实现时会在<script type="math/tex">R(\tau^{(n)})</script> 之后减去一个bias，即：</p>
-<script type="math/tex; mode=display">\nabla\overline{R}_{\theta} \approx \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^T (R(\tau_n)-b) \nabla log p(a_t|s_t, \theta)</script><p>这是因为在理论上，每一个action都能够被取样到，然而在实现上却不一定，没有被取样到的action的概率就会下降，尽管采取这个action的奖赏很大。</p>
-<h2 id="Value-based-Approach-Learning-an-Critic"><a href="#Value-based-Approach-Learning-an-Critic" class="headerlink" title="Value-based Approach: Learning an Critic"></a>Value-based Approach: Learning an Critic</h2>
-          
+          <p>Policy Gradient 是一种 Model-free 的方法。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/14/强化学习之Policy-Gradient/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
