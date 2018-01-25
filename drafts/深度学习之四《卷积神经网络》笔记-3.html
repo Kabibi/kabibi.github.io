@@ -123,7 +123,7 @@
 
 
 
-  <title>时间线 | Aaron's blog</title>
+  <title>深度学习之四《卷积神经网络》笔记(3) | Aaron's blog</title>
   
 
 
@@ -151,7 +151,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -261,222 +261,46 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
 
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共计 6 篇日志。 继续努力。
-      </span>
+	<h1 class="post-title" itemprop="name headline">深度学习之四《卷积神经网络》笔记(3)</h1>
+
+
+
+</header>
 
       
-
+      
+      
+      <div class="post-body">
         
         
+          <h1 id="Object-Localization"><a href="#Object-Localization" class="headerlink" title="Object Localization"></a>Object Localization</h1><p>前两节课程中，我们介绍的是利用CNN模型进行image classification。现在我们要学的是classification with localization，localization的意思是判断object在图片中的位置。以后还会讲detection问题，detection 问题中，可能有多个objects，甚至单个图片中会有多个不同分类的对象。</p>
+<p>image classification问题的解决思路可以帮助学习localization，而localization问题的解决思路又有助于解决detection问题。 </p>
+<p><img src="/images/post_images/C4W3L1_1.jpg" alt="C4W3L1_1"></p>
+<h2 id="Classification-with-localization"><a href="#Classification-with-localization" class="headerlink" title="Classification with localization"></a>Classification with localization</h2><p>在 classification 问题中，我们的解决思路是这样的：输入图片，经过ConvNet，最终softmax层输出不同的类别。我们把classification问题的解决思路应用到localization问题中去：我们可以让神经网络多输出几个单元，比如 bx，by，bh，bw，pc 这几个量。其中(bx, by)标志了object的中心位置坐标，bw, bh是object的宽和高占图片宽和高的比例，pc表示矩形区域是目标的概率。输出label可表示为：</p>
+<script type="math/tex; mode=display">\left [ \begin{matrix} Pc \\ bx \\ by \\ bh \\ bw \\ c1 \\ c2 \\ c3 \end{matrix} \right ]</script><p>若Pc=0，表示没有检测到目标，则输出label后面的7个参数都可以忽略。</p>
+<p><img src="/images/post_images/C4W3L1_2.jpg" alt="C4W3L1_2"></p>
+<h2 id="Loss-function-的计算"><a href="#Loss-function-的计算" class="headerlink" title="Loss function 的计算"></a>Loss function 的计算</h2><p>Loss function 若使用平方误差，有两种情况：</p>
+<p>Pc=1，即 y1=1：</p>
+<script type="math/tex; mode=display">L(\hat y,y)=(\hat y_1-y_1)^2+(\hat y_2-y_2)^2+\cdots+(\hat y_8-y_8)^2</script><p>Pc=0，即y1=0</p>
+<script type="math/tex; mode=display">L(\hat y,y)=(\hat y_1-y_1)^2</script><p>除了使用平方误差之外，还可以逻辑回归损失函数，类标签 c_1,c_2,c_3 也可以通过softmax输出。比较而言，平方误差已经能够取得比较好的效果。</p>
+<h1 id="Landmark-Detection"><a href="#Landmark-Detection" class="headerlink" title="Landmark Detection"></a>Landmark Detection</h1>
         
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/18/深度学习之四《卷积神经网络》笔记-2/" itemprop="url">
-              
-                <span itemprop="name">深度学习之四《卷积神经网络》笔记(2)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-18T17:23:51+08:00"
-              content="2018-01-18" >
-          01-18
-        </time>
       </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/14/强化学习之Policy-Gradient/" itemprop="url">
-              
-                <span itemprop="name">强化学习之Policy Gradient</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-14T20:23:20+08:00"
-              content="2018-01-14" >
-          01-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/13/深度学习之四《卷积神经网络》笔记-1/" itemprop="url">
-              
-                <span itemprop="name">深度学习之四《卷积神经网络》笔记(1)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-13T13:36:09+08:00"
-              content="2018-01-13" >
-          01-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/12/深度学习之三《结构化机器学习项目》笔记-2/" itemprop="url">
-              
-                <span itemprop="name">深度学习之三《结构化机器学习项目》笔记(2)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-12T10:38:14+08:00"
-              content="2018-01-12" >
-          01-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/04/小狗钱钱-读书笔记/" itemprop="url">
-              
-                <span itemprop="name">《小狗钱钱》读书笔记</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-04T09:40:22+08:00"
-              content="2018-01-04" >
-          01-04
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
@@ -484,6 +308,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMzA0OS85NjEx"></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -504,8 +337,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -597,6 +439,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Object-Localization"><span class="nav-number">1.</span> <span class="nav-text">Object Localization</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Classification-with-localization"><span class="nav-number">1.1.</span> <span class="nav-text">Classification with localization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Loss-function-的计算"><span class="nav-number">1.2.</span> <span class="nav-text">Loss function 的计算</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Landmark-Detection"><span class="nav-number">2.</span> <span class="nav-text">Landmark Detection</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -721,6 +579,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.0"></script>
+
+
 
   
 
@@ -749,6 +611,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
