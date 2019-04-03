@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="This is personal learning note for David Silver Lecture 1 - Introduction to RL.">
+<meta name="keywords" content="David Silver reinforcement learning,reinforcement learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="强化学习(1)-Introduction to RL">
+<meta property="og:url" content="http://kabibi.github.io/drafts/old_posts/强化学习-1-Introudction-to-RL.html">
+<meta property="og:site_name" content="∇ &gt; 0">
+<meta property="og:description" content="This is personal learning note for David Silver Lecture 1 - Introduction to RL.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture1_1.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture1_2.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture1_3.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture1_4.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture1_5.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture1_4.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture1_3.png">
+<meta property="og:updated_time" content="2019-04-03T01:59:47.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="强化学习(1)-Introduction to RL">
+<meta name="twitter:description" content="This is personal learning note for David Silver Lecture 1 - Introduction to RL.">
+<meta name="twitter:image" content="http://kabibi.github.io/images/post_images/RL_lecture1_1.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://kabibi.github.io/drafts/old_posts/强化学习-1-Introudction-to-RL">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>强化学习(1)-Introduction to RL | ∇ > 0</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">∇ > 0</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/kabibi" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">强化学习(1)-Introduction to RL
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>强化学习-1-INTROUDCTION-TO-RL</li>
+          
+        
+      
+    
+  </ul>
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>This is personal learning note for <a href="https://www.bilibili.com/video/av9831889/" target="_blank" rel="noopener">David Silver Lecture 1 - Introduction to RL</a>.</p>
+<a id="more"></a>
+<h1 id="About-RL"><a href="#About-RL" class="headerlink" title="About RL"></a>About RL</h1><p>RL 与 ML 的不同点在于：</p>
+<ol>
+<li>ML中没有supervisor，而RL中有。</li>
+<li>在RL中，reward是延迟的而不是立即得到的。</li>
+<li>在RL中，time（时序）非常重要。</li>
+<li>在RL中，agent 当前的动作可能影响到它后续获得的东西。</li>
+</ol>
+<h1 id="The-RL-Problem"><a href="#The-RL-Problem" class="headerlink" title="The RL Problem"></a>The RL Problem</h1><p>这一节中说明一些 RL 问题中的术语。</p>
+<h2 id="Rewards"><a href="#Rewards" class="headerlink" title="Rewards"></a>Rewards</h2><p>Reward $$ R_t $$ 是一个标量，表示一个agent在 t 时刻采取的action有多好。而一个agent的目标就是和最大化累计奖赏。</p>
+<h2 id="Sequential-Decision-Making"><a href="#Sequential-Decision-Making" class="headerlink" title="Sequential Decision Making"></a>Sequential Decision Making</h2><p>顺序决策模型中，我们的目标(goal)是选择一个action，用来最大化未来的累计奖赏。这个actions可能是一个很长的序列。而reward的获得可能延迟，而我们很可能需要牺牲眼前的reward用来获得长远的reward。比如在金融投资中，可能需要花费数月来获得收益。</p>
+<h2 id="Agent-and-Environment"><a href="#Agent-and-Environment" class="headerlink" title="Agent and Environment"></a>Agent and Environment</h2><p>Agent与环境的交互如下所示：<br>    <img src="/images/post_images/RL_lecture1_1.png" alt></p>
+<h2 id="History"><a href="#History" class="headerlink" title="History"></a>History</h2><p>The <strong>history</strong> is the sequence of observations, actions, rewards. (也就是在时刻t之前所观察到的所有变量。不同于轨迹 trajectory), 比如：<br>$$ H_t = {O_1, R_1, A_1,…,A_{t-1}, O_t, R_t} $$<br>What happens next depends on the history. The agent selects actions. The environment selects observations/rewards.（agent与environment相互作用）</p>
+<h2 id="State"><a href="#State" class="headerlink" title="State"></a>State</h2><p><strong>State</strong> is the information used to determine what happens next. Formally, state is a function of the history: $$ S_t = f(H_t) $$</p>
+<p>There are three kinds of states:</p>
+<ul>
+<li><strong>Environment State $$S_t^e$$</strong>:<br>  这是环境自己的状态，环境在某个状态中收到 agent 发来的信息，然后选择给予怎样的 observation/reward。该状态对 agent不可见。</li>
+<li><strong>Agent State $$S_t^a$$</strong>:<br>  这是 agent 内部的表示，agent 根据这个状态选择作出怎样的 action，这是RL算法使用的 state，可以是$$S_t^a = f(H_t)$$这样的函数形式。</li>
+<li><strong>Information State(Markov State)</strong>:<br>  An information state (<strong>a.k.a. Markov state</strong>) contains all useful information from the history.<br>  Properties of Markov state:<ul>
+<li>$$ P[S_{t+1}|S_t] = P[S_{t+1}|S_1, …,S_t] $$.</li>
+<li>The future is independent of the past given the present. (未来与你之前的历史无关，英雄不问出身)</li>
+<li>Once the state is known, the history may be thrown away.（当前的状态已经提供了充足的信息,历史可以抛去！）</li>
+<li>The state is a sufficient statistic of the future.</li>
+</ul>
+</li>
+</ul>
+<p>There are two kinds of environments:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Fully observable environments</th>
+<th>Partially observable environments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Definition</td>
+<td>Agent directly observes environment state.</td>
+<td>Agent indirectly observes environment</td>
+</tr>
+<tr>
+<td>State relationships</td>
+<td>Agent state = environment state = information state</td>
+<td>Now agent state $$\neq$$ environment state</td>
+</tr>
+<tr>
+<td>Examples</td>
+<td></td>
+<td>A robot with camera vision isn’t told its absolute location</td>
+</tr>
+<tr>
+<td></td>
+<td>this is a MDP</td>
+<td>this is a POMDP. Agent must construct its own state representation $$S_t^a$$</td>
+</tr>
+</tbody>
+</table>
+<h1 id="Inside-An-RL-Agent"><a href="#Inside-An-RL-Agent" class="headerlink" title="Inside An RL Agent"></a>Inside An RL Agent</h1><p>We firstly introduces the major components of an RL agent. There are respectively policy, value function and model. Then we take Maze as example to illustrate those components.</p>
+<p>An RL agent may include one or more of these components:</p>
+<ul>
+<li>Policy: agent’s behaviour function</li>
+<li>Value function: how good is each state and/or action</li>
+<li>Model: agent’s representation of the environment</li>
+</ul>
+<h2 id="Major-Components-of-an-RL-Agent"><a href="#Major-Components-of-an-RL-Agent" class="headerlink" title="Major Components of an RL Agent"></a>Major Components of an RL Agent</h2><ol>
+<li><p>Policy<br> A policy is the agent’s behaviour. It’s a map from state to action.</p>
+<ul>
+<li><strong>Deterministic policy</strong>: $$ a = \pi(s) $$</li>
+<li><strong>Stochastic policy</strong>: $$\pi(a|s) = P[A_t=a|S_t=s]$$</li>
+</ul>
+</li>
+<li><p>Value function<br> Value function is a prediction of future reward. It is used to evaluate the goodness/badness of states and therefore to select between actions, e.g. $$v_\pi(s) = E_\pi[R_{t+1}+\gamma R_{t+2} + \gamma^2R_{t+3}+ \cdots|S_t=s]$$</p>
+</li>
+<li><p>Model<br> A model predicts what the environment will do next.</p>
+<ul>
+<li>$P$ predicts the next state, e.g. $$P_{ss’}^a = P[S_{t+1}=s’|S_t=s, A_t=a]$$</li>
+<li>$R$ predicts the next (immediate) reward, e.g. $$R_s^a = E[R_{t+1}|S_t = s, A_t=a]$$</li>
+</ul>
+</li>
+</ol>
+<h2 id="Maze-Example"><a href="#Maze-Example" class="headerlink" title="Maze Example"></a>Maze Example</h2><p>We take maze example to illustrate the major components of an RL agent. Consider the following maze. We get reward -1 per time-step. States are agent’s location and we can take one of the 4 actions(N, E, S, W) at each time-step.</p>
+<center><img src="/images/post_images/RL_lecture1_2.png" width="400"></center>
+
+<h3 id="Maze-Example-Policy"><a href="#Maze-Example-Policy" class="headerlink" title="Maze Example: Policy"></a>Maze Example: Policy</h3><p>Policy is a map from state to action. In the below figure, arrows represents policy $$\pi(s)$$ for each state s.</p>
+<center><img src="/images/post_images/RL_lecture1_3.png" width="200"></center>
+
+<h3 id="Maze-Example-Value-Function"><a href="#Maze-Example-Value-Function" class="headerlink" title="Maze Example: Value Function"></a>Maze Example: Value Function</h3><p>Value function is a prediction of future reward. It is used to evaluate the goodness/badness of states and therefore to select between actions, e.g. $$v_\pi(s) = E_\pi[R_{t+1}+\gamma R_{t+2} + \gamma^2R_{t+3}+ \cdots|S_t=s]$$. In the below figure, numbers represent value $$v_\pi(s)$$ of each state $$s$$.</p>
+<center><img src="/images/post_images/RL_lecture1_4.png" width="200"></center>
+
+
+<h3 id="Maze-Example-Model"><a href="#Maze-Example-Model" class="headerlink" title="Maze Example: Model"></a>Maze Example: Model</h3><p>A model predicts what the environment will do next. $$P_{ss’}^a$$ predicts the next state. $$R_s^a$$ predicts the next (immediate) reward. In the below figure, grid layout represents transition model $$P_ss’^a$$(Grids we cannot reach are not shown). Numbers represent immediate reward $$R_s^a$$ from each state s(same for all a). Agent may have an internal model of the environment. However, this model may not be perfect.</p>
+<center><img src="/images/post_images/RL_lecture1_5.png" width="200"></center>
+
+
+<h2 id="Categorizing-RL-agents"><a href="#Categorizing-RL-agents" class="headerlink" title="Categorizing RL agents"></a>Categorizing RL agents</h2><p><strong>Value Based</strong>: There is no policy(implicit). We pick the action just by looking at value function. E.g. </p>
+<center><img src="/images/post_images/RL_lecture1_4.png" width="200"></center>
+
+<p><strong>Policy Based</strong>: There is no value function. We pick the action just by looking at our policy. E.g.</p>
+<center><img src="/images/post_images/RL_lecture1_3.png" width="200"></center>
+
+<p><strong>Actor Critic</strong>: This method combines value and policy together and try to get the maximized rewards.</p>
+<p><strong>Model Free</strong>: We don’t try to understand the environment(No model). Instead, we just use policy or value function to figure out how to get the maximized rewards.</p>
+<p><strong>Model Based</strong>: We first build up a model to represent how environment works and by this model we can know what would happen next and pick the best action.</p>
+<h1 id="Problems-within-RL"><a href="#Problems-within-RL" class="headerlink" title="Problems within RL"></a>Problems within RL</h1><h2 id="Learning-and-Planning"><a href="#Learning-and-Planning" class="headerlink" title="Learning and Planning"></a>Learning and Planning</h2><p>In RL <strong>learning</strong>, the environment is initially unknown. The agent interacts with the environment and improves its policy.<br>In <strong>planning</strong>, a model of the environment is fully known. The agent performs computations with its model (without any external interaction and may take time) to improve its policy(a.k.a. deliberation, reasoning, introspection, pondering, thought, search).</p>
+<h2 id="Exploration-and-Exploitation"><a href="#Exploration-and-Exploitation" class="headerlink" title="Exploration and Exploitation"></a>Exploration and Exploitation</h2><p><strong>Exploration</strong> finds more information about the environment.<br><strong>Exploitation</strong> exploits known information to maximise reward. It is usually important to explore as well as exploit.</p>
+<h2 id="Prediction-and-Control"><a href="#Prediction-and-Control" class="headerlink" title="Prediction and Control"></a>Prediction and Control</h2><p><strong>Prediction</strong>: Given a policy(may not be the best policy), we need to evaluate the future.<br><strong>Control</strong>: Find the best policy to optimise the future.</p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>强化学习-1-INTROUDCTION-TO-RL</li>
+          
+        
+      
+    
+  </ul>
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#About-RL"><span class="nav-number">1.</span> <span class="nav-text">About RL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#The-RL-Problem"><span class="nav-number">2.</span> <span class="nav-text">The RL Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Rewards"><span class="nav-number">2.1.</span> <span class="nav-text">Rewards</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sequential-Decision-Making"><span class="nav-number">2.2.</span> <span class="nav-text">Sequential Decision Making</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Agent-and-Environment"><span class="nav-number">2.3.</span> <span class="nav-text">Agent and Environment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#History"><span class="nav-number">2.4.</span> <span class="nav-text">History</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#State"><span class="nav-number">2.5.</span> <span class="nav-text">State</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Inside-An-RL-Agent"><span class="nav-number">3.</span> <span class="nav-text">Inside An RL Agent</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Major-Components-of-an-RL-Agent"><span class="nav-number">3.1.</span> <span class="nav-text">Major Components of an RL Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Maze-Example"><span class="nav-number">3.2.</span> <span class="nav-text">Maze Example</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Maze-Example-Policy"><span class="nav-number">3.2.1.</span> <span class="nav-text">Maze Example: Policy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maze-Example-Value-Function"><span class="nav-number">3.2.2.</span> <span class="nav-text">Maze Example: Value Function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maze-Example-Model"><span class="nav-number">3.2.3.</span> <span class="nav-text">Maze Example: Model</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Categorizing-RL-agents"><span class="nav-number">3.3.</span> <span class="nav-text">Categorizing RL agents</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Problems-within-RL"><span class="nav-number">4.</span> <span class="nav-text">Problems within RL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Learning-and-Planning"><span class="nav-number">4.1.</span> <span class="nav-text">Learning and Planning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploration-and-Exploitation"><span class="nav-number">4.2.</span> <span class="nav-text">Exploration and Exploitation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prediction-and-Control"><span class="nav-number">4.3.</span> <span class="nav-text">Prediction and Control</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '682b527504e4475ef559',
+    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
+    repo: 'kabibi.github.io',
+    owner: 'Kabibi',
+    admin: ['Kabibi'],
+    id: md5(location.pathname),
+    
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.loadBookmark();
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

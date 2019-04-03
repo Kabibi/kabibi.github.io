@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="This is personal learning note for David Silver Lecture 3 - Planning by Dynamic Programming.">
+<meta name="keywords" content="David Silver reinforcement learning,reinforcement learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="强化学习(3)-Planning by Dynamic Programming">
+<meta property="og:url" content="http://kabibi.github.io/drafts/old_posts/强化学习-3-Dynamic-Programming.html">
+<meta property="og:site_name" content="∇ &gt; 0">
+<meta property="og:description" content="This is personal learning note for David Silver Lecture 3 - Planning by Dynamic Programming.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture3_policy_evaluation.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture3_2.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture3_3.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture3_4.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture3_5.png">
+<meta property="og:updated_time" content="2019-04-03T01:59:47.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="强化学习(3)-Planning by Dynamic Programming">
+<meta name="twitter:description" content="This is personal learning note for David Silver Lecture 3 - Planning by Dynamic Programming.">
+<meta name="twitter:image" content="http://kabibi.github.io/images/post_images/RL_lecture3_policy_evaluation.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://kabibi.github.io/drafts/old_posts/强化学习-3-Dynamic-Programming">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>强化学习(3)-Planning by Dynamic Programming | ∇ > 0</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">∇ > 0</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/kabibi" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">强化学习(3)-Planning by Dynamic Programming
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>强化学习-3-DYNAMIC-PROGRAMMING</li>
+          
+        
+      
+    
+  </ul>
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>This is personal learning note for <em>David Silver Lecture 3 - Planning by Dynamic Programming</em>.</p>
+<a id="more"></a>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h2 id="What-is-Dynamic-Programming"><a href="#What-is-Dynamic-Programming" class="headerlink" title="What is Dynamic Programming?"></a>What is Dynamic Programming?</h2><p>Dynamic programming is both a mathematical optimization method and a computer programming method. In both contexts it refers to <strong>simplifying a complicated problem by breaking it down into simpler sub-problems in a recursive manner</strong>. While some decision problems cannot be taken apart this way, decisions that span several points in time do often break apart recursively; Bellman called this the “Principle of Optimality”. Likewise, in computer science, a problem that can be solved optimally by breaking it into sub-problems and then recursively finding the optimal solutions to the sub-problems is said to have <code>optimal substructure</code>.</p>
+<p>If sub-problems can be nested recursively inside larger problems, so that dynamic programming methods are applicable, then there is a relation between the value of the larger problem and the values of the sub-problems.[1] In the optimization literature this relationship is called the <code>Bellman equation</code>.</p>
+<h2 id="Requirements-for-Dynamic-Programming"><a href="#Requirements-for-Dynamic-Programming" class="headerlink" title="Requirements for Dynamic Programming"></a>Requirements for Dynamic Programming</h2><p>There are two key attributes that a problem must have in order for dynamic programming to be applicable: <code>optimal substructure</code> and <code>overlapping sub-problems</code>. If a problem can be solved by combining optimal solutions to non-overlapping sub-problems, the strategy is called “divide and conquer” instead[1]. This is why merge sort and quick sort are not classified as dynamic programming problems.</p>
+<ol>
+<li><p>Optimal substructure(最优子结构性质)<br> means that the solution to a given optimization problem can be obtained by the combination of optimal solutions to its sub-problems. Such optimal substructures are usually described by means of recursion.<br> 如果问题的最优解所包含的子问题的解也是最优的，我们就称该问题具有最优子结构性质（即满足最优化原理）。最优子结构性质为动态规划算法解决问题提供了重要线索。</p>
+</li>
+<li><p>Overlapping sub-problems(子问题重叠性质)<br> means that the space of sub-problems must be small, that is, any recursive algorithm solving the problem should solve the same sub-problems over and over, rather than generating new sub-problems.<br> 子问题重叠性质是指在用递归算法自顶向下对问题进行求解时，每次产生的子问题并不总是新问题，有些子问题会被重复计算多次。动态规划算法正是利用了这种子问题的重叠性质，对每一个子问题只计算一次，然后将其计算结果保存在一个表格中，当再次需要计算已经计算过的子问题时，只是在表格中简单地查看一下结果，从而获得较高的效率。</p>
+</li>
+</ol>
+<p>Markov decision processes satisfy both properties. Bellman equation gives recursive decomposition. Value function stores and reuses solutions.</p>
+<h2 id="Planning-by-Dynamic-Programming"><a href="#Planning-by-Dynamic-Programming" class="headerlink" title="Planning by Dynamic Programming"></a>Planning by Dynamic Programming</h2><p>In <strong>planning</strong>, a model of the environment is fully known. The agent performs computations with its model (without any external interaction and may take time). The agent improves its policy(a.k.a. deliberation, reasoning, introspection, pondering, thought, search).</p>
+<p>Dynamic programming assumes full knowledge of the MDP. It is used for planning in an MDP</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>For prediction</th>
+<th>For control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Input</td>
+<td>MDP $$&lt;S, A, P, R, \gamma&gt;$$ and policy $\pi$ or MRP $$&lt;S, P^\pi, R^\pi, \gamma&gt;$$</td>
+<td>MDP $$&lt;S, A, P, R, \gamma&gt;$$</td>
+</tr>
+<tr>
+<td>Output</td>
+<td>value function $$v_\pi$$</td>
+<td>optimal value function $$v_<em>$$ and optimal policy $$\pi_</em>$$</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Other-Applications-of-Dynamic-Programming"><a href="#Other-Applications-of-Dynamic-Programming" class="headerlink" title="Other Applications of Dynamic Programming"></a>Other Applications of Dynamic Programming</h2><p>Dynamic programming is used to solve many other problems, e.g.</p>
+<ul>
+<li>Scheduling algorithms</li>
+<li>String algorithms (e.g. sequence alignment)</li>
+<li>Graph algorithms (e.g. shortest path algorithms)</li>
+<li>Graphical models (e.g. Viterbi algorithm)</li>
+<li>Bioinformatics (e.g. lattice models)</li>
+</ul>
+<h1 id="Policy-Evaluation"><a href="#Policy-Evaluation" class="headerlink" title="Policy Evaluation"></a>Policy Evaluation</h1><p>We evaluate a given policy $\pi$ by iterative application of Bellman expectation backup $$v_1 \rightarrow v_2 \rightarrow \dots \rightarrow v_\pi $$. The algorithm is as follows</p>
+<center><img width="400" src="/images/post_images/RL_lecture3_policy_evaluation.png"></center>
+
+<p>Policy evaluation algorithm implelemted by Python:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">policy_eval</span><span class="params">(policy, env, discount_factor=<span class="number">1.0</span>, theta=<span class="number">0.00001</span>)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Evaluate a policy given an environment and a full description of the environment's dynamics.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        policy: [S, A] shaped matrix representing the policy.</span></span><br><span class="line"><span class="string">        env: OpenAI env. env.P represents the transition probabilities of the environment.</span></span><br><span class="line"><span class="string">            env.P[s][a] is a list of transition tuples (prob, next_state, reward, done).</span></span><br><span class="line"><span class="string">            env.nS is a number of states in the environment.</span></span><br><span class="line"><span class="string">            env.nA is a number of actions in the environment.</span></span><br><span class="line"><span class="string">        theta: We stop evaluation once our value function change is less than theta for all states.</span></span><br><span class="line"><span class="string">        discount_factor: Gamma discount factor.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        Vector of length env.nS representing the value function.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    V = np.zeros(env.nS)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        Delta = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> range(env.nS):</span><br><span class="line">            v = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> a, action_prob <span class="keyword">in</span> enumerate(policy[s]):</span><br><span class="line">                <span class="keyword">for</span> prob, next_state, reward, done <span class="keyword">in</span> env.P[s][a]:</span><br><span class="line">                    v += action_prob * prob * (reward + discount_factor * V[next_state])</span><br><span class="line">            Delta = max(Delta, np.abs(v - V[s]))</span><br><span class="line">            V[s] = v</span><br><span class="line">        <span class="keyword">if</span> Delta &lt; theta:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> V</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example-Evaluating-a-Random-Policy-in-the-Small-Gridworld"><a href="#Example-Evaluating-a-Random-Policy-in-the-Small-Gridworld" class="headerlink" title="Example: Evaluating a Random Policy in the Small Gridworld"></a>Example: Evaluating a Random Policy in the Small Gridworld</h2><center><img width="300" src="/images/post_images/RL_lecture3_2.png"></center>
+
+
+<h1 id="Policy-Improvement"><a href="#Policy-Improvement" class="headerlink" title="Policy Improvement"></a>Policy Improvement</h1><p>Given a policy $\pi$, $$v_\pi(s) = E[R_{t+1} + \gamma R_{t+2} + \dots | S_t = s]$$. Consider a deterministic policy, $$a = \pi(s)$$. We can improve the policy by acting greedily<br>$$\pi’(s) = \underset{a \in A}{argmax}\ q_\pi(s,a)$$</p>
+<p>This improves the value from any state <strong>over one step</strong>,<br>$$q_\pi(s, \pi’(s)) = \underset{a \in A}{max}\ q_\pi(s,a) \geq q_\pi(s, \pi(s)) = v_\pi(s)$$</p>
+<p>It therefore improves the value function. </p>
+<p>$$\color{green}{[Proof - v_{\pi’}(s) \geq v_\pi(s)]}$$</p>
+<p>$$$<br>\begin{align}<br>v_\pi(s) &amp;\leq q_\pi(s, \pi’(s)) = E_{\pi’}[R_{t+1} + \gamma v_\pi(S_{t+1})\ |\ S_t=s] \<br>&amp;\leq E_{\pi’}[R_{t+1} + \gamma q_\pi(S_{t+1}, \pi’(S_{t+1}))\ |\ S_t=s] \<br>&amp;\leq E_{\pi’}[R_{t+1} + \gamma R_{t+2} + \gamma^2 q_\pi(S_{t+2}， \pi’(S_{t+2}))\ |\ S_t=s] \<br>&amp;\leq E_{\pi’}[R_{t+1} + \gamma R_{t+2} + \dots\ |\ S_t=s] = v_{\pi’}(s) \<br>\end{align}<br>$$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">one_step_lookahead</span><span class="params">(state, V)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Helper function to calculate the value for all action in a given state.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            state: The state to consider (int)</span></span><br><span class="line"><span class="string">            V: The value to use as an estimator, Vector of length env.nS</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            A vector of length env.nA containing the expected value of each action.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        A = np.zeros(env.nA)</span><br><span class="line">        <span class="keyword">for</span> a <span class="keyword">in</span> range(env.nA):</span><br><span class="line">            <span class="keyword">for</span> prob, next_state, reward, done <span class="keyword">in</span> env.P[state][a]:</span><br><span class="line">                A[a] += prob * (reward + discount_factor * V[next_state])</span><br><span class="line">        <span class="keyword">return</span> A</span><br></pre></td></tr></table></figure>
+<h1 id="Policy-Iteration"><a href="#Policy-Iteration" class="headerlink" title="Policy Iteration"></a>Policy Iteration</h1><p>How to improve a policy? Given a policy $\pi$, we need to evaluate the policy $\pi$ first<br>$$v_\pi(s) = E[R_{t+1} + \gamma R_{t+2} + \dots\ |\ S_t=s]$$</p>
+<p>And then improve the policy by acting greedily with respect to $v_\pi$<br>$$\pi’=greedy(v_\pi)$$</p>
+<p>In general, need more iterations of improvement / evaluation. But this process of policy iteration always converges to $$\pi^*$$. </p>
+<center><img width="300" src="/images/post_images/RL_lecture3_3.png"></center><br><center><img width="300" src="/images/post_images/RL_lecture3_4.png"></center>
+
+<p>Actually we don’t need policy evaluation exactly converge to $$v_{\pi^*}$$. We can just introduce a <strong>stopping condition</strong> or stop after k iterations of iterative policy evaluation.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">policy_improvement</span><span class="params">(env, policy_eval_fn=policy_eval, discount_factor=<span class="number">1.0</span>)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Policy Improvement Algorithm. Iteratively evaluates and improves a policy</span></span><br><span class="line"><span class="string">    until an optimal policy is found.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        env: The OpenAI envrionment.</span></span><br><span class="line"><span class="string">        policy_eval_fn: Policy Evaluation function that takes 3 arguments:</span></span><br><span class="line"><span class="string">            policy, env, discount_factor.</span></span><br><span class="line"><span class="string">        discount_factor: gamma discount factor.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        A tuple (policy, V). </span></span><br><span class="line"><span class="string">        policy is the optimal policy, a matrix of shape [S, A] where each state s</span></span><br><span class="line"><span class="string">        contains a valid probability distribution over actions.</span></span><br><span class="line"><span class="string">        V is the value function for the optimal policy.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">one_step_lookahead</span><span class="params">(state, V)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Helper function to calculate the value for all action in a given state.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            state: The state to consider (int)</span></span><br><span class="line"><span class="string">            V: The value to use as an estimator, Vector of length env.nS</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            A vector of length env.nA containing the expected value of each action.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        A = np.zeros(env.nA)</span><br><span class="line">        <span class="keyword">for</span> a <span class="keyword">in</span> range(env.nA):</span><br><span class="line">            <span class="keyword">for</span> prob, next_state, reward, done <span class="keyword">in</span> env.P[state][a]:</span><br><span class="line">                A[a] += prob * (reward + discount_factor * V[next_state])</span><br><span class="line">        <span class="keyword">return</span> A</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Start with a random policy</span></span><br><span class="line">    policy = np.ones([env.nS, env.nA]) / env.nA</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment"># Evaluate the current policy</span></span><br><span class="line">        V = policy_eval_fn(policy, env, discount_factor)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Will be set to false if we make any changes to the policy</span></span><br><span class="line">        policy_stable = <span class="literal">True</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># For each state...</span></span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> range(env.nS):</span><br><span class="line">            <span class="comment"># The best action we would take under the currect policy</span></span><br><span class="line">            chosen_a = np.argmax(policy[s])</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># Find the best action by one-step lookahead</span></span><br><span class="line">            <span class="comment"># Ties are resolved arbitarily</span></span><br><span class="line">            action_values = one_step_lookahead(s, V)</span><br><span class="line">            best_a = np.argmax(action_values)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># Greedily update the policy</span></span><br><span class="line">            <span class="keyword">if</span> chosen_a != best_a:</span><br><span class="line">                policy_stable = <span class="literal">False</span></span><br><span class="line">            policy[s] = np.eye(env.nA)[best_a]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># If the policy is stable we've found an optimal policy. Return it</span></span><br><span class="line">        <span class="keyword">if</span> policy_stable:</span><br><span class="line">            <span class="keyword">return</span> policy, V</span><br></pre></td></tr></table></figure>
+<p><code>Generalized Policy Iteration</code> is the process of iteratively doing policy evaluation and improvement. We can pick different algorithms for each of these steps but the basic idea stays the same.</p>
+<h1 id="Value-Iteration"><a href="#Value-Iteration" class="headerlink" title="Value Iteration"></a>Value Iteration</h1><p>Any optimal policy can be subdivided into two components:</p>
+<ul>
+<li>An optimal first action $$A_∗$$ followed by an optimal policy from successor state S’</li>
+</ul>
+<p>$\color{red}{[Theorem - Principle\ of\ Optimality]}$:</p>
+<blockquote>
+<p>A policy $$\pi(a|s)$$ achieves the optimal value from state s, $$v_\pi (s) = v_∗(s)$$, if and only if</p>
+<ul>
+<li>For any state s’ reachable from s</li>
+<li>$\pi$ achieves the optimal value from state s’, $$v_\pi(s’) = v_*(s’)$$</li>
+</ul>
+</blockquote>
+<h2 id="Deterministic-Value-Iteration"><a href="#Deterministic-Value-Iteration" class="headerlink" title="Deterministic Value Iteration"></a>Deterministic Value Iteration</h2><p>If we know the solution to subproblems $$v_∗(s’)$$, then solution $$v_∗(s)$$ can be found by one-step look ahead<br>$$ v_<em>(s) \leftarrow \underset{a \in A}{max}\ R_s^a + \gamma \sum_{s’ \in S} P_{ss’}^a v_</em>(s’)$$</p>
+<p>The idea of value iteration is to apply these updates iteratively.<br>Intuition: start with final rewards and work backwards</p>
+<p>To evaluate a given policy $\pi$, we consider iterative application of Bellman expectation backup<br>$$v_1 \rightarrow v_2 \rightarrow \dots \rightarrow v_\pi $$</p>
+<p>Using synchronous backups,</p>
+<ul>
+<li>At each iteration k + 1</li>
+<li>For all states $$s \in S$$</li>
+<li>Update $$v_{k+1}(s)$$ from $$v_k(s’)$$</li>
+<li>where s’ is a successor state of s</li>
+</ul>
+<p><strong>Unlike policy iteration, there is no explicit policy. Intermediate value functions may not correspond to any policy.</strong></p>
+<center><img width="300" src="/images/post_images/RL_lecture3_5.png"></center>
+
+<p>$$$<br>v_{k+1}(s) = \underset{a \in A}{max}\ (R_s^a + \gamma \sum_{s’ \in S} P_{ss’}^a v_k(s’)) \<br>v_{k+1} = \underset{a \in A}{max}\ R^a + \gamma P^a v_k<br>$$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">value_iteration</span><span class="params">(env, theta=<span class="number">0.0001</span>, discount_factor=<span class="number">1.0</span>)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Value Iteration Algorithm.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        env: OpenAI env. env.P represents the transition probabilities of the environment.</span></span><br><span class="line"><span class="string">            env.P[s][a] is a list of transition tuples (prob, next_state, reward, done).</span></span><br><span class="line"><span class="string">            env.nS is a number of states in the environment. </span></span><br><span class="line"><span class="string">            env.nA is a number of actions in the environment.</span></span><br><span class="line"><span class="string">        theta: We stop evaluation once our value function change is less than theta for all states.</span></span><br><span class="line"><span class="string">        discount_factor: Gamma discount factor.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        A tuple (policy, V) of the optimal policy and the optimal value function.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">one_step_lookahead</span><span class="params">(state, V)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Helper function to calculate the value for all action in a given state.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            state: The state to consider (int)</span></span><br><span class="line"><span class="string">            V: The value to use as an estimator, Vector of length env.nS</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            A vector of length env.nA containing the expected value of each action.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        A = np.zeros(env.nA)</span><br><span class="line">        <span class="keyword">for</span> a <span class="keyword">in</span> range(env.nA):</span><br><span class="line">            <span class="keyword">for</span> prob, next_state, reward, done <span class="keyword">in</span> env.P[state][a]:</span><br><span class="line">                A[a] += prob * (reward + discount_factor * V[next_state])</span><br><span class="line">        <span class="keyword">return</span> A</span><br><span class="line">    </span><br><span class="line">    V = np.zeros(env.nS)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment"># Stopping condition</span></span><br><span class="line">        delta = <span class="number">0</span></span><br><span class="line">        <span class="comment"># Update each state...</span></span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> range(env.nS):</span><br><span class="line">            <span class="comment"># Do a one-step lookahead to find the best action</span></span><br><span class="line">            A = one_step_lookahead(s, V)</span><br><span class="line">            best_action_value = np.max(A)</span><br><span class="line">            <span class="comment"># Calculate delta across all states seen so far</span></span><br><span class="line">            delta = max(delta, np.abs(best_action_value - V[s]))</span><br><span class="line">            <span class="comment"># Update the value function</span></span><br><span class="line">            V[s] = best_action_value        </span><br><span class="line">        <span class="comment"># Check if we can stop </span></span><br><span class="line">        <span class="keyword">if</span> delta &lt; theta:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Create a deterministic policy using the optimal value function</span></span><br><span class="line">    policy = np.zeros([env.nS, env.nA])</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> range(env.nS):</span><br><span class="line">        <span class="comment"># One step lookahead to find the best action for this state</span></span><br><span class="line">        A = one_step_lookahead(s, V)</span><br><span class="line">        best_action = np.argmax(A)</span><br><span class="line">        <span class="comment"># Always take the best action</span></span><br><span class="line">        policy[s, best_action] = <span class="number">1.0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> policy, V</span><br></pre></td></tr></table></figure>
+<h1 id="Summary-of-DP-Algorithms"><a href="#Summary-of-DP-Algorithms" class="headerlink" title="Summary of DP Algorithms"></a>Summary of DP Algorithms</h1><table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Bellman Equation</th>
+<th>Algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prediction</td>
+<td>Bellman Expectation Equation</td>
+<td>Iterative Policy Evaluation</td>
+</tr>
+<tr>
+<td>Control</td>
+<td>Bellman Expectation Equation + Greedy Policy Improvement</td>
+<td>Policy Iteration</td>
+</tr>
+<tr>
+<td>Control</td>
+<td>Bellman Optimality Equation</td>
+<td>Value Iteration</td>
+</tr>
+</tbody>
+</table>
+<p>Algorithms are based on state-value function $$v_\pi (s)$$ or $$v_∗(s)$$. Complexity $$O(mn^2)$$ per iteration, for m actions and n states. Could also apply to action-value function $$q_\pi (s, a)$$ or $$q_∗ (s, a)$$. Complexity $$O(m^2n^2)$$ per iteration.</p>
+<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p><strong>Dynamic Programming (DP) methods</strong> assume that we have a perfect model of the environment’s Markov Decision Process (MDP). That’s usually not the case in practice, but it’s important to study DP anyway.</p>
+<p><strong>Policy Evaluation</strong>: Calculates the state-value function V(s) for a given policy. In DP this is done using a “full backup”. At each state, we look ahead one step at each possible action and next state. We can only do this because we have a perfect model of the environment.</p>
+<p><strong>Full backups</strong> are basically the Bellman equations turned into updates.</p>
+<p><strong>Policy Improvement</strong>: Given the correct state-value function for a policy we can act greedily with respect to it (i.e. pick the best action at each state). Then we are guaranteed to improve the policy or keep it fixed if it’s already optimal.</p>
+<p><strong>Policy Iteration</strong>: Iteratively perform Policy Evaluation and Policy Improvement until we reach the optimal policy.</p>
+<p><strong>Value Iteration</strong>: Instead of doing multiple steps of Policy Evaluation to find the “correct” V(s) we only do a single step and improve the policy immediately. In practice, this converges faster.</p>
+<p><strong>Generalized Policy Iteration</strong>: The process of iteratively doing policy evaluation and improvement. We can pick different algorithms for each of these steps but the basic idea stays the same.</p>
+<p><strong>DP methods bootstrap</strong>: They update estimates based on other estimates (one step ahead).</p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>强化学习-3-DYNAMIC-PROGRAMMING</li>
+          
+        
+      
+    
+  </ul>
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-Dynamic-Programming"><span class="nav-number">1.1.</span> <span class="nav-text">What is Dynamic Programming?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Requirements-for-Dynamic-Programming"><span class="nav-number">1.2.</span> <span class="nav-text">Requirements for Dynamic Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Planning-by-Dynamic-Programming"><span class="nav-number">1.3.</span> <span class="nav-text">Planning by Dynamic Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other-Applications-of-Dynamic-Programming"><span class="nav-number">1.4.</span> <span class="nav-text">Other Applications of Dynamic Programming</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Policy-Evaluation"><span class="nav-number">2.</span> <span class="nav-text">Policy Evaluation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example-Evaluating-a-Random-Policy-in-the-Small-Gridworld"><span class="nav-number">2.1.</span> <span class="nav-text">Example: Evaluating a Random Policy in the Small Gridworld</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Policy-Improvement"><span class="nav-number">3.</span> <span class="nav-text">Policy Improvement</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Policy-Iteration"><span class="nav-number">4.</span> <span class="nav-text">Policy Iteration</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Value-Iteration"><span class="nav-number">5.</span> <span class="nav-text">Value Iteration</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Deterministic-Value-Iteration"><span class="nav-number">5.1.</span> <span class="nav-text">Deterministic Value Iteration</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Summary-of-DP-Algorithms"><span class="nav-number">6.</span> <span class="nav-text">Summary of DP Algorithms</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Summary"><span class="nav-number">7.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '682b527504e4475ef559',
+    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
+    repo: 'kabibi.github.io',
+    owner: 'Kabibi',
+    admin: ['Kabibi'],
+    id: md5(location.pathname),
+    
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.loadBookmark();
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

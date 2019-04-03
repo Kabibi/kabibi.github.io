@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Policy Gradient 是一种 Model-free 的方法。">
+<meta name="keywords" content="reinforcement learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="强化学习之Policy Gradient">
+<meta property="og:url" content="http://kabibi.github.io/drafts/old_posts/强化学习之Policy-Gradient.html">
+<meta property="og:site_name" content="∇ &gt; 0">
+<meta property="og:description" content="Policy Gradient 是一种 Model-free 的方法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/PG_NN_as_actor.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/PG_1.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/PG_MC_VS_TD.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/PG_qlearning.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/PG_actor_critic.png">
+<meta property="og:updated_time" content="2019-04-03T01:59:47.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="强化学习之Policy Gradient">
+<meta name="twitter:description" content="Policy Gradient 是一种 Model-free 的方法。">
+<meta name="twitter:image" content="http://kabibi.github.io/images/post_images/PG_NN_as_actor.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://kabibi.github.io/drafts/old_posts/强化学习之Policy-Gradient">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>强化学习之Policy Gradient | ∇ > 0</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">∇ > 0</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/kabibi" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">强化学习之Policy Gradient
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>强化学习之POLICY-GRADIENT</li>
+          
+        
+      
+    
+  </ul>
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>Policy Gradient 是一种 Model-free 的方法。</p>
+<a id="more"></a>
+<h1 id="Policy-based-Approach-Learning-an-Actor"><a href="#Policy-based-Approach-Learning-an-Actor" class="headerlink" title="Policy-based Approach: Learning an Actor"></a>Policy-based Approach: Learning an Actor</h1><p>首先，我们知道对于深度学习问题，有三步：</p>
+<ul>
+<li>Define a set of functions.</li>
+<li>Evaluate the goodness of function.</li>
+<li>Pick the best function.</li>
+</ul>
+<p>下面，我将从这三个角度分别进行说明。</p>
+<h2 id="Define-a-set-of-functions"><a href="#Define-a-set-of-functions" class="headerlink" title="Define a set of functions"></a>Define a set of functions</h2><p>在Policy Gradient（PG）方法中，我们把Neural Network（NN）作为actor，这个actor就是我们的策略。这个NN的输入是机器所观察到的环境（比如游戏画面的pixels），而输出层的每一个neuron都对应于一个actor，neuron的值则是这个采取这个action的概率。如下图所示：</p>
+<p><img src="/images/post_images/PG_NN_as_actor.png" alt="NN as Actor"></p>
+<p>采取NN而不是传统的look-up table的好处在于：</p>
+<ul>
+<li>具有更好的泛化能力，能够举一反三。</li>
+</ul>
+<h2 id="Evaluate-the-goodness-of-actor"><a href="#Evaluate-the-goodness-of-actor" class="headerlink" title="Evaluate the goodness of actor"></a>Evaluate the goodness of actor</h2><p>既然我们使用NN定义模型，那么如何评估这个模型的好坏呢？</p>
+<p>我们需要一个公式去量化这个模型的好坏。在supervised learning中，我们经常用Cross Entropy来评估。在PG中，我们这样定义：</p>
+<p>首先，actor就是我们的策略，定义actor为： $$ \pi_\theta(s) $$。其次，比如说用RL解决游戏问题，那么使用$$ \pi_\theta(s) $$ 打游戏，会得到一系列轨迹 $$ \tau = {s_1, a_1, r_1, s_2, a_2, r_2, …,s_T, a_T, r_T}。$$我们定义 $$ R_\theta = \sum_{t=1}^T r_t $$ 由于我们没有任何关于环境的知识，所以actor是一个随机性策略：给定某个状态和相应的动作，输出的是一个概率值，即 $$ \pi_\theta(s,a) $$ 输出的是概率。因此 $$ R_\theta $$ 其实是一个随机变量，我们的目的在于最大化其期望值 $$ \bar{R}<em>\theta $$，因此，$$ \bar{R}</em>\theta $$ 是我们寻找的能够评估 actor 好坏的指标。</p>
+<h2 id="Pick-the-best-function"><a href="#Pick-the-best-function" class="headerlink" title="Pick the best function."></a>Pick the best function.</h2><p>既然我们已经找到了能够评估actor的指标了，那么下一步就是优化 $$ \overline{R}_\theta $$，这需要一些数学上的推导。</p>
+<p>我们定义一个episode就是一个轨迹 $$ \tau $$，其中$$ \tau = {s_1, a_1, r_1, s_2, a_2, r_2, …,s_T, a_T, r_T}$$，如果使用actor打N场游戏，就会有N条轨迹，某一条轨迹都有一定的概率被取样出来，我们假定这个概率被参数$$\theta$$控制，因此我们可以有下面的公式：</p>
+<p>$$$ \overline{R}<em>\theta = \sum</em>\tau R(\tau)p(\tau|\theta) \approx \frac{1}{N} \sum_{n=1}^N R(\tau_n)$$$</p>
+<p>接下来就是使用Policy Ascent 求解 $$ \overline{R}_\theta $$ 的最大值。</p>
+<h3 id="Gradient-Ascent-优化"><a href="#Gradient-Ascent-优化" class="headerlink" title="Gradient Ascent 优化"></a>Gradient Ascent 优化</h3><p>Gradient Ascent的基本思路就是：</p>
+<p>$$$\theta_1\leftarrow\theta_0 + \eta\nabla\overline{R}_{\theta_0}$$$<br>$$$ \theta_2\leftarrow\theta_1 + \eta\nabla\overline{R}_{\theta_1} $$$<br>$$$ … $$$</p>
+<p>现在我们的目标是优化$$ \overline{R}_{\theta}$$，即优化下式：</p>
+<p>$$ \theta^* = \underset{\theta}{argmax} \ \overline{R}_{\theta} $$</p>
+<p>其中 $$ \theta = { w_1, w_2, …, b_1, …} $$</p>
+<p>$$<br>\nabla \overline{R_\theta} =<br>\begin{bmatrix} \partial \overline{R}_\theta / \partial w_1 \<br>\partial \overline{R}_\theta / \partial w_2 \<br>\vdots \<br>\partial \overline{R}_\theta / \partial b_1 \<br>\vdots \<br>\end{bmatrix}<br>$$</p>
+<p>由于:<br>$$$\overline{R}<em>{\theta} = \sum</em>{n=1}^N R(\tau_n)p(\tau_n|\theta)$$$</p>
+<p>故：<br>$$$<br>\begin{align}<br>\nabla\overline{R}<em>{\theta} &amp;= \sum</em>{n=1}^N R(\tau_n) \nabla p(\tau_n|\theta) \<br>&amp;= \sum_{n=1}^N R(\tau_n)p(\tau_n|\theta) \frac{\nabla p(\tau|\theta)}{p(\tau|\theta)} \<br>&amp;= \sum_{n=1}^N R(\tau_n)p(\tau_n|\theta) \nabla logp(\tau|\theta) \qquad (注：p(\tau|\theta) = p(s_1)\prod_{t=1}^T p(a_t|s_t,\theta)p(r_t, s_{t+1}|s_t, a_t)) \<br>&amp;= \sum_{n=1}^N [R(\tau_n)p(\tau_n|\theta) \nabla (log(p(s_1) \prod_{t=1}^T p(a_t|s_t,\theta)p(r_t, s_{t+1}|s_t, a_t)))] \<br>&amp;= \sum_{n=1}^N [R(\tau_n)p(\tau_n|\theta) \nabla (logp(s_1) + \sum_{t=1}^T (logp(a_t|s_t,\theta) + logp(r_t, s_{t+1}|s_t, a_t))] \<br>&amp;= \sum_{n=1}^N [R(\tau_n)p(\tau_n|\theta) \sum_{t=1}^T \nabla logp(a_t|s_t,\theta)] \<br>&amp;= \sum_{n=1}^N \sum_{t=1}^T R(\tau_n)p(\tau_n|\theta) \nabla logp(a_t|s_t,\theta) \<br>&amp;\approx \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^T R(\tau_n) \nabla log p(a_t|s_t, \theta)<br>\end{align}<br>$$$</p>
+<p>有几点需要注意：</p>
+<ul>
+<li>我们考虑的是累计奖赏$$ R(\tau^{(n)}) $$ 而不是立即的奖赏$$ r_t^{(n)} $$</li>
+<li>如果在轨迹$$ \tau^{(n)} $$ 中，机器在$$s_t^{(n)}$$采取动作$$a_t^{(n)}$$：<ul>
+<li>如果$$ R(\tau^{n}) &gt; 0 $$，调节$$ \theta $$ 以增加 $$ p(a_t^{(n)}|s_t^{(n)}) $$</li>
+<li>如果$$ R(\tau^{n}) &lt; 0 $$，调节$$ \theta $$ 以减少 $$ p(a_t^{(n)}|s_t^{(n)}) $$</li>
+</ul>
+</li>
+</ul>
+<h1 id="Policy-Gradient实现"><a href="#Policy-Gradient实现" class="headerlink" title="Policy Gradient实现"></a>Policy Gradient实现</h1><p>给定参数 $$ \theta $$，我们先用这个参数模拟出N条轨迹：<br>$$<br>\tau^{(1)}: (s_1^{(1)}, a_1^{(1)}), (s_2^{(1)}, a_2^{(1)}), …得到R(\tau^{(1)}) \<br>\tau^{(2)}: (s_1^{(2)}, a_1^{(2)}), (s_2^{(2)}, a_2^{(2)}), …得到R(\tau^{(2)}) \<br>… \<br>\tau^{(N)}: (s_1^{(N)}, a_1^{(N)}), (s_2^{(N)}, a_2^{(N)}), …得到R(\tau^{(N)})<br>$$</p>
+<p>然后通过<br>$$ \nabla\overline{R}<em>{\theta} \approx \frac{1}{N} \sum</em>{n=1}^N \sum_{t=1}^T R(\tau_n) \nabla log p(a_t|s_t, \theta) $$<br>计算出 $$ \nabla\overline{R}_{\theta} $$，再通过下式更新 $$ \theta $$：</p>
+<p>$$ \theta \leftarrow \theta + \eta \nabla \overline{R}_{\theta} $$</p>
+<p>接着再用新的 $$ \theta $$ 再模拟出新的N条轨迹，用这N条轨迹得到新的$$ \theta $$，如此反复进行下去～</p>
+<h2 id="Some-intuition"><a href="#Some-intuition" class="headerlink" title="Some intuition"></a>Some intuition</h2><h3 id="Intuition-1"><a href="#Intuition-1" class="headerlink" title="Intuition 1"></a>Intuition 1</h3><p>可是如何理解$$ \nabla\overline{R}<em>{\theta} \approx \frac{1}{N} \sum</em>{n=1}^N \sum_{t=1}^T R(\tau_n) \nabla log p(a_t|s_t, \theta) $$ 中的$$\nabla log p(a_t|s_t, \theta) $$ 这个东西呢？</p>
+<p>我们可以通过 Classification 问题来理解，如下图所示。</p>
+<p><img src="/images/post_images/PG_1.png" alt="PG"></p>
+<p>给定状态s，假如a=”left”，那么NN的输出层$$ y_i $$应该与 $$ \hat{y_i} $$越接近越好，我们通过Cross Entropy量化两者的接近程度并最小化，可以表示为：</p>
+<p>$$ Minimize \quad -\sum_{i=1}^3 \hat{y_i} log \ y_i $$</p>
+<p>最小化上式也即最大化：</p>
+<p>$$ Maximize \quad log \ y_i = log \ P(“left”|s) $$ </p>
+<p>于是我们对上式求梯度，就得到了 $$\nabla log p(a_t|s_t, \theta) $$。</p>
+<h3 id="Intuition-2"><a href="#Intuition-2" class="headerlink" title="Intuition 2"></a>Intuition 2</h3><p>但是$$\nabla log p(a_t|s_t, \theta)$$前的$$ R(\tau_n) $$ 又当如何理解呢？这是在说每一笔训练数据都具有$$ R(\tau^{(n)}) $$的权重，在实现的时候，比如$$R(\tau^{(n)}) = 2 $$，那我们需要把这笔数据用两次。</p>
+<h2 id="Add-a-baseline"><a href="#Add-a-baseline" class="headerlink" title="Add a baseline"></a>Add a baseline</h2><p>通常我们在实现时会在$$ R(\tau^{(n)}) $$ 之后减去一个bias，即：</p>
+<p>$$ \nabla\overline{R}<em>{\theta} \approx \frac{1}{N} \sum</em>{n=1}^N \sum_{t=1}^T (R(\tau_n)-b) \nabla log p(a_t|s_t, \theta) $$</p>
+<p>这是因为在理论上，每一个action都能够被取样到，然而在实现上却不一定，没有被取样到的action的概率就会下降，尽管采取这个action的奖赏很大。</p>
+<h1 id="Value-based-Approach-Learning-a-Critic"><a href="#Value-based-Approach-Learning-a-Critic" class="headerlink" title="Value-based Approach: Learning a Critic"></a>Value-based Approach: Learning a Critic</h1><h2 id="What-does-a-critic-do"><a href="#What-does-a-critic-do" class="headerlink" title="What does a critic do ?"></a>What does a critic do ?</h2><p>给定一个actor $$ \pi $$，critic是用来评估这个actor的优劣的。一般的，actor就是我的策略，而critic就是评估策略的值函数 $$ V_\pi(s) $$, 其值为从状态s开始，采取策略$$ \pi $$ 所得到的累积奖赏。</p>
+<h2 id="How-to-estimate-the-value-function"><a href="#How-to-estimate-the-value-function" class="headerlink" title="How to estimate the value function?"></a>How to estimate the value function?</h2><p>给定一个actor $$\pi$$，如何估计$$ V_\pi(s)$$?主要有两种办法，一种是基于Monte-Carlo的方法，另一种是基于差分的方法。</p>
+<h3 id="Monte-Carlo-based-approach"><a href="#Monte-Carlo-based-approach" class="headerlink" title="Monte-Carlo based approach"></a>Monte-Carlo based approach</h3><p>在基于MC的方法中，critic 看 actor $$ \pi $$ 玩游戏，然后计算每一个episode的累积奖赏。</p>
+<h3 id="Temporal-difference-approach"><a href="#Temporal-difference-approach" class="headerlink" title="Temporal-difference approach"></a>Temporal-difference approach</h3><p>有些应用中，一个episode可能会无限长，要延迟到一个episode结束才能够计算total reward，因此无法使用MC来估计$$ V_\pi(s) $$。</p>
+<p>假如我们得到下面的轨迹：</p>
+<p>$$ …,s_t, a_t, r_t, s_{t+1},… $$</p>
+<p>那么有 $$ V_\pi(s_t) - r = V_\pi(s_{t+1}) $$</p>
+<h3 id="MC-VS-TD"><a href="#MC-VS-TD" class="headerlink" title="MC VS. TD"></a>MC VS. TD</h3><p><img src="/images/post_images/PG_MC_VS_TD.png" alt="MC VS. TD"></p>
+<p>在MC方法中，由于策略的随机性，我们多次计算$$ V_\pi(s_a) $$，然后把所有的结果累加取平均，将这个值作为$$ V_\pi(s_a) $$的估计。MC方法的特点在于最后的评估具有比较大的variance，不过是unbiased的。</p>
+<p>在TD方法中，我们先计算出$$ V_\pi(s_{t+1}) $$，然后通过 $$ r_t + V_\pi(s_{t+1}) $$来估计 $$ V_\pi(s_t) $$。TD的特点在于r具有较小的variance，但是$$ V_\pi(s_{t+1}) $$ 可能具有bias。</p>
+<h3 id="Q-learning"><a href="#Q-learning" class="headerlink" title="Q-learning"></a>Q-learning</h3><p>另外还有一个critic，叫做Q-learning，在介绍之前需要先定义一下 $$ Q_\pi(s,a) $$。$$ Q_\pi(s,a) $$ 也叫状态-动作函数，在状态s，我们采取动作a之后的累积奖赏，要求是动作空间是离散的。Q-learning的大致算法如下：</p>
+<p><img src="/images/post_images/PG_qlearning.png" alt="Q learning"></p>
+<p>给定一个$$ Q_\pi(s,a) $$，找到一个比$$ \pi $$更好的策略$$ \pi^\prime $$，”更好”的定义是：</p>
+<p>$$ V_{\pi^\prime}(s) \geq V_\pi(s), for \ all \ state \ s $$</p>
+<p>$$$ V_{\pi^\prime}(s) = \underset{a}{argmax} \ Q_\pi(s,a) $$$</p>
+<p>$$ \pi^\prime $$ 它仅仅取决于$$ Q_\pi(s,a) $$，另一方面，Q-learning不适用于连续动作空间的情况。</p>
+<h1 id="Actor-Critic"><a href="#Actor-Critic" class="headerlink" title="Actor-Critic"></a>Actor-Critic</h1><p><img src="/images/post_images/PG_actor_critic.png" alt="Actor and Critic"></p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>强化学习之POLICY-GRADIENT</li>
+          
+        
+      
+    
+  </ul>
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Policy-based-Approach-Learning-an-Actor"><span class="nav-number">1.</span> <span class="nav-text">Policy-based Approach: Learning an Actor</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Define-a-set-of-functions"><span class="nav-number">1.1.</span> <span class="nav-text">Define a set of functions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Evaluate-the-goodness-of-actor"><span class="nav-number">1.2.</span> <span class="nav-text">Evaluate the goodness of actor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pick-the-best-function"><span class="nav-number">1.3.</span> <span class="nav-text">Pick the best function.</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Ascent-优化"><span class="nav-number">1.3.1.</span> <span class="nav-text">Gradient Ascent 优化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Policy-Gradient实现"><span class="nav-number">2.</span> <span class="nav-text">Policy Gradient实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Some-intuition"><span class="nav-number">2.1.</span> <span class="nav-text">Some intuition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Intuition-1"><span class="nav-number">2.1.1.</span> <span class="nav-text">Intuition 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Intuition-2"><span class="nav-number">2.1.2.</span> <span class="nav-text">Intuition 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add-a-baseline"><span class="nav-number">2.2.</span> <span class="nav-text">Add a baseline</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Value-based-Approach-Learning-a-Critic"><span class="nav-number">3.</span> <span class="nav-text">Value-based Approach: Learning a Critic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-does-a-critic-do"><span class="nav-number">3.1.</span> <span class="nav-text">What does a critic do ?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-estimate-the-value-function"><span class="nav-number">3.2.</span> <span class="nav-text">How to estimate the value function?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Monte-Carlo-based-approach"><span class="nav-number">3.2.1.</span> <span class="nav-text">Monte-Carlo based approach</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Temporal-difference-approach"><span class="nav-number">3.2.2.</span> <span class="nav-text">Temporal-difference approach</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MC-VS-TD"><span class="nav-number">3.2.3.</span> <span class="nav-text">MC VS. TD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-learning"><span class="nav-number">3.2.4.</span> <span class="nav-text">Q-learning</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Actor-Critic"><span class="nav-number">4.</span> <span class="nav-text">Actor-Critic</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '682b527504e4475ef559',
+    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
+    repo: 'kabibi.github.io',
+    owner: 'Kabibi',
+    admin: ['Kabibi'],
+    id: md5(location.pathname),
+    
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.loadBookmark();
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文为 Andrew NG 的深度学习课程三第二周的对应学习笔记。">
+<meta name="keywords" content="Andrew Ng deep learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="深度学习之三《结构化机器学习项目》笔记(2)">
+<meta property="og:url" content="http://kabibi.github.io/drafts/old_posts/深度学习之三《结构化机器学习项目》笔记-2.html">
+<meta property="og:site_name" content="∇ &gt; 0">
+<meta property="og:description" content="本文为 Andrew NG 的深度学习课程三第二周的对应学习笔记。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C3W2L5_1.jpg">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/pre_train.jpg">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/end-to-end.jpg">
+<meta property="og:updated_time" content="2019-04-03T01:59:47.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习之三《结构化机器学习项目》笔记(2)">
+<meta name="twitter:description" content="本文为 Andrew NG 的深度学习课程三第二周的对应学习笔记。">
+<meta name="twitter:image" content="http://kabibi.github.io/images/post_images/C3W2L5_1.jpg">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://kabibi.github.io/drafts/old_posts/深度学习之三《结构化机器学习项目》笔记-2">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>深度学习之三《结构化机器学习项目》笔记(2) | ∇ > 0</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">∇ > 0</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/kabibi" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">深度学习之三《结构化机器学习项目》笔记(2)
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>深度学习之三《结构化机器学习项目》笔记-2</li>
+          
+        
+      
+    
+  </ul>
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>本文为 Andrew NG 的深度学习课程三第二周的对应学习笔记。</p>
+<a id="more"></a>
+<h1 id="Carrying-out-error-analysis"><a href="#Carrying-out-error-analysis" class="headerlink" title="Carrying out error analysis"></a>Carrying out error analysis</h1><p>进行error analysis让我们改进模型更加有针对性，从而提高效率。我们把分类错误的样子拿出来进行分析，并使用表格进行分析，通过统计各个种类出现错误的比例来进行针对性的提升，这样可以更有针对性地提高模型的性能，而避免出现花了很长时间盲目地对某一方面进行改进，比如不断地收集更多的数据，结果却发现对性能的提升没有什么卵用。</p>
+<p>这种error analysis虽然简单，但是能够避免花费大量的时间精力去做一些对提高模型性能收效甚微的工作，让我们专注解决影响模型正确率的最主要问题。</p>
+<h1 id="Cleaning-up-incorrectly-labeled-data"><a href="#Cleaning-up-incorrectly-labeled-data" class="headerlink" title="Cleaning up incorrectly labeled data"></a>Cleaning up incorrectly labeled data</h1><h2 id="出现incorrectly-labeled-data的应对策略"><a href="#出现incorrectly-labeled-data的应对策略" class="headerlink" title="出现incorrectly labeled data的应对策略"></a>出现incorrectly labeled data的应对策略</h2><ul>
+<li><p>Training set 中出现标记错误的数据：如果label标记错误是随机出现的，那么深度学习算法对其包容性是很强的，一般可以直接忽略。但是如果是系统性错误(Systematic errors), 则会对深度学习算法造成影响。</p>
+</li>
+<li><p>dev/test set 中出现标记错误的数据：利用上节内容介绍的error analysis，统计dev sets中所有分类错误的样本中incorrectly labeled data所占的比例。根据该比例的大小，决定是修正还是忽略incorrectly labeled data，</p>
+</li>
+</ul>
+<h2 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h2><p>考虑下面的情况：</p>
+<ul>
+<li>Overall dev set error: 10%</li>
+<li>Errors due incorrect labels: 0.6%</li>
+<li>Errors due to other causes: 9.4%</li>
+</ul>
+<p>这种情况下显然incorrect labels不是造成错误的主要原因，因此可以忽略incorrectly labeled data。</p>
+<p>考虑另一种情况：</p>
+<ul>
+<li>Overall dev set error: 2%</li>
+<li>Errors due incorrect labels: 0.6%</li>
+<li>Errors due to other causes: 1.4%</li>
+</ul>
+<p>由于incorrect labels的比例占到了30%，这种情况下不应该忽略incorrectly labeled data，需要手动修正。</p>
+<h2 id="修正incorrect-dev-test-set-data-的建议"><a href="#修正incorrect-dev-test-set-data-的建议" class="headerlink" title="修正incorrect dev/test set data 的建议"></a>修正incorrect dev/test set data 的建议</h2><ul>
+<li>Apply same process to your dev and test sets to make sure they continue to come from the same distribution</li>
+<li>Consider examining examples your algorithm got right as well as ones it got wrong</li>
+<li>Train and dev/test data may now come from slightly different distributions</li>
+</ul>
+<h1 id="Build-your-first-system-quickly-then-iterate"><a href="#Build-your-first-system-quickly-then-iterate" class="headerlink" title="Build your first system quickly then iterate"></a>Build your first system quickly then iterate</h1><p>如何构建一个机器学习应用模型? Andrew 给出的建议是先快速构建第一个简单模型，然后再反复迭代优化。</p>
+<ul>
+<li>Set up dev/test set and metric</li>
+<li>Build initial system quickly</li>
+<li>Use Bias/Variance analysis &amp; Error analysis to prioritize next steps</li>
+</ul>
+<h1 id="Training-and-testing-on-different-distribution"><a href="#Training-and-testing-on-different-distribution" class="headerlink" title="Training and testing on different distribution"></a>Training and testing on different distribution</h1><p>当train set与dev/test set不来自同一个分布的时候，我们应该如何解决这一问题，构建准确的机器学习模型呢？</p>
+<p>以猫类识别为例，train set来自于网络下载（webpages），图片比较清晰；dev/test set来自用户手机拍摄（mobile app），图片比较模糊。假如train set的大小为200000，而dev/test set的大小为10000，显然train set要远远大于dev/test set。</p>
+<p>虽然dev/test set质量不高，但是模型最终主要应用在对这些模糊的照片的处理上。面对train set与dev/test set分布不同的情况，有两种解决方法。</p>
+<ul>
+<li><p>第一种方法是将train set和dev/test set完全混合，然后在随机选择一部分作为train set，另一部分作为dev/test set。例如，混合210000例样本，然后随机选择205000例样本作为train set，2500例作为dev set，2500例作为test set。这种做法的优点是实现train set和dev/test set分布一致，缺点是dev/test set中webpages图片所占的比重比mobile app图片大得多。例如dev set包含2500例样本，大约有2381例来自webpages，只有119例来自mobile app。这样，dev set的算法模型对比验证，仍然主要由webpages决定，实际应用的mobile app图片所占比重很小，达不到验证效果。因此，这种方法并不是很好。</p>
+</li>
+<li><p>第二种方法是将原来的train set和一部分dev/test set组合当成train set，剩下的dev/test set分别作为dev set和test set。例如，200000例webpages图片和5000例mobile app图片组合成train set，剩下的2500例mobile app图片作为dev set，2500例mobile app图片作为test set。其关键在于dev/test set全部来自于mobile app。这样保证了验证集最接近实际应用场合。这种方法较为常用，而且性能表现比较好。</p>
+</li>
+</ul>
+<h1 id="Bias-and-Variance-with-mismatched-data-distributions"><a href="#Bias-and-Variance-with-mismatched-data-distributions" class="headerlink" title="Bias and Variance with mismatched data distributions"></a>Bias and Variance with mismatched data distributions</h1><p>根据human-level error，training error以及dev-error可以判断到底是出现了bias还是variance。</p>
+<ul>
+<li>human-level error和training error相差较大，则出现了bias</li>
+<li>training error和dev error相差较大，则出现了variance</li>
+</ul>
+<p>但是上述结论的前提是：你的training error和dev error必须来自同一个分布。否则无法判断到底是否真的出现了variance。比如training error和dev error相差较大的原因可能是由于两种数据集来自不同的分布。</p>
+<p>那么如果training set和dev set分布不一致，应该怎么办呢？一个方法就是使用：train-dev set——“Same distribution as training set, but not used for training.” 从原来的train set中分割出一部分作为train-dev set，train-dev set不作为训练模型使用，而是与dev set一样用于验证。</p>
+<p>这样我们就有了training error，train-dev error以及dev error。</p>
+<ul>
+<li>training error和train-dev error的差值表现variance有多大（因为显然两者来自同一分布）。</li>
+<li>train-dev error和dev error的差值表现两者是否来自同一分布（data mismatch）。</li>
+</ul>
+<p><img src="/images/post_images/C3W2L5_1.jpg" alt></p>
+<h1 id="Addressing-data-mismatch"><a href="#Addressing-data-mismatch" class="headerlink" title="Addressing data mismatch"></a>Addressing data mismatch</h1><p>关于如何解决train set和dev/test set 样本分布不一致的问题，可以从以下角度：</p>
+<ul>
+<li>Carry out manual error analysis to try to understand difference between training and dev/test sets.</li>
+<li>Make training data more similar; or collect more data similar to dev/test sets.</li>
+</ul>
+<p>为了让train set与dev/test set类似，我们可以使用人工数据合成的方法（artificial data synthesis）。例如说话人识别问题，实际应用场合（dev/test set）是包含背景噪声的，而训练样本train set很可能没有背景噪声。为了让train set与dev/test set分布一致，我们可以在train set上人工添加背景噪声，合成类似实际场景的声音。这样会让模型训练的效果更准确。但是，需要注意的是，我们不能给每段语音都增加同一段背景噪声，这样会出现对背景噪音的过拟合，效果不佳。这就是人工数据合成需要注意的地方。</p>
+<h1 id="Transfer-learning"><a href="#Transfer-learning" class="headerlink" title="Transfer learning"></a>Transfer learning</h1><h2 id="什么是transfer-learning？"><a href="#什么是transfer-learning？" class="headerlink" title="什么是transfer learning？"></a>什么是transfer learning？</h2><p><code>Transfer learning</code>: 深度学习非常强大的一个功能之一就是有时候你可以将已经训练好的模型的一部分知识（网络结构）直接应用到另一个类似模型中去。比如我们已经训练好一个猫类识别的神经网络模型，那么我们可以直接把该模型中的一部分网络结构应用到使用X光片预测疾病的模型中去。这种学习方法被称为迁移学习（Transfer Learning）。</p>
+<p>如果需要构建新模型的样本数量较少，可以只训练输出层的权重系数 $ W^{[L]} $, $ b^{[L]} $ 而保持其他层的权重参数保持不变。这种方法的优点在于做法比较简单，而且不需要很多的数据。而如果训练样本很多的话，那么也可以重新训练网络的权重系数，这样可以使得模型更加精确。采用那种方法通常根据数据量而定。</p>
+<p>如果重新训练所有权重系数，初始 $ W^{[l]} $, $ b^{[l]} $ 由之前的模型训练得到，这一过程称为<code>pre-training</code>。</p>
+<p><img src="/images/post_images/pre_train.jpg" alt="pre-train"></p>
+<p>之后，不断调试、优化 $ W^{[l]} $,$b^{[l]}$ 的过程称为<code>fine-tuning</code>。pre-training和fine-tuning分别对应上图中的黑色箭头和红色箭头。</p>
+<h2 id="transfer-learning-的应用场合"><a href="#transfer-learning-的应用场合" class="headerlink" title="transfer learning 的应用场合"></a>transfer learning 的应用场合</h2><p>总的来说，transfer learning的应用场合主要为：</p>
+<ul>
+<li>Task A and B have the same input x.</li>
+<li>You have a lot more data for Task A than Task B.</li>
+<li>Low level features from A could be helpful for learning B.</li>
+</ul>
+<h2 id="Why-transfer-learning-works？"><a href="#Why-transfer-learning-works？" class="headerlink" title="Why transfer learning works？"></a>Why transfer learning works？</h2><p>一个从Quora上摘抄的回答：<br>You have learned to differentiate between rotten potato and fresh potato. But now with your learning experience, you have to differentiate between rotten tomato and fresh tomato. During learning of rotten potato, you have extracted knowledge like- if any vegetable is rotten, liquid will come out from there body. So, if you can use this knowledge in your job of rotten tomato identification, you are using transfer learning technique.</p>
+<h1 id="Multi-task-learning"><a href="#Multi-task-learning" class="headerlink" title="Multi-task learning"></a>Multi-task learning</h1><h2 id="什么是-MTL"><a href="#什么是-MTL" class="headerlink" title="什么是 MTL?"></a>什么是 MTL?</h2><p>顾名思义，多任务学习（multi-task learning）就是构建神经网络同时执行多个任务。这跟二元分类或者多元分类都不同，多任务学习类似将多个神经网络融合在一起，用一个网络模型来实现多种分类效果。如果有C个，那么输出y的维度是(C,1)。例如汽车自动驾驶中，需要实现的多任务为行人、车辆、交通标志和信号灯。如果检测出汽车和交通标志，则y为：</p>
+<p>$$<br>y =<br>\quad<br>\begin{bmatrix}<br>0 \<br>1 \<br>1 \<br>0<br>\end{bmatrix}<br>$$</p>
+<h2 id="MTL-与-softmax-的不同"><a href="#MTL-与-softmax-的不同" class="headerlink" title="MTL 与 softmax 的不同"></a>MTL 与 softmax 的不同</h2><p>Multi-task learning与Softmax regression的区别在于Softmax regression是single label的，即输出向量y只有一个元素为1；而Multi-task learning是multiple labels的，即输出向量y可以有多个元素为1。</p>
+<h2 id="MTL-的应用场合"><a href="#MTL-的应用场合" class="headerlink" title="MTL 的应用场合"></a>MTL 的应用场合</h2><p>多任务学习是使用单个神经网络模型来实现多个任务。实际上，也可以分别构建多个神经网络来实现。但是，如果各个任务之间是相似问题（例如都是图片类别检测），则可以使用多任务学习模型。另外，多任务学习中，可能存在训练样本Y某些label空白的情况，这并不影响多任务模型的训练。</p>
+<p>总体来说，多任务学习的应用场合主要包括三点：</p>
+<ul>
+<li>Training on a set of tasks that could benefit from having shared lower-level features.</li>
+<li>Usually: Amount of data you have for each task is quite similar.</li>
+<li>Can train a big enough neural network to do well on all the tasks.</li>
+</ul>
+<h1 id="What-is-end-to-end-deep-learning"><a href="#What-is-end-to-end-deep-learning" class="headerlink" title="What is end-to-end deep learning"></a>What is end-to-end deep learning</h1><h2 id="什么是-end-to-end-deep-learning"><a href="#什么是-end-to-end-deep-learning" class="headerlink" title="什么是 end-to-end deep learning?"></a>什么是 end-to-end deep learning?</h2><p>端到端（end-to-end）深度学习就是将所有不同阶段的数据处理系统或学习系统模块组合在一起，用一个单一的神经网络模型来实现所有的功能。它将所有模块混合在一起，只关心输入和输出。</p>
+<p>如果训练样本足够大，神经网络模型足够复杂，那么end-to-end模型性能比传统机器学习分块模型更好。实际上，end-to-end让神经网络模型内部去自我训练模型特征，自我调节，增加了模型整体契合度。end-to-end deep learning 在机器翻译领域工作的很好，因为可以获得大量的数据。</p>
+<p><img src="/images/post_images/end-to-end.jpg" alt="end-to-end deep learning"></p>
+<h1 id="Whether-to-use-end-to-end-deep-learning"><a href="#Whether-to-use-end-to-end-deep-learning" class="headerlink" title="Whether to use end-to-end deep learning"></a>Whether to use end-to-end deep learning</h1><p>优点：</p>
+<ul>
+<li>Let the data speak: 让机器自己去根据数据学习更没有加入人为的干扰。</li>
+<li>Less hand-designing of components needed: 简化设计流程。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>May need large amount of data</li>
+<li>Excludes potentially useful hand-designed: 可能无法把有用的人类知识注入到算法中。</li>
+</ul>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>深度学习之三《结构化机器学习项目》笔记-2</li>
+          
+        
+      
+    
+  </ul>
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Carrying-out-error-analysis"><span class="nav-number">1.</span> <span class="nav-text">Carrying out error analysis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cleaning-up-incorrectly-labeled-data"><span class="nav-number">2.</span> <span class="nav-text">Cleaning up incorrectly labeled data</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#出现incorrectly-labeled-data的应对策略"><span class="nav-number">2.1.</span> <span class="nav-text">出现incorrectly labeled data的应对策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例说明"><span class="nav-number">2.2.</span> <span class="nav-text">举例说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修正incorrect-dev-test-set-data-的建议"><span class="nav-number">2.3.</span> <span class="nav-text">修正incorrect dev/test set data 的建议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Build-your-first-system-quickly-then-iterate"><span class="nav-number">3.</span> <span class="nav-text">Build your first system quickly then iterate</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Training-and-testing-on-different-distribution"><span class="nav-number">4.</span> <span class="nav-text">Training and testing on different distribution</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bias-and-Variance-with-mismatched-data-distributions"><span class="nav-number">5.</span> <span class="nav-text">Bias and Variance with mismatched data distributions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Addressing-data-mismatch"><span class="nav-number">6.</span> <span class="nav-text">Addressing data mismatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Transfer-learning"><span class="nav-number">7.</span> <span class="nav-text">Transfer learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是transfer-learning？"><span class="nav-number">7.1.</span> <span class="nav-text">什么是transfer learning？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transfer-learning-的应用场合"><span class="nav-number">7.2.</span> <span class="nav-text">transfer learning 的应用场合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-transfer-learning-works？"><span class="nav-number">7.3.</span> <span class="nav-text">Why transfer learning works？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Multi-task-learning"><span class="nav-number">8.</span> <span class="nav-text">Multi-task learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-MTL"><span class="nav-number">8.1.</span> <span class="nav-text">什么是 MTL?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MTL-与-softmax-的不同"><span class="nav-number">8.2.</span> <span class="nav-text">MTL 与 softmax 的不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MTL-的应用场合"><span class="nav-number">8.3.</span> <span class="nav-text">MTL 的应用场合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#What-is-end-to-end-deep-learning"><span class="nav-number">9.</span> <span class="nav-text">What is end-to-end deep learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-end-to-end-deep-learning"><span class="nav-number">9.1.</span> <span class="nav-text">什么是 end-to-end deep learning?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Whether-to-use-end-to-end-deep-learning"><span class="nav-number">10.</span> <span class="nav-text">Whether to use end-to-end deep learning</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '682b527504e4475ef559',
+    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
+    repo: 'kabibi.github.io',
+    owner: 'Kabibi',
+    admin: ['Kabibi'],
+    id: md5(location.pathname),
+    
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.loadBookmark();
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这一部分主要讲述什么是神经网络, 一些不同的神经网络模型, 深度学习的基本概念以及其一些应用, 还有深度学习近年来很火的原因.">
+<meta name="keywords" content="Andrew Ng deep learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="深度学习之一《神经网络与深度学习》笔记(1)-深度学习概述">
+<meta property="og:url" content="http://kabibi.github.io/drafts/old_posts/深度学习之一《神经网络与深度学习》笔记-1.html">
+<meta property="og:site_name" content="∇ &gt; 0">
+<meta property="og:description" content="这一部分主要讲述什么是神经网络, 一些不同的神经网络模型, 深度学习的基本概念以及其一些应用, 还有深度学习近年来很火的原因.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C1W1L1_1.jpg">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C1W1L1_relu.jpg">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C1W1L2_common_NN.jpg">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C1W1L2_data.jpg">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C1W1L3_performance.jpg">
+<meta property="og:updated_time" content="2019-04-03T01:59:47.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习之一《神经网络与深度学习》笔记(1)-深度学习概述">
+<meta name="twitter:description" content="这一部分主要讲述什么是神经网络, 一些不同的神经网络模型, 深度学习的基本概念以及其一些应用, 还有深度学习近年来很火的原因.">
+<meta name="twitter:image" content="http://kabibi.github.io/images/post_images/C1W1L1_1.jpg">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://kabibi.github.io/drafts/old_posts/深度学习之一《神经网络与深度学习》笔记-1">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>深度学习之一《神经网络与深度学习》笔记(1)-深度学习概述 | ∇ > 0</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">∇ > 0</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/kabibi" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">深度学习之一《神经网络与深度学习》笔记(1)-深度学习概述
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>深度学习之一《神经网络与深度学习》笔记-1</li>
+          
+        
+      
+    
+  </ul>
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>这一部分主要讲述什么是神经网络, 一些不同的神经网络模型, 深度学习的基本概念以及其一些应用, 还有深度学习近年来很火的原因.</p>
+<a id="more"></a>
+<h1 id="What-is-a-neural-network"><a href="#What-is-a-neural-network" class="headerlink" title="What is a neural network?"></a>What is a neural network?</h1><p>简单来说，深度学习（Deep Learning）就是更复杂的神经网络（Neural Network）。下面我们将通过一个简单的例子来引入神经网络模型的概念。</p>
+<p>假如我们要建立房价的预测模型，一共有六个房子。我们已知输入 x 即每个房子的面积（多少尺或者多少平方米），还知道其对应的输出 y 即每个房子的价格。根据这些输入输出，我们要建立一个函数模型，来预测房价：y=f(x)。</p>
+<p>一般地，我们会一条直线来拟合图中这些离散点，即建立房价与面积的线性模型。但是从实际考虑，我们知道价格永远不会是负数。所以，我们对该直线做一点点修正，让它变成折线的形状，当面积小于某个值时，价格始终为零。如下图蓝色折线所示，就是我们建立的房价预测模型。</p>
+<center><img src="/images/post_images/C1W1L1_1.jpg" width="300"></center>
+
+<p>其实这个简单的模型（蓝色折线）就可以看成是一个神经网络，而且几乎是一个最简单的神经网络。该神经网络的输入x是房屋面积，输出y是房屋价格，中间包含了一个神经元（neuron），即房价预测函数（蓝色折线）。该神经元的功能就是实现函数f(x)的功能。</p>
+<p>值得一提的是，上图神经元的预测函数（蓝色折线）在神经网络应用中比较常见。我们把这个函数称为<code>ReLU函数</code>，即线性整流函数（Rectified Linear Unit），形如下图所示：</p>
+<center><img src="/images/post_images/C1W1L1_relu.jpg" width="300"></center>
+
+<h1 id="Supervised-Learning-with-Neural-Networks"><a href="#Supervised-Learning-with-Neural-Networks" class="headerlink" title="Supervised Learning with Neural Networks"></a>Supervised Learning with Neural Networks</h1><p>目前为止，由神经网络模型创造的价值基本上都是基于监督式学习（Supervised Learning）的。在实际应用中，机器学习解决的大部分问题都属于监督式学习，神经网络模型也大都属于监督式学习。下面是几个监督式学习在神经网络中应用的例子。</p>
+<ul>
+<li>第一个例子还是房屋价格预测。根据训练样本的输入x和输出y，训练神经网络模型，预测房价。</li>
+<li>第二个例子是线上广告。输入 x 是广告和用户个人信息，输出 y 是用户是否对广告进行点击。</li>
+<li>第三个例子是计算机视觉（computer vision）。输入x是图片像素值，输出是图片所属的不同类别。</li>
+<li>第四个例子是语音识别（speech recognition）。深度学习可以将一段语音信号辨识为相应的文字信息。</li>
+<li>第五个例子是智能翻译，例如通过神经网络输入英文，然后直接输出中文。</li>
+<li>第六个例子是自动驾驶。通过输入一张图片或者汽车雷达信息，神经网络通过训练来告诉你相应的路况信息并作出相应的决策。</li>
+</ul>
+<p>我们应该知道，根据不同的问题和应用场合，应该使用不同类型的神经网络模型。例如上面介绍的几个例子中，</p>
+<ul>
+<li>一般的监督式学习（房价预测和线上广告问题），使用<strong>标准的神经网络模型</strong>。</li>
+<li>图像识别处理问题，使用<strong>卷积神经网络</strong>（Convolution Neural Network）。</li>
+<li>处理类似语音这样的序列信号时，使用<strong>循环神经网络</strong>（Recurrent Neural Network）。</li>
+<li>还有其它的例如自动驾驶这样的复杂问题则需要更加复杂的混合神经网络模型。</li>
+</ul>
+<p>CNN和RNN是比较常用的神经网络模型。下图给出了Standard NN，Convolutional NN和Recurrent NN的神经网络结构图。</p>
+<p><img src="/images/post_images/C1W1L2_common_NN.jpg" alt></p>
+<h2 id="Structured-data-amp-Unstructed-data"><a href="#Structured-data-amp-Unstructed-data" class="headerlink" title="Structured data &amp; Unstructed data"></a>Structured data &amp; Unstructed data</h2><p>另外，数据类型一般分为两种：Structured Data和Unstructured Data。</p>
+<p><img src="/images/post_images/C1W1L2_data.jpg" alt></p>
+<p>简单地说，</p>
+<ul>
+<li><strong>Structured Data</strong> 通常指的是有实际意义的数据。例如房价预测中的size，#bedrooms，price等；例如在线广告中的User Age，Ad ID等。这些数据都具有实际的物理意义，比较容易理解。</li>
+<li><strong>Unstructured Data</strong> 通常指的是比较抽象的数据，例如Audio，Image或者Text。以前，计算机对于Unstructured Data比较难以处理，而人类对Unstructured Data却能够处理的比较好，例如我们第一眼很容易就识别出一张图片里是否有猫，但对于计算机来说并不那么简单。现在，值得庆幸的是，由于深度学习和神经网络的发展，计算机在处理Unstructured Data方面效果越来越好，甚至在某些方面优于人类。</li>
+</ul>
+<h1 id="Why-is-Deep-Learning-taking-off？"><a href="#Why-is-Deep-Learning-taking-off？" class="headerlink" title="Why is Deep Learning taking off？"></a>Why is Deep Learning taking off？</h1><p>如果说深度学习和神经网络背后的技术思想已经出现数十年了，那么为什么直到现在才开始发挥作用呢？接下来，我们来看一下深度学习背后的主要动力是什么，方便我们更好地理解并使用深度学习来解决更多问题。</p>
+<p>深度学习为什么这么强大？下面我们用一张图来说明。如下图所示，横坐标x表示数据量（Amount of data），纵坐标y表示机器学习模型的性能表现（Performance）。</p>
+<p><img src="/images/post_images/C1W1L3_performance.jpg" alt></p>
+<p>上图共有4条曲线。</p>
+<ul>
+<li>红色曲线代表了传统机器学习算法的表现，例如是SVM，logistic regression，decision tree等。当数据量比较小的时候，传统学习模型的表现是比较好的。但是当数据量很大的时候，其表现很一般，性能基本趋于水平。</li>
+<li>黄色曲线代表了规模较小的神经网络模型（Small NN）。它在数据量较大时候的性能优于传统的机器学习算法。</li>
+<li>蓝色曲线代表了规模中等的神经网络模型（Media NN），它在在数据量更大的时候的表现比Small NN更好。</li>
+<li>绿色曲线代表更大规模的神经网络（Large NN），即深度学习模型。从图中可以看到，在数据量很大的时候，它的表现仍然是最好的，而且基本上保持了较快上升的趋势。</li>
+</ul>
+<p>值得一提的是，近些年来，由于数字计算机的普及，人类进入了大数据时代，每时每分，互联网上的数据是海量的、庞大的。如何对大数据建立稳健准确的学习模型变得尤为重要。传统机器学习算法在数据量较大的时候，性能一般，很难再有提升。然而，深度学习模型由于网络复杂，对大数据的处理和分析非常有效。所以，近些年来，在处理海量数据和建立复杂准确的学习模型方面，深度学习有着非常不错的表现。然而，在数据量不大的时候，例如上图中左边区域，深度学习模型不一定优于传统机器学习算法，性能差异可能并不大。</p>
+<p>所以说，现在深度学习如此强大的原因归结为三个因素：</p>
+<ul>
+<li>Data</li>
+<li>Computation</li>
+<li>Algorithms</li>
+</ul>
+<p>其中，数据量的几何级数增加，加上GPU出现、计算机运算能力的大大提升，使得深度学习能够应用得更加广泛。<br>算法上的创新和改进让深度学习的性能和速度也大大提升。举个算法改进的例子，之前神经网络神经元的激活函数是Sigmoid函数，后来改成了ReLU函数。之所以这样更改的原因是对于Sigmoid函数，在远离零点的位置，函数曲线非常平缓，其梯度趋于0，所以造成神经网络模型学习速度变得很慢。然而，ReLU函数在x大于零的区域，其梯度始终为1，尽管在x小于零的区域梯度为0，但是在实际应用中采用ReLU函数确实要比Sigmoid函数快很多。</p>
+<p>构建一个深度学习的流程是首先产生Idea，然后将Idea转化为Code，最后进行Experiment。接着根据结果修改Idea，继续这种Idea-&gt;Code-&gt;Experiment的循环，直到最终训练得到表现不错的深度学习网络模型。如果计算速度越快，每一步骤耗时越少，那么上述循环越能高效进行。</p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>深度学习之一《神经网络与深度学习》笔记-1</li>
+          
+        
+      
+    
+  </ul>
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#What-is-a-neural-network"><span class="nav-number">1.</span> <span class="nav-text">What is a neural network?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Supervised-Learning-with-Neural-Networks"><span class="nav-number">2.</span> <span class="nav-text">Supervised Learning with Neural Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Structured-data-amp-Unstructed-data"><span class="nav-number">2.1.</span> <span class="nav-text">Structured data &amp; Unstructed data</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Why-is-Deep-Learning-taking-off？"><span class="nav-number">3.</span> <span class="nav-text">Why is Deep Learning taking off？</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '682b527504e4475ef559',
+    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
+    repo: 'kabibi.github.io',
+    owner: 'Kabibi',
+    admin: ['Kabibi'],
+    id: md5(location.pathname),
+    
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.loadBookmark();
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="This is personal learning note for David Silver Lecture 4 - Model-free Prediction. In last lecture, we introduced how to solve a known MDP by dynamic programming. In this lecture, we talk about how to">
+<meta name="keywords" content="David Silver reinforcement learning,reinforcement learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="强化学习(4)-Model-free Prediction">
+<meta property="og:url" content="http://kabibi.github.io/drafts/old_posts/强化学习-4-Model-free-Prediction.html">
+<meta property="og:site_name" content="∇ &gt; 0">
+<meta property="og:description" content="This is personal learning note for David Silver Lecture 4 - Model-free Prediction. In last lecture, we introduced how to solve a known MDP by dynamic programming. In this lecture, we talk about how to">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_first_visit.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_blackjack_example.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_blackjack.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_td0.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_MC_backup.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_TD_backup.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_DP_backup.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_unified_view.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_TD_prediction.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_average_n_step_return.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_td_lambda.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_TD_weighting.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_forward_view.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_eligibility_traces.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_backward_view_eligibility_trace.png">
+<meta property="og:updated_time" content="2019-04-03T01:59:47.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="强化学习(4)-Model-free Prediction">
+<meta name="twitter:description" content="This is personal learning note for David Silver Lecture 4 - Model-free Prediction. In last lecture, we introduced how to solve a known MDP by dynamic programming. In this lecture, we talk about how to">
+<meta name="twitter:image" content="http://kabibi.github.io/images/post_images/RL_lecture4_first_visit.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://kabibi.github.io/drafts/old_posts/强化学习-4-Model-free-Prediction">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>强化学习(4)-Model-free Prediction | ∇ > 0</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">∇ > 0</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/kabibi" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">强化学习(4)-Model-free Prediction
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>强化学习-4-MODEL-FREE-PREDICTION</li>
+          
+        
+      
+    
+  </ul>
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>This is personal learning note for <a href="https://www.bilibili.com/video/av9831889/" target="_blank" rel="noopener">David Silver Lecture 4 - Model-free Prediction</a>.</p>
+<p>In last lecture, we introduced how to solve a known MDP by dynamic programming. In this lecture, we talk about how to <strong>estimate the value function of an unknown MDP</strong>. It’s a model-free <strong>prediction</strong> problem. In the next lecture, we will introduce how to <strong>optimise the value function of an unknown MDP</strong>. It’s a model-free <strong>control</strong> problem.</p>
+<a id="more"></a>
+<h1 id="Monte-Carlo-Learning"><a href="#Monte-Carlo-Learning" class="headerlink" title="Monte-Carlo Learning"></a>Monte-Carlo Learning</h1><p><strong>MC methods learn directly from episodes of experience</strong>. In Monte-Carlo learning, We have no knowledge of MDP transitons/rewards. So MC is a model-free method. </p>
+<ul>
+<li>Monte Carlo methods are ways of solving the reinforcement learning problem based on <strong>averaging sample returns</strong>.</li>
+<li>Monte Carlo methods can be incremental in an <strong>episode-by-episode</strong> sense, but not in a step-by-step(online) sense.</li>
+<li>MC uses the simplest possible idea: <strong>value = mean return</strong>. </li>
+<li>Caveat: <strong>can only apply MC to episodic MDPs</strong>, this is to say, all episodes must terminate.</li>
+</ul>
+<p>An important face about Monte-Carlo methods is that the estimate for each state are independent. The estimate for one state does not build upon the estimate of any other state, as is the case in DP.</p>
+<h2 id="Monte-Carlo-Policy-Evaluation"><a href="#Monte-Carlo-Policy-Evaluation" class="headerlink" title="Monte-Carlo Policy Evaluation"></a>Monte-Carlo Policy Evaluation</h2><p>In monte-Carlo policy evaluation, our goal is to learn $$v_\pi$$ from episodes of experience under policy $\pi$. </p>
+<p>$$S_1, A_1, R_2, \dots, S_k\ \sim \pi$$</p>
+<p>Recall that the value function is the expected return: $$v_\pi(s) = E_\pi[G_t | S_t = s]$$. But Monte-Carlo policy evaluation uses <strong>empirical mean return</strong> instead of expected return. We would use another formulation in place of $$v_\pi(s) = E_\pi[G_t | S_t = s]$$ for Monte-Carlo policy evaluation.</p>
+<p>This is how to <strong>evaluate state s</strong> by first-visit Monte-Carlo policy evaluation and every-visit Monte-Carlo policy evaluation:</p>
+<center><img src="/images/post_images/RL_lecture4_first_visit.png" width="600"></center>
+
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>First-Visit Monte-Carlo Policy Evaluation</th>
+<th>Every-Visit Monte-Carlo Policy Evaluation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Step 1</td>
+<td>The $$\color{red}{first}$$ time-step t that state s is visited in an episode</td>
+<td>$$\color{red}{Every}$$ time-step t that state s is visited in an episode</td>
+</tr>
+<tr>
+<td>Step 2</td>
+<td>Increment counter $$N(s) \leftarrow N(s) + 1$$</td>
+<td>Increment counter $$N(s) \leftarrow N(s) + 1$$</td>
+</tr>
+<tr>
+<td>Step 3</td>
+<td>Increment total return $$S(s) \leftarrow S(s) + G_t$$</td>
+<td>Increment total return $$S(s) \leftarrow S(s) + G_t$$</td>
+</tr>
+<tr>
+<td>Step 4</td>
+<td>Value is estimated by mean return $$V (s) = S(s)/N(s)$$</td>
+<td>Value is estimated by mean return $$V (s) = S(s)/N(s)$$</td>
+</tr>
+<tr>
+<td>Step 5</td>
+<td>By law of large numbers, $$V (s) \rightarrow v_\pi (s)\ as\ N(s) \rightarrow \infty$$</td>
+<td>By law of large numbers, $$V (s) \rightarrow v_\pi (s)\ as\ N(s) \rightarrow \infty$$</td>
+</tr>
+</tbody>
+</table>
+<p>First visit MC has been most widely studied and is the one we focus on in this lecture. Every-visit MC extends more naturally to function approximation and eligibility traces.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gym</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="string">"../"</span> <span class="keyword">not</span> <span class="keyword">in</span> sys.path:</span><br><span class="line">    sys.path.append(<span class="string">"../"</span>)</span><br><span class="line"><span class="keyword">from</span> lib.envs.blackjack <span class="keyword">import</span> BlackjackEnv</span><br><span class="line"><span class="keyword">from</span> lib <span class="keyword">import</span> plotting</span><br><span class="line"></span><br><span class="line">matplotlib.style.use(<span class="string">'ggplot'</span>)</span><br><span class="line">env = BlackjackEnv()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mc_prediction</span><span class="params">(policy, env, num_episodes, discount_factor=<span class="number">1.0</span>)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Monte Carlo prediction algorithm. Calculates the value function</span></span><br><span class="line"><span class="string">    for a given policy using sampling.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        policy: A function that maps an observation to action probabilities.</span></span><br><span class="line"><span class="string">        env: OpenAI gym environment.</span></span><br><span class="line"><span class="string">        num_episodes: Number of episodes to sample.</span></span><br><span class="line"><span class="string">        discount_factor: Gamma discount factor.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        A dictionary that maps from state -&gt; value.</span></span><br><span class="line"><span class="string">        The state is a tuple and the value is a float.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Keeps track of sum and count of returns for each state</span></span><br><span class="line">    <span class="comment"># to calculate an average. We could use an array to save all</span></span><br><span class="line">    <span class="comment"># returns (like in the book) but that's memory inefficient.</span></span><br><span class="line">    returns_sum = defaultdict(float)</span><br><span class="line">    returns_count = defaultdict(float)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># The final value function</span></span><br><span class="line">    V = defaultdict(float)</span><br><span class="line"></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    1. 先执行策略，产生一条完整的轨迹[(s,a,r),(s,a,r),...(s,a,r)]</span></span><br><span class="line"><span class="string">    2. 对于该轨迹中的每一个 state，计算 V[state]，具体的</span></span><br><span class="line"><span class="string">        提取所有的 state 保存至 states_in_episode 中去</span></span><br><span class="line"><span class="string">        对其中每一个 state，保存其后累积奖赏 G = \sum r_i \gamma^i</span></span><br><span class="line"><span class="string">        V[state] = return_sum[state]/return_count[state]</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i_episode <span class="keyword">in</span> range(<span class="number">1</span>, num_episodes + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span> i_episode % <span class="number">1000</span> == <span class="number">0</span>:</span><br><span class="line">            print(<span class="string">"\rEpisode: &#123;&#125;/&#123;&#125;."</span>.format(i_episode, num_episodes), end=<span class="string">""</span>)</span><br><span class="line">            <span class="comment"># sys.stdout.flush()</span></span><br><span class="line"></span><br><span class="line">        state = env.reset()</span><br><span class="line">        episode = []</span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">200</span>):</span><br><span class="line">            action = policy(state)</span><br><span class="line">            next_state, reward, done, _ = env.step(action)</span><br><span class="line">            episode.append((state, action, reward))</span><br><span class="line">            state = next_state</span><br><span class="line">            <span class="keyword">if</span> done:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 现在已经得到了一条完整的轨迹, 通过该条轨迹更新其中每一个状态 s 的值函数 V[s]</span></span><br><span class="line">        states_in_episode = set(x[<span class="number">0</span>] <span class="keyword">for</span> i, x <span class="keyword">in</span> enumerate(episode))  <span class="comment"># 从轨迹中抽取所有的状态</span></span><br><span class="line">        <span class="keyword">for</span> state <span class="keyword">in</span> states_in_episode:</span><br><span class="line">            first_occur_idx = next(i <span class="keyword">for</span> i, x <span class="keyword">in</span> enumerate(episode) <span class="keyword">if</span> x[<span class="number">0</span>] == state)  <span class="comment"># 找到该state在整条轨迹中第一次出现的下标+1</span></span><br><span class="line">            G = sum(x[<span class="number">2</span>] * (discount_factor ** i) <span class="keyword">for</span> i, x <span class="keyword">in</span> enumerate(episode[first_occur_idx:]))  <span class="comment"># 计算该state之后的折扣累积奖赏</span></span><br><span class="line">            returns_sum[state] += G</span><br><span class="line">            returns_count[state] += <span class="number">1.0</span></span><br><span class="line">            V[state] = returns_sum[state] / returns_count[state]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> V</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sample_policy</span><span class="params">(observation)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    A policy that sticks if the player score is &gt;= 20 and hits otherwise.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    score, dealer_score, usable_ace = observation</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span> <span class="keyword">if</span> score &gt;= <span class="number">20</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">V_10k = mc_prediction(sample_policy, env, num_episodes=<span class="number">10000</span>)</span><br><span class="line">plotting.plot_value_function(V_10k, title=<span class="string">"10,000 Steps"</span>)</span><br><span class="line"></span><br><span class="line">V_500k = mc_prediction(sample_policy, env, num_episodes=<span class="number">500000</span>)</span><br><span class="line">plotting.plot_value_function(V_500k, title=<span class="string">"500,000 Steps"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="Incremental-Mean"><a href="#Incremental-Mean" class="headerlink" title="Incremental Mean"></a>Incremental Mean</h2><p>The mean $$\mu_1 , \mu_2 , …$$ of a sequence $$x_1 , x_2 , …$$ can be computed incrementally,</p>
+<p>$$$<br>\begin{align}<br>\mu_k &amp;= \frac{1}{k} \sum_{j=1}^k x_j \<br>&amp;= \frac{1}{k} (x_k + \sum_{j=1}^{k-1} x_j) \<br>&amp;= \frac{1}{k} (x_k + (k-1)\mu_{k-1}) \<br>&amp;= \mu_{k-1} + \frac{1}{k}(x_k - \mu_{k-1}) \<br>\end{align}<br>$$$</p>
+<p>Update V(s) incrementally after episode $$S_1, A_1, R_2, \dots, S_T$$, for each state $S_t$ with return $G_t$</p>
+<p>$$$<br>\begin{align}<br>N(S_t) &amp;\leftarrow N(S_t) + 1 \<br>V(S_t) &amp;\leftarrow V(S_t) + \frac{1}{N(S_t)}(G_t - V(S_t)) \<br>\end{align}<br>$$$</p>
+<p>In non-stationary problems, it can be useful to track a running mean, i.e. forget old episodes.<br>$$V(S_t) \leftarrow V(S_t) + \color{red}{\alpha} (G_t - V(S_t)) $$</p>
+<h2 id="Blackjack-Example"><a href="#Blackjack-Example" class="headerlink" title="Blackjack Example"></a>Blackjack Example</h2><center><img src="/images/post_images/RL_lecture4_blackjack_example.png"></center>
+
+<p>Here is the approximate state-value functions for the blackjack policy that sticks only on 20 or 21, computed by Monte Carlo policy evaluation.</p>
+<center><img src="/images/post_images/RL_lecture4_blackjack.png" width="300"></center>
+
+
+<h1 id="Temporal-Difference-Learning"><a href="#Temporal-Difference-Learning" class="headerlink" title="Temporal-Difference Learning"></a>Temporal-Difference Learning</h1><ul>
+<li>Like MC method, TD methods <strong>learn directly from episodes of experience</strong>.</li>
+<li>TD is a <strong>model-free</strong> method: no knowledge of MDP transitions / rewards. </li>
+<li><strong>TD learns from incomplete episodes, by bootstrapping</strong>. </li>
+<li>TD learning is a combination of Monte Carlo ideas and dynamic programming(DP) ideas. </li>
+<li>Like DP, TD methods update estimates <strong>based in part on other learned estimates</strong>, without waiting for a final outcome(they <strong>bootstrap</strong>).</li>
+<li>TD methods combine the sampling of Monte Carlo with the bootstrapping of DP.</li>
+</ul>
+<p>Note: bootstraping: 在统计学中，自助法（Bootstrap Method，Bootstrapping或自助抽样法）是一种从给定训练集中有放回的均匀抽样，也就是说，每当选中一个样本，它等可能地被再次选中并被再次添加到训练集中</p>
+<h2 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h2><p>A simple every-visit Monte Carlo method suitable for nonstationary environment is</p>
+<p>$$ V(S_t) \leftarrow V(S_t) + \alpha[G_t -V(S_t)] $$</p>
+<p>where $$G_t$$ is the actual return following time t, and $$\alpha$$ is a constant step-size parameter. Wheres MC methods must wait until the end of the episode to determine the increment to $$V(S_t)$$(only then is $$G_t$$ known), TD methods need to  wait only until the next time step. At time t+1 they immediately form a target and make a useful update using the observed reward $$R_{t+1}$$ and the estimate $$V(S_{t+1})$$. The simplest TD method makes the update</p>
+<p>$$ V(S_t) \leftarrow V(S_t) + \alpha[R_{t+1} + \gamma V(S_{t+1})- V(S_t)]$$</p>
+<p>immediately on transition to $$S_{t+1}$$ and receiving $$R_{t+1}$$.</p>
+<center><img src="/images/post_images/RL_lecture4_td0.png" height="500"></center>
+
+
+<h2 id="MC-DP-TD-Target"><a href="#MC-DP-TD-Target" class="headerlink" title="MC, DP, TD Target"></a>MC, DP, TD Target</h2><p>From previous lecture we know<br>$$$<br>\begin{align}<br>v_\pi(s) &amp;= \mathop{\mathbb{E}}_\pi[G_t\ |\ S_t = s] &amp;&amp;(MC\ use\ an\ estimate\ of\ G_t\ as\ a\ target.)   \<br>&amp;= \mathop{\mathbb{E}}<em>\pi[R</em>{t+1} + \gamma G_{t+1}\ |\ S_t=s] \<br>&amp;= \mathop{\mathbb{E}}<em>\pi[R</em>{t+1} + \gamma v_\pi(S_{t+1})\ |\ S_t = s]  &amp;&amp;(DP\ use\ an\ estimate\ of\ R_{t+1}+\gamma v_\pi(S_{t+1})\ as\ a\ target.)    \<br>\end{align}<br>$$$</p>
+<p>But TD methods use an estimate of $$R_{t+1} + \gamma V(S_{t+1})$$ as a target. It uses the current estimate $V$ instead of the true $v_\pi$.</p>
+<h2 id="Differences-between-TD-and-MC"><a href="#Differences-between-TD-and-MC" class="headerlink" title="Differences between TD and MC"></a>Differences between TD and MC</h2><p>Goal: learn $$v_\pi$$ online from experience under policy $\pi$</p>
+<table>
+<thead>
+<tr>
+<th>Incremental every-visit Monte-Carlo</th>
+<th>TD(0)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update value $$V(S_t)$$ toward actual return $$\color{red}{G_t}$$</td>
+<td>Update value $$V(S_t)$$ toward estimated return $$\color{red}{R_{t+1} + \gamma V(S_{t+1} )}$$.</td>
+</tr>
+<tr>
+<td>$V(S_t) \leftarrow V(S_t) + \alpha(\color{red}{G_t} - V(S_t)) $</td>
+<td>$$V(S_t) \leftarrow V(S_t) + \alpha(\color{red}{R_{t+1} +\gamma V(S_{t+1})} - V(S_t))$$</td>
+</tr>
+<tr>
+<td>MC can only learn from <font color="red">complete</font> sequences(MC must wait until end of episode before return is known)</td>
+<td>TD can learn from <font color="red">incomplete</font> sequences(TD can learn before knowing the final outcome(can learn online after every step))</td>
+</tr>
+<tr>
+<td>MC only works for <font color="red">episodic</font>(terminating) environments</td>
+<td>TD works in <font color="red">continuing</font> (non-terminating) environments</td>
+</tr>
+</tbody>
+</table>
+<p>Note: </p>
+<ul>
+<li>$$R_{t+1} + \gamma V(S_{t+1})$$ is called the <code>TD target</code>. </li>
+<li>$$\delta = R_{t+1} + \gamma V(S_{t+1}) - V(S_t) $$ is called the <code>TD error</code>.</li>
+</ul>
+<h2 id="Advantages-and-Disadvantages-of-MC-vs-TD"><a href="#Advantages-and-Disadvantages-of-MC-vs-TD" class="headerlink" title="Advantages and Disadvantages of MC vs. TD"></a>Advantages and Disadvantages of MC vs. TD</h2><table>
+<thead>
+<tr>
+<th>MC</th>
+<th>TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MC has high variance, zero bias</td>
+<td>TD has low variance, some bias</td>
+</tr>
+<tr>
+<td>Good convergence properties (even with function approximation)</td>
+<td>TD(0) converges to $$v_\pi(s)$$</td>
+</tr>
+<tr>
+<td>Not very sensitive to initial value</td>
+<td>More sensitive to initial value</td>
+</tr>
+<tr>
+<td>Very simple to understand and use</td>
+<td>Usually more efficient than MC (but not always with function approximation)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Bias-Variance-Trade-Off"><a href="#Bias-Variance-Trade-Off" class="headerlink" title="Bias/Variance Trade-Off"></a>Bias/Variance Trade-Off</h2><p>Return $$G_t = R_{t+1} + \gamma R_{t+2} + \dots + \gamma R_T$$ is <font color="red">unbiased</font> estimate of $$v_\pi(S_t)$$</p>
+<p>True TD target $$R_{t+1} + \gamma \color{red}{v_(S_{t+1})}$$ is <font color="red">unbiased</font> estimate of $$v_\pi(S_t)$$</p>
+<p>TD target $$R_{t+1} + \gamma \color{red}{V(S_{t+1})}$$ is <font color="red">biased</font> estimate of $$v_\pi (S_t)$$</p>
+<p>TD target is much lower variance than the return:</p>
+<ul>
+<li>Return depends on many random actions, transitions, rewards</li>
+<li>TD target depends on one random action, transition, reward</li>
+</ul>
+<h2 id="Random-Walk-Example"><a href="#Random-Walk-Example" class="headerlink" title="Random Walk Example"></a>Random Walk Example</h2><p>Random Walk Example 没看懂</p>
+<h1 id="MC-VS-TD"><a href="#MC-VS-TD" class="headerlink" title="MC VS. TD"></a>MC VS. TD</h1><h2 id="Batch-MC-and-TD"><a href="#Batch-MC-and-TD" class="headerlink" title="Batch MC and TD"></a>Batch MC and TD</h2><p>MC and TD converge: $$V (s) \rightarrow v_\pi (s)$$ as experience $$\rightarrow \infty$$</p>
+<p>But what about batch solution for finite experience?</p>
+<p>$$$<br>s_1^1, a_1^1, r_2^1, \dots, s_{T_1}^1 \<br>\vdots \<br>s_1^K, a_1^K, r_2^K, \dots, s_{T_K}^K \<br>$$$</p>
+<p>e.g. Repeatedly sample episode k $\in$ [1, K]</p>
+<h2 id="AB-Example"><a href="#AB-Example" class="headerlink" title="AB Example"></a>AB Example</h2><p>Two states A, B; no discounting;<br>We have 8 episodes of experience as follows. What is V(A), V(B)?</p>
+<p>$$$<br>A, 0, B, 0 \<br>B, 1 \<br>B, 1 \<br>B, 1 \<br>B, 1 \<br>B, 1 \<br>B, 1 \<br>B, 0 \<br>$$$</p>
+<h2 id="Certainty-Equivalence"><a href="#Certainty-Equivalence" class="headerlink" title="Certainty Equivalence"></a>Certainty Equivalence</h2><p>If we apply different methods, we would get different solutions.</p>
+<p>MC converges to solution with minimum mean-squared error. Best fit to the observed returns.</p>
+<p>$$$<br>\sum_{k=1}^K \sum_{t=1}^{T_k} (G_t^k - V(S_t^k))^2<br>$$$</p>
+<p>In the AB example, V (A) = 0</p>
+<p>TD(0) converges to solution of max likelihood Markov model</p>
+<p>Solution to the MDP $$&lt;S, A, \hat P, \hat R, \gamma&gt;$$ that best fits the data</p>
+<p>$$$<br>\begin{align}<br>\hat P_{s,s’}^a &amp;= \frac{1}{N(s,a)}\sum_{k=1}^K \sum_{t=1}^{T_k} {\bf 1} (s_t^k, a_t^k, s_{t+1}^k = s, a,s’) \<br>\hat R_s^a &amp;= \frac{1}{N(s,a)} \sum_{k=1}^K \sum_{t=1}^{T_k} {\bf 1} (s_t^k, a_t^k=s,a)r_t^k<br>\end{align}<br>$$$</p>
+<p>In the AB example, V(A) = 0.75</p>
+<h2 id="Advantages-and-Disadvantages-of-MC-vs-TD-1"><a href="#Advantages-and-Disadvantages-of-MC-vs-TD-1" class="headerlink" title="Advantages and Disadvantages of MC vs. TD"></a>Advantages and Disadvantages of MC vs. TD</h2><p>TD exploits Markov property, Usually more efficient in Markov environments</p>
+<p>MC does not exploit Markov property, Usually more effective in non-Markov environments</p>
+<h2 id="Unified-View"><a href="#Unified-View" class="headerlink" title="Unified View"></a>Unified View</h2><table>
+<thead>
+<tr>
+<th>Monte-Carlo Backup</th>
+<th style="text-align:left">Temporal-Difference Backup</th>
+<th style="text-align:right">Dynamic Programming Backup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$$ V(S_t) \leftarrow V(S_t) + \frac{1}{N(S_t)}(G_t - V(S_t)) $$</td>
+<td style="text-align:left">$$ V(S_t) \leftarrow V(S_t) + \alpha(R_{t+1} + \gamma V(S_{t+1})-V(S_t)) $$</td>
+<td style="text-align:right">$$ V(S_t) \leftarrow E_\pi[R_{t+1} + \gamma V(S_{t+1}]) $$</td>
+</tr>
+<tr>
+<td><img src="/images/post_images/RL_lecture4_MC_backup.png" width="300"></td>
+<td style="text-align:left"><img src="/images/post_images/RL_lecture4_TD_backup.png" width="300"></td>
+<td style="text-align:right"><img src="/images/post_images/RL_lecture4_DP_backup.png" width="300"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Bootstrapping-and-Sampling"><a href="#Bootstrapping-and-Sampling" class="headerlink" title="Bootstrapping and Sampling"></a>Bootstrapping and Sampling</h2><table>
+<thead>
+<tr>
+<th>Bootstrapping(update involves an estimate)</th>
+<th>Sampling(update samples an expectation)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MC does not bootstrap</td>
+<td>MC samples</td>
+</tr>
+<tr>
+<td>DP bootstraps</td>
+<td>DP does not sample</td>
+</tr>
+<tr>
+<td>TD bootstraps</td>
+<td>TD samples</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Unified-View-of-Reinforcement-Learning"><a href="#Unified-View-of-Reinforcement-Learning" class="headerlink" title="Unified View of Reinforcement Learning"></a>Unified View of Reinforcement Learning</h2><center><img src="/images/post_images/RL_lecture4_unified_view.png" width="300"></center>
+
+
+<h1 id="TD-lambda"><a href="#TD-lambda" class="headerlink" title="TD($\lambda$)"></a>TD($\lambda$)</h1><h2 id="n-Step-TD"><a href="#n-Step-TD" class="headerlink" title="n-Step TD"></a>n-Step TD</h2><h3 id="n-Step-Prediction"><a href="#n-Step-Prediction" class="headerlink" title="n-Step Prediction"></a>n-Step Prediction</h3><p>Let TD target look n steps into the future. The following figure shows $$ TD(0) \rightarrow TD(1) \rightarrow \dots \rightarrow MC $$.</p>
+<center><img src="/images/post_images/RL_lecture4_TD_prediction.png" width="300"></center>
+
+<h3 id="n-Step-Return"><a href="#n-Step-Return" class="headerlink" title="n-Step Return"></a>n-Step Return</h3><p>Consider the following n-step returns for $$n = 1, 2, \infty$$:</p>
+<p>$$$<br>\begin{align}<br>&amp;n=1 \quad (TD) \quad &amp;&amp;G_t^{(1)} = R_{t+1} + \gamma V(S_{t+1}) \<br>&amp;n=2 \quad &amp;&amp;G_t^{(2)} = R_{t+1} + \gamma R_{t+2} + \gamma^2 V(S_{t+2}) \<br>&amp;\vdots \quad &amp;&amp;\vdots \<br>&amp;n=\infty \quad (MC) &amp;&amp;G_t^{(\infty)}=R_{t+1} + \gamma R_{t+2} + \dots + \gamma^{T-1}R_T \<br>\end{align}<br>$$$</p>
+<p>We define the n-step return $$G_t^{(n)}$$ as:<br>$$ G_t^{(n)} = R_{t+1} + \gamma R_{t+2} + \dots + \gamma^{n-1}R_{t+n} + \gamma^n V(S_{t+n}) $$</p>
+<p>n-step temporal-difference learning </p>
+<p>$$ V(S_t) \leftarrow V(S_t) + \alpha(\color{red}{G_t^{(n)}} - V(S_t)) $$</p>
+<h3 id="Averaging-n-Step-Returns"><a href="#Averaging-n-Step-Returns" class="headerlink" title="Averaging n-Step Returns"></a>Averaging n-Step Returns</h3><p>We can average n-step returns over different n. E.g. average the 2-step and 4-step returns: $$ \frac{1}{2}G^{(2)} + \frac{1}{2} G^{(4)} $$. Combines information from two different time-steps. </p>
+<center><img src="/images/post_images/RL_lecture4_average_n_step_return.png" width="100"></center>
+
+<p>This gives different n the same weights. Can we efficiently combine information from all time-steps? In the next slide, we would introduce TD($\lambda$), which gives all n-step returns different weights.</p>
+<h2 id="Forward-View-of-TD-lambda"><a href="#Forward-View-of-TD-lambda" class="headerlink" title="Forward View of TD($\lambda$)"></a>Forward View of TD($\lambda$)</h2><h3 id="lambda-return"><a href="#lambda-return" class="headerlink" title="$\lambda$-return"></a>$\lambda$-return</h3><center><img src="/images/post_images/RL_lecture4_td_lambda.png" width="200"></center>
+
+<p>The $\lambda$-return $$G_t^\lambda$$ combines all n-step returns $$G_t^{(n)}$$ using weight $$(1-\lambda)\lambda^{(n-1)}$$</p>
+<p>$$G_t^\lambda = (1-\lambda) \sum_{n=1}^\infty \lambda^{(n-1)} G_t^{(n)}$$</p>
+<p>Forward-view TD($\lambda$)</p>
+<p>$$V(S_t) \leftarrow V(S_t) + \alpha(G_t^\lambda-V(S_t))$$</p>
+<p>TD(λ) Weighting Function is shown as follows:</p>
+<center><img src="/images/post_images/RL_lecture4_TD_weighting.png" width="400"></center>
+
+
+<h3 id="Forward-View-TD-lambda"><a href="#Forward-View-TD-lambda" class="headerlink" title="Forward-View TD($\lambda$)"></a>Forward-View TD($\lambda$)</h3><p>TD($\lambda$) update value function towards the $\lambda$-return. Forward-view looks into the future to compute $$G_t^\lambda$$. Like MC, $$G_t^\lambda$$ can only be computed from <font color="red">complete</font> episodes.</p>
+<center><img src="/images/post_images/RL_lecture4_forward_view.png" width="400"></center>
+
+<h2 id="Backward-View-of-TD-lambda"><a href="#Backward-View-of-TD-lambda" class="headerlink" title="Backward-View of TD($\lambda$)"></a>Backward-View of TD($\lambda$)</h2><h3 id="Backward-View-TD-lambda"><a href="#Backward-View-TD-lambda" class="headerlink" title="Backward-View TD($\lambda$)"></a>Backward-View TD($\lambda$)</h3><p>Forward view provides theory<br>Backward view provides mechanism<br>Update online, every step, from incomplete sequences</p>
+<h3 id="Eligibility-Traces"><a href="#Eligibility-Traces" class="headerlink" title="Eligibility Traces"></a>Eligibility Traces</h3><center><img src="/images/post_images/RL_lecture4_eligibility_traces.png" width="300"></center>
+
+<p>Credit assignment problem: did bell or light cause shock?<br>Frequency heuristic: assign credit to most frequent states<br>Recency heuristic: assign credit to most recent states<br>Eligibility traces combine both heuristics</p>
+<p>$$<br>\begin{align}<br>E_0(s) &amp;= 0 \<br>E_t(s) &amp;= \gamma \lambda E_{t-1}(s) + {\bf 1}(S_t=s) \<br>\end{align}<br>$$</p>
+<h3 id="Backward-View-TD-lambda-1"><a href="#Backward-View-TD-lambda-1" class="headerlink" title="Backward View TD($\lambda$)"></a>Backward View TD($\lambda$)</h3><p>Keep an eligibility trace for every state s<br>Update value V(s) for every state s<br>In proportion to TD-error $\delta_t$ and eligibility trace $$E_t(s)$$</p>
+<p>$$<br>\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t) \<br>V(s) \leftarrow V(s) + \alpha \delta_t E_t(s) \<br>$$</p>
+<center><img src="/images/post_images/RL_lecture4_backward_view_eligibility_trace.png" width="350"></center>
+
+
+<h2 id="Relationship-Between-Forward-and-Backward-TD"><a href="#Relationship-Between-Forward-and-Backward-TD" class="headerlink" title="Relationship Between Forward and Backward TD"></a>Relationship Between Forward and Backward TD</h2><h3 id="TD-lambda-and-TD-0"><a href="#TD-lambda-and-TD-0" class="headerlink" title="TD($\lambda$) and TD(0)"></a>TD($\lambda$) and TD(0)</h3><p>When $\lambda$ = 0, only current state is updated<br>$$$<br>\begin{align}<br>E_t(s) &amp;= {\bf 1}(S_t = s) \<br>V(s) &amp;\leftarrow V(s) + \alpha \delta_t E_t(s) \<br>\end{align}<br>$$$</p>
+<p>This is exactly equivalent to TD(0) update</p>
+<p>$$V(S_t) \leftarrow V(S_t) + \alpha \delta_t$$</p>
+<h3 id="TD-lambda-and-MC"><a href="#TD-lambda-and-MC" class="headerlink" title="TD($\lambda$) and MC"></a>TD($\lambda$) and MC</h3><p>When $\lambda$ = 1, credit is deferred until end of episode<br>Consider episodic environments with offline updates<br>Over the course of an episode, total update for TD(1) is the same as total update for MC</p>
+<font color="green">Theorem</font>:<br>&gt; The sum of offline updates is identical for forward-view and backward-view TD($\lambda$):<br>&gt; $$\sum_{t=1}^T \alpha \delta_t E_t(s) = \sum_{t=1}^T \alpha(G_t^\lambda - V(S_t)) {\bf 1}(S_t=s)$$<br><br><font color="blue">后面实在看不懂。。。</font>
+
+
+<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p><code>Dynamic Programming</code> approaches assume <strong>complete knowledge</strong> of the environment (the MDP). In practice, we often don’t have full knowledge of how the world works.</p>
+<p><code>Monte Carlo (MC)</code> methods can <strong>learn directly from experience</strong> collected by interacting with the environment. An episode of experience is a series of (State, Action, Reward, Next State) tuples. MC methods work based on episodes. We <strong>sample episodes of experience and make updates to our estimates at the end of each episode</strong>. MC methods have <strong>high variance</strong> (due to lots of random decisions within an episode) but are <strong>unbiased</strong>.</p>
+<p><code>MC Policy Evaluation</code>: Given a policy, we want to estimate the state-value function V(s). Sample episodes of experience and estimate V(s) to be the reward received from that state onwards averaged across all of your experience. The same technique works for the action-value function Q(s, a). Given enough samples, this is proven to converge.</p>
+<p><code>MC Control</code>: Idea is the same as for Dynamic Programming. <strong>Use MC Policy Evaluation to evaluate the current policy then improve the policy greedily.</strong> The Problem: <em>How do we ensure that we explore all states if we don’t know the full environment?</em></p>
+<p><code>Solution to exploration problem</code>: Use epsilon-greedy policies instead of full greedy policies. When making a decision act randomly with probability epsilon. This will learn the optimal epsilon-greedy policy.</p>
+<p><code>Off-Policy Learning</code>: How can we learn about the actual optimal (greedy) policy while following an exploratory (epsilon-greedy) policy? We can use <strong>importance sampling</strong>, which weighs returns by their probability of occurring under the policy we want to learn about.</p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>强化学习-4-MODEL-FREE-PREDICTION</li>
+          
+        
+      
+    
+  </ul>
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Monte-Carlo-Learning"><span class="nav-number">1.</span> <span class="nav-text">Monte-Carlo Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Monte-Carlo-Policy-Evaluation"><span class="nav-number">1.1.</span> <span class="nav-text">Monte-Carlo Policy Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Incremental-Mean"><span class="nav-number">1.2.</span> <span class="nav-text">Incremental Mean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Blackjack-Example"><span class="nav-number">1.3.</span> <span class="nav-text">Blackjack Example</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Temporal-Difference-Learning"><span class="nav-number">2.</span> <span class="nav-text">Temporal-Difference Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm"><span class="nav-number">2.1.</span> <span class="nav-text">Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MC-DP-TD-Target"><span class="nav-number">2.2.</span> <span class="nav-text">MC, DP, TD Target</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Differences-between-TD-and-MC"><span class="nav-number">2.3.</span> <span class="nav-text">Differences between TD and MC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Advantages-and-Disadvantages-of-MC-vs-TD"><span class="nav-number">2.4.</span> <span class="nav-text">Advantages and Disadvantages of MC vs. TD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bias-Variance-Trade-Off"><span class="nav-number">2.5.</span> <span class="nav-text">Bias/Variance Trade-Off</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Random-Walk-Example"><span class="nav-number">2.6.</span> <span class="nav-text">Random Walk Example</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MC-VS-TD"><span class="nav-number">3.</span> <span class="nav-text">MC VS. TD</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Batch-MC-and-TD"><span class="nav-number">3.1.</span> <span class="nav-text">Batch MC and TD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AB-Example"><span class="nav-number">3.2.</span> <span class="nav-text">AB Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Certainty-Equivalence"><span class="nav-number">3.3.</span> <span class="nav-text">Certainty Equivalence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Advantages-and-Disadvantages-of-MC-vs-TD-1"><span class="nav-number">3.4.</span> <span class="nav-text">Advantages and Disadvantages of MC vs. TD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unified-View"><span class="nav-number">3.5.</span> <span class="nav-text">Unified View</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bootstrapping-and-Sampling"><span class="nav-number">3.6.</span> <span class="nav-text">Bootstrapping and Sampling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unified-View-of-Reinforcement-Learning"><span class="nav-number">3.7.</span> <span class="nav-text">Unified View of Reinforcement Learning</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TD-lambda"><span class="nav-number">4.</span> <span class="nav-text">TD($\lambda$)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#n-Step-TD"><span class="nav-number">4.1.</span> <span class="nav-text">n-Step TD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#n-Step-Prediction"><span class="nav-number">4.1.1.</span> <span class="nav-text">n-Step Prediction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#n-Step-Return"><span class="nav-number">4.1.2.</span> <span class="nav-text">n-Step Return</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Averaging-n-Step-Returns"><span class="nav-number">4.1.3.</span> <span class="nav-text">Averaging n-Step Returns</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Forward-View-of-TD-lambda"><span class="nav-number">4.2.</span> <span class="nav-text">Forward View of TD($\lambda$)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lambda-return"><span class="nav-number">4.2.1.</span> <span class="nav-text">$\lambda$-return</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Forward-View-TD-lambda"><span class="nav-number">4.2.2.</span> <span class="nav-text">Forward-View TD($\lambda$)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Backward-View-of-TD-lambda"><span class="nav-number">4.3.</span> <span class="nav-text">Backward-View of TD($\lambda$)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Backward-View-TD-lambda"><span class="nav-number">4.3.1.</span> <span class="nav-text">Backward-View TD($\lambda$)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Eligibility-Traces"><span class="nav-number">4.3.2.</span> <span class="nav-text">Eligibility Traces</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Backward-View-TD-lambda-1"><span class="nav-number">4.3.3.</span> <span class="nav-text">Backward View TD($\lambda$)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Relationship-Between-Forward-and-Backward-TD"><span class="nav-number">4.4.</span> <span class="nav-text">Relationship Between Forward and Backward TD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TD-lambda-and-TD-0"><span class="nav-number">4.4.1.</span> <span class="nav-text">TD($\lambda$) and TD(0)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TD-lambda-and-MC"><span class="nav-number">4.4.2.</span> <span class="nav-text">TD($\lambda$) and MC</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Summary"><span class="nav-number">5.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '682b527504e4475ef559',
+    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
+    repo: 'kabibi.github.io',
+    owner: 'Kabibi',
+    admin: ['Kabibi'],
+    id: md5(location.pathname),
+    
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.loadBookmark();
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

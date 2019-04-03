@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文为 Andrew NG 的深度学习课程五《序列模型》第1周的对应学习笔记。">
+<meta name="keywords" content="Andrew Ng deep learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="深度学习之五《序列模型》笔记(1)">
+<meta property="og:url" content="http://kabibi.github.io/drafts/old_posts/深度学习之五《序列模型》笔记-1.html">
+<meta property="og:site_name" content="∇ &gt; 0">
+<meta property="og:description" content="本文为 Andrew NG 的深度学习课程五《序列模型》第1周的对应学习笔记。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C5W1L3_1.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C5W1L3_2.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C5W1L4_1.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C5W1L5_1.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C5W1L6_2.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C5W1L10_1.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C5W1L11_1.png">
+<meta property="og:image" content="http://kabibi.github.io/images/post_images/C5W1L12_1.png">
+<meta property="og:updated_time" content="2019-04-03T01:59:47.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习之五《序列模型》笔记(1)">
+<meta name="twitter:description" content="本文为 Andrew NG 的深度学习课程五《序列模型》第1周的对应学习笔记。">
+<meta name="twitter:image" content="http://kabibi.github.io/images/post_images/C5W1L3_1.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://kabibi.github.io/drafts/old_posts/深度学习之五《序列模型》笔记-1">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>深度学习之五《序列模型》笔记(1) | ∇ > 0</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">∇ > 0</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/kabibi" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">深度学习之五《序列模型》笔记(1)
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>深度学习之五《序列模型》笔记-1</li>
+          
+        
+      
+    
+  </ul>
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>本文为 Andrew NG 的深度学习课程五《序列模型》第1周的对应学习笔记。</p>
+<a id="more"></a>
+<h1 id="Why-sequence-models"><a href="#Why-sequence-models" class="headerlink" title="Why sequence models?"></a>Why sequence models?</h1><p>序列学习的主要应用场景有：</p>
+<ul>
+<li>Speech recognition: 将语音识别成文字</li>
+<li>Music generation: 生成你想要的音乐（比如R&amp;B风格等）</li>
+<li>Sentiment classification: 根据一段话识别用户想要表达的意思</li>
+<li>DNA sequence analysis: 比如从一段DNA序列中找出哪些是蛋白质</li>
+<li>Machine translation: 进行不同语种之间的翻译</li>
+<li>Video activity recognition: 输入视频的一帧一帧，判断视频中在进行什么活动</li>
+<li>Name entity recognition: 从一段话中找出是名字的那些单词</li>
+</ul>
+<p>上述学习都有一个共同特点，就是输入或者输出数据是一段序列(sequence), 针对不同的问题，我们会学习不同的序列模型。</p>
+<h1 id="Notation"><a href="#Notation" class="headerlink" title="Notation"></a>Notation</h1><p>本节中我们描述了一套符号，用来表述训练集里的序列数据 x 和 y。</p>
+<p>举个例子，在我们进行 命名实体识别(Name entity recognition) 时，假如输入的序列数据 x 为： Harry Potter and Hermione Granger invented a new spell. 那么我们采取下面的符号约定：</p>
+<ul>
+<li>$$x^{<t>}$$代表 x 中的第 t 个元素</t></li>
+<li>$$T_x$$为序列 x 的长度</li>
+<li>$$x^{(i)<t>}$$表示第 i 个序列的第 t 个元素</t></li>
+<li>$$T_x^{(i)}$$表示第 i 个序列的长度</li>
+</ul>
+<p>如何表示单词呢？使用一个词汇表(vocabulary/dictionary)，这个向量中的每一个元素都对应一个单词。假如用一个大小为10000的词汇表：<br>$$$<br>\begin{bmatrix}<br>a \<br>aaron \<br>\vdots \<br>harry \<br>\vdots \<br>potter \<br>\vdots \<br>zulu<br>\end{bmatrix}<br>$$$<br>采用 one-hot 表示法，那么单词 aaron 所对应的向量则为：<br>$$$<br>\begin{bmatrix}<br>0 \<br>1 \<br>0 \<br>\vdots \<br>0 \<br>\vdots \<br>0<br>\end{bmatrix}<br>$$$</p>
+<h1 id="Recurrent-Neural-Networks"><a href="#Recurrent-Neural-Networks" class="headerlink" title="Recurrent Neural Networks"></a>Recurrent Neural Networks</h1><p>learn the mapping from x to y.</p>
+<h2 id="Why-not-a-standard-network"><a href="#Why-not-a-standard-network" class="headerlink" title="Why not a standard network?"></a>Why not a standard network?</h2><p><img src="/images/post_images/C5W1L3_1.png" alt><br>采用上面的标准神经网络，效果并不好。主要有两个问题：</p>
+<ol>
+<li>Inputs, outputs can be different lengths in different examples.</li>
+<li>Doesn’t share features learned across different positions of text.(E.g. You want things learned for one part of the image to generalize quickly to other part of the image and we like similar effect for sequence data as well.)</li>
+</ol>
+<h2 id="Recurrent-Neural-Networks-1"><a href="#Recurrent-Neural-Networks-1" class="headerlink" title="Recurrent Neural Networks"></a>Recurrent Neural Networks</h2><p>采用下面的 Recurrent Neural Networks 就不会有上述的缺点。比如$$\hat{y}^{<3>}$$就用到了$$x^{<1>}$$。</1></3></p>
+<p><img src="/images/post_images/C5W1L3_2.png" alt></p>
+<p>但是这个网络还有一个缺点，就是没有使用到序列后面部分的信息，如比说$$x^{<4>}$$可能也对$$\hat{y}^{<3>}$$有用，但是并没有用到。之后讲的双向循环神经网络(bidirectional RNN, BRNN)会解决这个问题。</3></4></p>
+<h2 id="Forward-propagation"><a href="#Forward-propagation" class="headerlink" title="Forward propagation"></a>Forward propagation</h2><p>$$$<br>\begin{align}<br>a^{<0>} &amp;= \vec{0} \<br>a^{<1>} &amp;= g(W_{aa} a^{<0>} + W_{ax} x^{<1>} + b_a) \<br>\hat{y}^{<1>} &amp;= g(W_{ya} a^{<1>} + b_y) \<br>\vdots \<br>a^{<t>} &amp;= g(W_{aa} a^{<t-1>} + W_{ax} x^{<t>} + b_a) \<br>\hat{y}^{<t>} &amp;= g(W_{ya} a^{<t>} + b_y) \<br>\vdots<br>\end{align}<br>$$$</t></t></t></t-1></t></1></1></1></0></1></0></p>
+<ul>
+<li><strong>符号约定</strong>：$$W_{ax}$$表示其要乘以某个向量$$x$$，得到$$a^{<t>}$$这样的值。同理，$$W_{ya}$$表示其要乘以某个向量a，得到$$\hat{y}^{<t>}$$这样的值。</t></t></li>
+<li><strong>激活函数的选取</strong>：在$$ a^{<t>} = g(W_{aa} a^{<t-1>} + W_{ax} x^{<t>} + b_a) $$中激活函数一般采用 tanh 或者 Relu；在$$\hat{y}^{<t>} = g(W_{ya} a^{<t>} + b_y)$$中激活函数可以采用 sigmoid (二分类)或者 softmax (多分类)。</t></t></t></t-1></t></li>
+</ul>
+<h2 id="Simplified-RNN-notation"><a href="#Simplified-RNN-notation" class="headerlink" title="Simplified RNN notation"></a>Simplified RNN notation</h2><p>注意到：<br>$$$<br>W_{aa} a^{<t-1>} + W_{ax} x^{<t>} =<br>\begin{bmatrix}<br>W_{aa}; W_{ax}<br>\end{bmatrix}<br>\begin{bmatrix}<br>a^{<t-1>} \<br>x^{<t>}<br>\end{bmatrix}<br>$$$</t></t-1></t></t-1></p>
+<p>因此可以把 $$ a^{<t>} = g(W_{aa} a^{<t-1>} + W_{ax} x^{<t>} + b_a)$$ 简记为 $$a^{<t>} = g(W_a[a^{<t-1>}, x^{<t>}]+ b_a) $$。这样当我们用到更复杂的模型，可以简化符号。最后有：</t></t-1></t></t></t-1></t></p>
+<p>$$$<br>\begin{align}<br>a^{<t>} &amp;= g(W_a[a^{<t-1>}, x^{<t>}]+ b_a) \<br>\hat{y}^{<t>} &amp;= g(W_{y} a^{<t>} + b_y) \<br>\end{align}<br>$$$</t></t></t></t-1></t></p>
+<p>W 的下标反映了做运算过后会输出什么类型的量。</p>
+<h1 id="Backpropagation-through-time"><a href="#Backpropagation-through-time" class="headerlink" title="Backpropagation through time"></a>Backpropagation through time</h1><p><img src="/images/post_images/C5W1L4_1.png" alt></p>
+<p>$$$<br>\begin{align}<br>&amp; Loss \ Function: \ L^{<t>}(\hat{y}^{<t>}, y^{<t>}) = -y^{<t>}log \ \hat{y}^{<t>} - (1-y^{<t>})log(1-\hat{y}^{<t>}) \<br>&amp; Cost \ Function: \ L(\hat{y}, y) = \sum_{t=1}^{T_x} L^{<t>}(\hat{y}^{<t>}, y^{<t>})<br>\end{align}<br>$$$</t></t></t></t></t></t></t></t></t></t></p>
+<h1 id="Different-types-of-RNNs"><a href="#Different-types-of-RNNs" class="headerlink" title="Different types of RNNs"></a>Different types of RNNs</h1><p>下图演示了不同类型的 RNN 结构。One-to-many 结构应用在音乐生成中。Many-to-one则是 Sentiment classification 的典型例子。Many-to-many 结构分为 $$T_x = T_y $$ 和 $$T_x \neq T_y $$两种形式。前者是 Name entity recognition 的典型应用，后者可以应用在 Machine translation中。针对不同的问题，我们可以提出不同的 RNN 结构来解决。</p>
+<p><img src="/images/post_images/C5W1L5_1.png" alt></p>
+<h1 id="Language-model-and-sequence-generation"><a href="#Language-model-and-sequence-generation" class="headerlink" title="Language model and sequence generation"></a>Language model and sequence generation</h1><h2 id="What’s-a-language-model"><a href="#What’s-a-language-model" class="headerlink" title="What’s a language model?"></a>What’s a language model?</h2><p>Given a sentence, a language would tell you what is the probability of a sentence. For example, if there are two sentence, one is “The apple and pair salad” and another is “The apple and pear salad”. A language model would output the probabilities for these two sentences. It’s obvious that a good language model would know P(“The apple and pair salad”)&lt;P(“The apple and pear salad”).</p>
+<h2 id="How-to-build-a-language-model"><a href="#How-to-build-a-language-model" class="headerlink" title="How to build a language model?"></a>How to build a language model?</h2><p>To build such a model using an RNN, you would first need a training set comprising a large corpus of English text.<br>For example, you have a sentence “Cats average 15 hours of sleep a day”. Then you need to tokenize the sentence into words and give a one-hot representation of each word. Optionally, you can add an extra token <eos> or not.<br>Then we build an RNN to model the chances of these different sequences. We set $$a^{<0>}$$ and $$x^{<0>}$$ to zero vectors and let $$x^{<t>}=y^{<t-1>}$$. $$\hat{y}^{<t>}$$ is actually softmax output.</t></t-1></t></0></0></eos></p>
+<p><img src="/images/post_images/C5W1L6_2.png" alt></p>
+<p>$$$<br>\begin{align}<br>Persian<unk> &amp;\rightarrow \hat y^{<1>}, P(<unk>)\<br>cats &amp;\rightarrow \hat y^{<2>}, P(cats|<unk>)\<br>average &amp;\rightarrow \hat y^{<3>}, P(average|<unk>,cats)\<br>15 &amp;\rightarrow \hat y^{<4>}, P(15|<unk>, cats, average)\<br>hours &amp;\rightarrow \hat y^{<5>}, P(hours|<unk>, cats, average, 15)\<br>of &amp;\rightarrow \hat y^{<6>}, P(of|<unk>, cats, average, 15, hours) \<br>sleep &amp;\rightarrow \hat y^{<7>}, P(sleep|<unk>, cats, average, 15, hours, of) \<br>a &amp;\rightarrow \hat y^{<8>}, P(a|<unk>, cats, average, 15, hours, of, sleep) \<br>day &amp;\rightarrow \hat y^{<9>}, P(day|<unk>, cats, average, 15, hours, of, sleep, a) \</unk></9></unk></8></unk></7></unk></6></unk></5></unk></4></unk></3></unk></2></unk></1></unk></p>
+<p><eos> &amp;\rightarrow \hat y^{<10>},P(<eos>|<unk>, cats, average, 15, hours, of, sleep, a, day) \<br>\end{align}<br>$$$</unk></eos></10></eos></p>
+<p>$$$ p(y^{<1>},\cdots,y^{<t>}) = p(y^{<1>}) p(y^{<2>}|y^{<1>}) \cdots p(y^{<t>}|y^{<1>},\cdots,y^{<t-1>}) $$$</t-1></1></t></1></2></1></t></1></p>
+<p>This RNN learns to predict one word at a time going from left to right given the previous words.</p>
+<h1 id="Sampling-novel-sequences"><a href="#Sampling-novel-sequences" class="headerlink" title="Sampling novel sequences"></a>Sampling novel sequences</h1><p>A sequence model models the chance of any particular sequence of words $$P(y^{<1>}, y^{<2>}, \dots, y^{&lt;T_x&gt;})$$. After you have trained a sequence model, let your model generate a randomly chosen sentence from your RNN language model can help you get a sense of what your model has learned.</2></1></p>
+<p>What we have talked about is <code>word-level language model</code>. <code>Character-level language model</code> is also used in application. For example, our vocabularies can be [a, b, c,…, z, \whitespace, 。,，, ;, …, 0, …, 9, A,…, Z]</p>
+<p>使用 character-level 语言模型的优点在于不会出现未知标识，缺点是会得到太多太长的序列，大多数英语句子只有10～20个单词，但是却可能包含许多字符,因此 character-level 语言模型在捕捉句子单词之间的依赖关系上不如 word-level 语言模型，比如句子之前的部分如何影响之后的部分。而且 character-level 语言模型训练起来成本高昂。</p>
+<h1 id="Vanishing-gradients-with-RNNs"><a href="#Vanishing-gradients-with-RNNs" class="headerlink" title="Vanishing gradients with RNNs"></a>Vanishing gradients with RNNs</h1><p>Consider we have two sentences: <code>&quot;The cat, which already ate ...(many food names), was full&quot;</code> and <code>&quot;The cats, which already ate ...(many food names), were full&quot;</code>. The only difference is whether the word “cat” is singular or plural. As in English, the “many food names” part in both sentences can be arbitrarily long, the network has to be able to remember something earlier in the sentence to inference whether we need a “was” or “were” in the later part. </p>
+<p>This is an essential problem with the vanilla RNN architectures we’ve seen so far: <strong>the gradient will vanish in very deep recurrent architecture</strong>. Therefore, for example, a word $$y^{<3>}$$ can only be influenced effectively by nearby words $$y^{<1>}$$ and $$y^{<2>}$$ through backpropagation. The same thing happens in the forward pass, vanilla RNNs can hardly remember long-term information and could perform poorly in the example we mentioned above. One may recall we also encounter gradient exploding problem, but it can be solved with <strong>gradient clipping</strong> so it’s not a very big problem.</2></1></3></p>
+<h1 id="Gated-Recurrent-Unit-GRU"><a href="#Gated-Recurrent-Unit-GRU" class="headerlink" title="Gated Recurrent Unit(GRU)"></a>Gated Recurrent Unit(GRU)</h1><p>GRU is a modification to the RNN hidden layer that make it better of capturing long range connections and helps a lot in the vanishing gradient problems.</p>
+<h2 id="simplified-GRU"><a href="#simplified-GRU" class="headerlink" title="simplified GRU"></a>simplified GRU</h2><p>We start from a simplified version GRU. Let $$c^{<t>}$$ represent t-th memory cell, and $$\Gamma_u$$ represent an update gate (see the later explanation). Again, we use the sentence “The cat, which already ate …(many food names), was full” as our example, then $$c^{<2>}$$ = 1 (say, 1 represent “is singular”), then $$c^{<2>}$$ will be somehow remembered until the position of word “was”. The job of the gate is to decide when to apply this remembered $$c^{<2>}$$ . Our desired result is that only at the positions of word “cat” and “was”, $$\Gamma_u$$ = 1, otherwise $$\Gamma_u$$= 0. The mathematical formulation of a GRU is:</2></2></2></t></p>
+<p>$$$<br>\begin{align}<br>c^{<t-1>} &amp;= a^{<t-1>} \<br>\tilde{c}^{<t>} &amp;= tanh(W_c[c^{<t-1>}, x^{<t>}]+b_c)  \<br>\Gamma_u &amp;= \sigma(W_u[c^{<t-1>}, x^{<t>}]+b_u)  \<br>c^{<t>} &amp;= \Gamma_u <em> \tilde{c}^{<t>} + (1-\Gamma_u)</t></em>c^{<t-1>}    \<br>a^{<t>} &amp;= c^{<t>}<br>\end{align}<br>$$$</t></t></t-1></t></t></t-1></t></t-1></t></t-1></t-1></p>
+<p>where $$ \tilde{c}^{<t>}$$ is a candidate for $$ c^{<t>} $$ and $$ \Gamma_u $$ determines whether update $$c^{<t>}$$ with $$ \tilde{c}^{<t>} $$.</t></t></t></t></p>
+<h2 id="Full-GRU"><a href="#Full-GRU" class="headerlink" title="Full GRU"></a>Full GRU</h2><p>One may observe that the formula of calculating Γu is very similar to a logistic regression, where I consider these two things share similar ideas. And this is also why the Γu is activated by a sigmoid function (result in a value between 0 and 1). Now, let’s look at the equations for Full GRU:</p>
+<p>$$$<br>\begin{align}<br>c^{<t-1>} &amp;= a^{<t-1>} \<br>\tilde{c}^{<t>} &amp;= tanh(W_c[\color{red}{\Gamma_r}<em>c^{<t-1>}, x^{<t>}]+b_c)  \<br>\Gamma_u &amp;= \sigma(W_u[c^{<t-1>}, x^{<t>}]+b_u)  \<br>\color{red}{\Gamma_r} &amp;= \color{red}{\sigma(W_r[c^{<t-1>}, x^{<t>}]+b_r)} \<br>c^{<t>} &amp;= \Gamma_u </t></t></t-1></t></t-1></t></t-1></em> \tilde{c}^{<t>} + (1-\Gamma_u)*c^{<t-1>}    \<br>a^{<t>} &amp;= c^{<t>}<br>\end{align}<br>$$$</t></t></t-1></t></t></t-1></t-1></p>
+<h1 id="LSTM-long-short-term-memory-unit"><a href="#LSTM-long-short-term-memory-unit" class="headerlink" title="LSTM(long short term memory) unit"></a>LSTM(long short term memory) unit</h1><p>Another important recurrent architecture in the literature is LSTM. We can see it as a modified version of GRU though LSTM comes way earlier than GRU. There are 3 gates in LSTM: update gate, forget gate and output gate, which are represented by $$\Gamma_u$$ , $$\Gamma_f$$ , $$\Gamma_o$$ in the formula below. Also, note that we now heavily use $$a^{<t-1>}$$ in the calculation rather than $$c^{<t-1>}$$ as we did in GRU.</t-1></t-1></p>
+<h2 id="Forward-Pass-in-LSTM"><a href="#Forward-Pass-in-LSTM" class="headerlink" title="Forward Pass in LSTM"></a>Forward Pass in LSTM</h2><p>Note that the flow constructed by $$c^{<t>}$$ in each cell provides LSTM the ability to remember long-term information. </t></p>
+<p>$$$<br>\begin{align}<br>\tilde{c}^{<t>} &amp;= tanh(W_c[a^{<t-1>}, x^{<t>}]+b_c)  \<br>\Gamma_u &amp;= \sigma(W_u[a^{<t-1>}, x^{<t>}]+b_u)  \<br>\Gamma_f &amp;= \sigma(W_f[a^{<t-1>}, x^{<t>}]+b_f)  \<br>\Gamma_o &amp;= \sigma(W_o[a^{<t-1>}, x^{<t>}]+b_o)  \<br>c^{<t>} &amp;= \Gamma_u <em> \tilde{c}^{<t>} + \Gamma_f</t></em>c^{<t-1>}    \<br>a^{<t>} &amp;= \Gamma_o * tanh(c^{<t>})<br>\end{align}<br>$$$</t></t></t-1></t></t></t-1></t></t-1></t></t-1></t></t-1></t></p>
+<center><img width="400" src="/images/post_images/C5W1L10_1.png"></center>
+
+
+<h2 id="Backpropagation-in-LSTM"><a href="#Backpropagation-in-LSTM" class="headerlink" title="Backpropagation in LSTM"></a>Backpropagation in LSTM</h2><p>Please kindly refer to <a href="https://wiseodd.github.io/techblog/2016/08/12/lstm-backprop/" target="_blank" rel="noopener">https://wiseodd.github.io/techblog/2016/08/12/lstm-backprop/</a>.</p>
+<h2 id="About-the-Gates"><a href="#About-the-Gates" class="headerlink" title="About the Gates"></a>About the Gates</h2><h3 id="Forget-Gate"><a href="#Forget-Gate" class="headerlink" title="Forget Gate"></a>Forget Gate</h3><p>For the sake of this illustration, lets assume we are reading words in a piece of text, and want use an LSTM to keep track of grammatical structures, such as whether the subject is singular or plural. If the subject changes from a singular word to a plural word, we need to find a way to get rid of our previously stored memory value of the singular/plural state. In an LSTM, the forget gate lets us do this:</p>
+<p>$$$\Gamma_f = \sigma(W_f[a^{<t-1>}, x^{<t>}]+b_f)  $$$</t></t-1></p>
+<p>Here, $$W_f$$ are weights that govern the forget gate’s behavior. We concatenate $$[a^{<t-1>}, x^{<t>}]$$ and multiply by $$W_f$$ . The equation above results in a vector $$\Gamma_f^{<t>}$$ with values between 0 and 1. This forget gate vector will be multiplied element-wise by the previous cell state $$c^{<t-1>}$$. <strong>So if one of the values of $$\Gamma_f^{<t>}$$ is 0 (or close to 0) then it means that the LSTM should remove that piece of information (e.g. the singular subject) in the corresponding component of $$c^{<t-1>}$$ . If one of the values is 1, then it will keep the information</t-1></t></strong>.</t-1></t></t></t-1></p>
+<h3 id="Update-Gate"><a href="#Update-Gate" class="headerlink" title="Update Gate"></a>Update Gate</h3><p>Once we forget that the subject being discussed is singular, we need to find a way to update it to reflect that the new subject is now plural. Here is the formulat for the update gate:</p>
+<p>$$$ \Gamma_u = \sigma(W_u[a^{<t-1>}, x^{<t>}]+b_u) $$$</t></t-1></p>
+<p>Similar to the forget gate, here $$\Gamma_u^{<t>}$$ is again a vector of values between 0 and 1. This will be multiplied element-wise with $$\tilde{c}^{<t>}$$ , in order to compute $$c^{<t>}$$.</t></t></t></p>
+<h3 id="Updating-the-Cell"><a href="#Updating-the-Cell" class="headerlink" title="Updating the Cell"></a>Updating the Cell</h3><p>To update the new subject we need to create a new vector of numbers that we can add to our previous cell state. The equation we use is:</p>
+<p>$$$ \tilde{c}^{<t>} = tanh(W_c[a^{<t-1>}, x^{<t>}]+b_c) $$$</t></t-1></t></p>
+<p>Finally, the new cell state is:</p>
+<p>$$$ c^{<t>} = \Gamma_u <em> \tilde{c}^{<t>} + \Gamma_f</t></em>c^{<t-1>} $$$</t-1></t></p>
+<h3 id="Output-Gate"><a href="#Output-Gate" class="headerlink" title="Output Gate"></a>Output Gate</h3><p>To decide which outputs we will use, we will use the following two formulas:</p>
+<p>$$$ \Gamma_o = \sigma(W_o[a^{<t-1>}, x^{<t>}]+b_o)  $$$<br>$$$ a^{<t>} = \Gamma_o * tanh(c^{<t>})$$$</t></t></t></t-1></p>
+<p>Where in the first equation you decide what to output using a sigmoid function and in the second you multiply that by the tanh of the previous state.</p>
+<h1 id="Bidirectional-RNNs"><a href="#Bidirectional-RNNs" class="headerlink" title="Bidirectional RNNs"></a>Bidirectional RNNs</h1><p>Bidirectional RNN is another type of RNN that is very popular due to one of its intuitive natures.</p>
+<center><img src="/images/post_images/C5W1L11_1.png" width="300"></center>
+
+<p>When walking through a sentence, we may want to get information from future as we can get previous context. The key idea is that we calculate activations start from both sides, then for each $$x^{<t>}$$ we will have two activations $$\overset{\rightarrow}{a}^{<t>}$$ and $$\overset{\leftarrow}{a}^{<t>}$$ . Our new version of $\hat y$ where</t></t></t></p>
+<p>$$\hat{y}^{<t>} = g(W_y[\overset{\rightarrow}{a}^{<t>},\overset{\leftarrow}{a}^{<t>}]+b_y)$$</t></t></t></p>
+<h1 id="Deep-RNN"><a href="#Deep-RNN" class="headerlink" title="Deep RNN"></a>Deep RNN</h1><p>In addition, we can also build a deep RNN by stacking more RNN cells, that is, having more layers just like we did in deep neural networks.</p>
+<center><img src="/images/post_images/C5W1L12_1.png" width="300"></center>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>深度学习之五《序列模型》笔记-1</li>
+          
+        
+      
+    
+  </ul>
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Why-sequence-models"><span class="nav-number">1.</span> <span class="nav-text">Why sequence models?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Notation"><span class="nav-number">2.</span> <span class="nav-text">Notation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Recurrent-Neural-Networks"><span class="nav-number">3.</span> <span class="nav-text">Recurrent Neural Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-not-a-standard-network"><span class="nav-number">3.1.</span> <span class="nav-text">Why not a standard network?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Recurrent-Neural-Networks-1"><span class="nav-number">3.2.</span> <span class="nav-text">Recurrent Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Forward-propagation"><span class="nav-number">3.3.</span> <span class="nav-text">Forward propagation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Simplified-RNN-notation"><span class="nav-number">3.4.</span> <span class="nav-text">Simplified RNN notation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Backpropagation-through-time"><span class="nav-number">4.</span> <span class="nav-text">Backpropagation through time</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Different-types-of-RNNs"><span class="nav-number">5.</span> <span class="nav-text">Different types of RNNs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Language-model-and-sequence-generation"><span class="nav-number">6.</span> <span class="nav-text">Language model and sequence generation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#What’s-a-language-model"><span class="nav-number">6.1.</span> <span class="nav-text">What’s a language model?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-build-a-language-model"><span class="nav-number">6.2.</span> <span class="nav-text">How to build a language model?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sampling-novel-sequences"><span class="nav-number">7.</span> <span class="nav-text">Sampling novel sequences</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vanishing-gradients-with-RNNs"><span class="nav-number">8.</span> <span class="nav-text">Vanishing gradients with RNNs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gated-Recurrent-Unit-GRU"><span class="nav-number">9.</span> <span class="nav-text">Gated Recurrent Unit(GRU)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#simplified-GRU"><span class="nav-number">9.1.</span> <span class="nav-text">simplified GRU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Full-GRU"><span class="nav-number">9.2.</span> <span class="nav-text">Full GRU</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LSTM-long-short-term-memory-unit"><span class="nav-number">10.</span> <span class="nav-text">LSTM(long short term memory) unit</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Forward-Pass-in-LSTM"><span class="nav-number">10.1.</span> <span class="nav-text">Forward Pass in LSTM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Backpropagation-in-LSTM"><span class="nav-number">10.2.</span> <span class="nav-text">Backpropagation in LSTM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#About-the-Gates"><span class="nav-number">10.3.</span> <span class="nav-text">About the Gates</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Forget-Gate"><span class="nav-number">10.3.1.</span> <span class="nav-text">Forget Gate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-Gate"><span class="nav-number">10.3.2.</span> <span class="nav-text">Update Gate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Updating-the-Cell"><span class="nav-number">10.3.3.</span> <span class="nav-text">Updating the Cell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Output-Gate"><span class="nav-number">10.3.4.</span> <span class="nav-text">Output Gate</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bidirectional-RNNs"><span class="nav-number">11.</span> <span class="nav-text">Bidirectional RNNs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deep-RNN"><span class="nav-number">12.</span> <span class="nav-text">Deep RNN</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '682b527504e4475ef559',
+    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
+    repo: 'kabibi.github.io',
+    owner: 'Kabibi',
+    admin: ['Kabibi'],
+    id: md5(location.pathname),
+    
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.loadBookmark();
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

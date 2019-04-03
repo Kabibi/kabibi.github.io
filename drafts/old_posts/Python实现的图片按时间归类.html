@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="來到臺灣之後四處遊學，照片真是越來越多了，怎麼也有幾千張了吧。再加上和前幾年的照片混雜在一起，有時候想看看5年前自己長什麼蠢樣，無奈卻找不到照片～">
+<meta name="keywords" content="tools,Python">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Python实现的图片按时间归类">
+<meta property="og:url" content="http://kabibi.github.io/drafts/old_posts/Python实现的图片按时间归类.html">
+<meta property="og:site_name" content="∇ &gt; 0">
+<meta property="og:description" content="來到臺灣之後四處遊學，照片真是越來越多了，怎麼也有幾千張了吧。再加上和前幾年的照片混雜在一起，有時候想看看5年前自己長什麼蠢樣，無奈卻找不到照片～">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-03T01:59:47.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python实现的图片按时间归类">
+<meta name="twitter:description" content="來到臺灣之後四處遊學，照片真是越來越多了，怎麼也有幾千張了吧。再加上和前幾年的照片混雜在一起，有時候想看看5年前自己長什麼蠢樣，無奈卻找不到照片～">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://kabibi.github.io/drafts/old_posts/Python实现的图片按时间归类">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Python实现的图片按时间归类 | ∇ > 0</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">∇ > 0</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/kabibi" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Python实现的图片按时间归类
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>PYTHON实现的图片按时间归类</li>
+          
+        
+      
+    
+  </ul>
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>來到臺灣之後四處遊學，照片真是越來越多了，怎麼也有幾千張了吧。再加上和前幾年的照片混雜在一起，有時候想看看5年前自己長什麼蠢樣，無奈卻找不到照片～</p>
+<a id="more"></a>
+<p>於是就像不如用Python寫一個腳本，把所有的照片按照時間進行分類。</p>
+<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><h2 id="安裝exifread模塊"><a href="#安裝exifread模塊" class="headerlink" title="安裝exifread模塊"></a>安裝exifread模塊</h2><p>我們將會使用到exifread模塊，在Ubuntu下，它的安裝命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install exifread</span><br></pre></td></tr></table></figure>
+<h2 id="什麼是Exif"><a href="#什麼是Exif" class="headerlink" title="什麼是Exif?"></a>什麼是Exif?</h2><p>現在我們用手機/數碼相機進行拍照，一般可以直接從文件的名稱就可以看出這張照片的拍照時間，但是如果我們修改了文件的名稱，是不是就不知道這張照片什麼時候拍的了？</p>
+<p>顯然不是。通常我們查看照片的屬性，就可以直接看到Width, Height, Maker, Flash, ISO, White balance, Focal length這些參數信息。這些信息顯然一定存儲在照片的某個位置。我們實現對照片進行分類，就要通過某種方法，獲得這些信息。</p>
+<p>這些信息就存儲在Exif中，至於Exif是什麼，我們來看Wiki的解釋。</p>
+<blockquote>
+<p>可交换图像文件格式常被简称为Exif（Exchangeable image file format），是专门为数码相机的照片设定的，可以记录数码照片的属性信&gt;息和拍摄数据。</p>
+</blockquote>
+<blockquote>
+<p>Exif可以附加于JPEG、TIFF、RIFF等文件之中，为其增加有关数码相机&gt;拍摄信息的内容和索引图或图像处理软件的版本信息。</p>
+</blockquote>
+<blockquote>
+<p>Windows7操作系统具备对Exif的原生支持，通过鼠标右键点击图片打开&gt;菜单，点击属性并切换到详细信息标签下即可直接查看Exif信息。</p>
+</blockquote>
+<blockquote>
+<p>Exif信息是可以被任意编辑的，因此只有参考的功能。</p>
+</blockquote>
+<blockquote>
+<p>Exif信息以0xFFE1作为开头标记，后两个字节表示Exif信息的长度。所以Exif信息最大为64 kB，而内部采用TIFF格式。</p>
+</blockquote>
+<h1 id="二、其他的一些小問題"><a href="#二、其他的一些小問題" class="headerlink" title="二、其他的一些小問題"></a>二、其他的一些小問題</h1><p>編程之前，我們還有一些小問題需要解決～</p>
+<h2 id="1-如何獲得照片的屬性？"><a href="#1-如何獲得照片的屬性？" class="headerlink" title="1. 如何獲得照片的屬性？"></a>1. 如何獲得照片的屬性？</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> exifread</span><br><span class="line">file = open(<span class="string">'1.jpg'</span>)</span><br><span class="line">tags = exifread.process_file(file)</span><br><span class="line"><span class="keyword">print</span> tags.keys()</span><br></pre></td></tr></table></figure>
+<p>輸出如下：</p>
+<blockquote>
+<p>[‘EXIF ApertureValue’, ‘Image ExifOffset’, ‘EXIF ComponentsConfiguration’, ‘EXIF FlashPixVersion’, ‘EXIF ColorSpace’, ‘EXIF ExifVersion’, ‘Thumbnail ResolutionUnit’, ‘Thumbnail YResolution’, ‘Interoperability InteroperabilityVersion’, ‘GPS GPSDate’, ‘EXIF DateTimeOriginal’, ‘Image YCbCrPositioning’, ‘EXIF InteroperabilityOffset’, ‘Thumbnail JPEGInterchangeFormat’, ‘EXIF ExifImageLength’, ‘Image ResolutionUnit’, ‘EXIF ExposureTime’, ‘Thumbnail XResolution’, ‘Image GPSInfo’, ‘Thumbnail JPEGInterchangeFormatLength’, ‘Thumbnail Compression’, ‘EXIF ExifImageWidth’, ‘JPEGThumbnail’, ‘GPS GPSTimeStamp’, ‘EXIF DateTimeDigitized’, ‘EXIF FocalLength’, ‘Image Model’, ‘Image XResolution’, ‘Image Make’, ‘EXIF ISOSpeedRatings’, ‘Image YResolution’, ‘Interoperability InteroperabilityIndex’]</p>
+</blockquote>
+<p>這個list就是照片中所有的參數，他們的值我們都可以通過獲得，比如我們想知道這張照片是什麼時候拍的，就可以下面的代碼獲得：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> tags[<span class="string">'EXIF DateTimeOriginal'</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="2-文件操作"><a href="#2-文件操作" class="headerlink" title="2. 文件操作"></a>2. 文件操作</h2><h3 id="複製"><a href="#複製" class="headerlink" title="複製"></a>複製</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutuil.copy(src, dst)</span><br></pre></td></tr></table></figure>
+<h3 id="剪切"><a href="#剪切" class="headerlink" title="剪切"></a>剪切</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutuil.move(src, dst)</span><br></pre></td></tr></table></figure>
+<h3 id="新建目錄"><a href="#新建目錄" class="headerlink" title="新建目錄"></a>新建目錄</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">os.mkdir(path, mode)</span><br><span class="line"><span class="comment"># Super-mkdir;</span></span><br><span class="line"><span class="comment"># create a leaf directory and all intermediate ones.</span></span><br><span class="line"><span class="comment"># Works like mkdir, except that any intermediate path</span></span><br><span class="line"><span class="comment"># segment (not just the rightmost) will be created if it does not exist.</span></span><br><span class="line"><span class="comment"># This is recursive.</span></span><br><span class="line">os.makedirs(path, mode)</span><br></pre></td></tr></table></figure>
+<h3 id="重命名"><a href="#重命名" class="headerlink" title="重命名"></a>重命名</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os.rename(src, dst)</span><br></pre></td></tr></table></figure>
+<h3 id="使用os-system實現複製，剪切新建，重命名"><a href="#使用os-system實現複製，剪切新建，重命名" class="headerlink" title="使用os.system實現複製，剪切新建，重命名"></a>使用os.system實現複製，剪切新建，重命名</h3><p>可以直接調用os提供的函數實現文件的操作，比如下面的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.system(<span class="string">'mkdir /home/code'</span>) <span class="comment"># 新建文件夾</span></span><br><span class="line">os.system(<span class="string">'cp 1.jpg 2.jpg'</span>) <span class="comment"># 複製</span></span><br><span class="line">os.system(<span class="string">'mv 1.jpg 2.jpg'</span>) <span class="comment"># 重命名</span></span><br><span class="line">os.system(<span class="string">'mv 1.jpg /home/2.jpg'</span>) <span class="comment"># 剪切</span></span><br><span class="line">os.path.isdir(<span class="string">'/home'</span>)  <span class="comment"># 判斷是否是目錄</span></span><br><span class="line">os.path.isfile(<span class="string">'/home/1.jpg'</span>)  <span class="comment"># 判斷是否是文件</span></span><br></pre></td></tr></table></figure>
+<h3 id="遍歷目錄中的文件"><a href="#遍歷目錄中的文件" class="headerlink" title="遍歷目錄中的文件"></a>遍歷目錄中的文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># os.walk(top[, topdown=True[, onerror=None[, followlinks=False]]])</span></span><br><span class="line"><span class="comment"># root, dirs, files三者的順序不能改變！</span></span><br><span class="line"><span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(<span class="string">"/home/vinater/DATA/Pictures/"</span>):</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> files:  <span class="comment"># 遍歷文件</span></span><br><span class="line">        <span class="keyword">print</span> (os.path.join(root, name))</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> dirs:   <span class="comment"># 遍歷目錄中的文件</span></span><br><span class="line">        <span class="keyword">print</span> (os.path.join(root, name))</span><br></pre></td></tr></table></figure>
+<p>os.walk返回一個三元組，分別是根目錄root，文件files和文件夾dirs；</p>
+<h3 id="分離路徑名和基本名"><a href="#分離路徑名和基本名" class="headerlink" title="分離路徑名和基本名"></a>分離路徑名和基本名</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一種方法</span></span><br><span class="line">path = <span class="string">'/home/vinater/DATA/Pictures/background'</span></span><br><span class="line">basename = os.path.basename(path)</span><br><span class="line">dirname = os.path.dirname(path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二種方法</span></span><br><span class="line">dirname, basename = os.path.split(path)</span><br></pre></td></tr></table></figure>
+<h3 id="分離基本名和擴展名"><a href="#分離基本名和擴展名" class="headerlink" title="分離基本名和擴展名"></a>分離基本名和擴展名</h3><p>第一種方法直接使用splitext:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root, extension = os.path.splitext(fname)</span><br></pre></td></tr></table></figure>
+<p>第二種方法使用split</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> root,dirs,files <span class="keyword">in</span> os.walk(<span class="string">'/home/vinater/DATA/Pictures/background'</span>):</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> files:</span><br><span class="line">        <span class="comment"># 分別是前綴名和後綴名</span></span><br><span class="line">        <span class="keyword">print</span> str.split(name,<span class="string">'.'</span>)[<span class="number">0</span>], str.split(name,<span class="string">'.'</span>)[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> dirs:</span><br><span class="line">        <span class="keyword">print</span> str.split(name,<span class="string">'.'</span>)[<span class="number">0</span>], str.split(name,<span class="string">'.'</span>)[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<h1 id="三、開始編程"><a href="#三、開始編程" class="headerlink" title="三、開始編程"></a>三、開始編程</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> exifread</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Photo</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, fromPath, toPath)</span>:</span></span><br><span class="line">        <span class="comment"># source path where your photos are</span></span><br><span class="line">        self.fromPath = fromPath</span><br><span class="line">        <span class="comment"># destination path where put your photos to</span></span><br><span class="line">        self.toPath = toPath</span><br><span class="line">        <span class="comment"># counter</span></span><br><span class="line">        self.totalPhotos = <span class="number">1</span></span><br><span class="line">        self.md5List = []</span><br><span class="line">        self.samePhotos = <span class="number">0</span></span><br><span class="line">        self.picFormats = [<span class="string">'.jpg'</span>,<span class="string">'.JPG'</span>,<span class="string">'.jpeg'</span>,<span class="string">'.JPEG'</span>,<span class="string">'.png'</span>,<span class="string">'.PNG'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getYMD</span><span class="params">(self, filename)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Get year, month, day, hour, minute, second of the image</span></span><br><span class="line"><span class="string">        :param filename: file name of the image</span></span><br><span class="line"><span class="string">        :return: year, month, day, hour, minute, second</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        file = open(filename)</span><br><span class="line">        r,e = os.path.split(filename)</span><br><span class="line">        <span class="keyword">if</span> e <span class="keyword">in</span> self.picFormats:</span><br><span class="line">            md5 = hashlib.md5(open(filename).read()).hexdigest()</span><br><span class="line">            <span class="keyword">if</span>(md5 <span class="keyword">not</span> <span class="keyword">in</span> self.md5List):</span><br><span class="line">                self.md5List.append(md5)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">print</span> <span class="string">'!!Find the same files!!'</span></span><br><span class="line">                self.samePhotos += <span class="number">1</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span>,<span class="literal">None</span>,<span class="literal">None</span>,<span class="literal">None</span>,<span class="literal">None</span>,<span class="literal">None</span></span><br><span class="line">        <span class="comment"># tags is a dictionary stores image's exif information</span></span><br><span class="line">        tags = exifread.process_file(file)</span><br><span class="line">        <span class="comment"># if do not find exif information, set default date</span></span><br><span class="line">        <span class="keyword">if</span> len(tags) == <span class="number">0</span>:</span><br><span class="line">            date = <span class="string">'1970:01:01'</span></span><br><span class="line">            time = <span class="string">'00:00:00'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># temp has the format "1970:01:01 00:00:00"</span></span><br><span class="line">            <span class="keyword">if</span> tags.has_key(<span class="string">'EXIF DateTimeOriginal'</span>):</span><br><span class="line">                temp = str(tags[<span class="string">'EXIF DateTimeOriginal'</span>])</span><br><span class="line">            <span class="keyword">elif</span> tags.has_key(<span class="string">'Image DateTime'</span>):</span><br><span class="line">                temp = str(tags[<span class="string">'Image DateTime'</span>])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                temp = <span class="string">'1970:01:01 00:00:00'</span></span><br><span class="line">            date, time = str.split(temp, <span class="string">' '</span>)</span><br><span class="line">        year, month, day = date.split(<span class="string">':'</span>)</span><br><span class="line">        hour, minute, second = time.split(<span class="string">':'</span>)</span><br><span class="line">        <span class="keyword">return</span> year, month, day, hour, minute, second</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">renameAllFiles</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Rename all images and move to property location</span></span><br><span class="line"><span class="string">        :return: none</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(self.fromPath):</span><br><span class="line">            <span class="comment"># traversal all file in source path</span></span><br><span class="line">            <span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(self.fromPath):</span><br><span class="line">                <span class="keyword">for</span> name <span class="keyword">in</span> files:</span><br><span class="line">                    <span class="keyword">print</span> root, name</span><br><span class="line">                    <span class="keyword">if</span> (root[<span class="number">-1</span>] != <span class="string">'/'</span>):</span><br><span class="line">                        filename = str(root) + <span class="string">'/'</span> + str(name)</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        filename = str(root) + str(name)</span><br><span class="line">                    <span class="comment"># get root and extension name</span></span><br><span class="line">                    r, extension = os.path.splitext(filename)</span><br><span class="line">                    <span class="comment"># get date</span></span><br><span class="line">                    year, month, day, hour, min, sec = self.getYMD(filename)</span><br><span class="line">                    <span class="keyword">if</span> year == <span class="literal">None</span>:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    <span class="comment"># get new file name</span></span><br><span class="line">                    newFileName = str(year) + <span class="string">'-'</span> + str(month) + <span class="string">'-'</span> + str(day) + <span class="string">'-'</span> + str(hour) + <span class="string">':'</span> + str(</span><br><span class="line">                        min) + <span class="string">'-'</span> + str(self.totalPhotos) + extension</span><br><span class="line">                    <span class="comment"># judge whether the folder exists, if not, make directory</span></span><br><span class="line">                    save2Path = self.toPath + <span class="string">'/'</span> + year + <span class="string">'/'</span> + year + <span class="string">'-'</span> + month</span><br><span class="line">                    <span class="keyword">if</span> (<span class="keyword">not</span> os.path.isdir(save2Path)):</span><br><span class="line">                        os.makedirs(save2Path)</span><br><span class="line">                    <span class="comment"># counter plus 1</span></span><br><span class="line">                    self.totalPhotos += <span class="number">1</span></span><br><span class="line">                    <span class="comment"># move file to property place</span></span><br><span class="line">                    shutil.move(filename, save2Path + <span class="string">'/'</span> + newFileName)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">removeEmptyFolders</span><span class="params">(self, path)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        remove empty folders</span></span><br><span class="line"><span class="string">        :param path: remove empty folder under path</span></span><br><span class="line"><span class="string">        :return: none</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(path):</span><br><span class="line">            <span class="keyword">for</span> dir <span class="keyword">in</span> dirs:</span><br><span class="line">                <span class="keyword">if</span> os.listdir(root + <span class="string">'/'</span> + dir) == []:</span><br><span class="line">                    os.rmdir(root + <span class="string">'/'</span> + dir)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getMd5</span><span class="params">(self,filename)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> hashlib.md5(open(filename,<span class="string">'rb'</span>).read()).hexdigest()</span><br><span class="line"></span><br><span class="line">src = raw_input(<span class="string">'Enter source path:'</span>).encode(<span class="string">'utf-8'</span>)</span><br><span class="line">dst = raw_input(<span class="string">'Enter destination path:'</span>).encode(<span class="string">'utf-8'</span>)</span><br><span class="line">p = Photo(src, dst)</span><br><span class="line">p.renameAllFiles()</span><br><span class="line">p.removeEmptyFolders(p.fromPath)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'Total images: %d \nTotal same images: %d'</span> % (p.totalPhotos, p.samePhotos)</span><br></pre></td></tr></table></figure>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+  
+  
+  <ul class="breadcrumb">
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/">DRAFTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li><a href="/drafts/old_posts/">OLD_POSTS</a></li>
+          
+        
+      
+    
+      
+      
+        
+          
+            
+          
+          
+            <li>PYTHON实现的图片按时间归类</li>
+          
+        
+      
+    
+  </ul>
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、背景"><span class="nav-number">1.</span> <span class="nav-text">一、背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝exifread模塊"><span class="nav-number">1.1.</span> <span class="nav-text">安裝exifread模塊</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什麼是Exif"><span class="nav-number">1.2.</span> <span class="nav-text">什麼是Exif?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、其他的一些小問題"><span class="nav-number">2.</span> <span class="nav-text">二、其他的一些小問題</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何獲得照片的屬性？"><span class="nav-number">2.1.</span> <span class="nav-text">1. 如何獲得照片的屬性？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-文件操作"><span class="nav-number">2.2.</span> <span class="nav-text">2. 文件操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#複製"><span class="nav-number">2.2.1.</span> <span class="nav-text">複製</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#剪切"><span class="nav-number">2.2.2.</span> <span class="nav-text">剪切</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新建目錄"><span class="nav-number">2.2.3.</span> <span class="nav-text">新建目錄</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重命名"><span class="nav-number">2.2.4.</span> <span class="nav-text">重命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用os-system實現複製，剪切新建，重命名"><span class="nav-number">2.2.5.</span> <span class="nav-text">使用os.system實現複製，剪切新建，重命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遍歷目錄中的文件"><span class="nav-number">2.2.6.</span> <span class="nav-text">遍歷目錄中的文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分離路徑名和基本名"><span class="nav-number">2.2.7.</span> <span class="nav-text">分離路徑名和基本名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分離基本名和擴展名"><span class="nav-number">2.2.8.</span> <span class="nav-text">分離基本名和擴展名</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、開始編程"><span class="nav-number">3.</span> <span class="nav-text">三、開始編程</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '682b527504e4475ef559',
+    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
+    repo: 'kabibi.github.io',
+    owner: 'Kabibi',
+    admin: ['Kabibi'],
+    id: md5(location.pathname),
+    
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.loadBookmark();
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
