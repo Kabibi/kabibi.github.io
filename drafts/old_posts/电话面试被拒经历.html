@@ -189,6 +189,10 @@
       </a>
     </div>
     
+      
+        <p class="site-subtitle">Reinforcement Learning</p>
+      
+    
     
   </div>
 
@@ -245,7 +249,7 @@
         
         
           
-          <li class="menu-item menu-item-categories">
+          <li class="menu-item menu-item-tags">
 
     
     
@@ -255,7 +259,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
 
@@ -485,7 +489,7 @@
           
 
   
-    <div class="comments" id="gitalk-container">
+    <div class="comments" id="comments">
     </div>
 
   
@@ -515,7 +519,9 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <img class="site-author-image" itemprop="image" src="/images/kenan.jpeg" alt="Aaron">
+            
+              <p class="site-author-name" itemprop="name">Aaron</p>
               <div class="site-description motion-element" itemprop="description"></div>
           </div>
 
@@ -593,7 +599,7 @@
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+  <span class="author" itemprop="copyrightHolder">Aaron</span>
 
   
 
@@ -719,36 +725,37 @@
   
 
   
-
-
   
-    
 
-<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-
-
-
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
 
 
 
-<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
 
 <script>
-  var gitalk = new Gitalk({
-    clientID: '682b527504e4475ef559',
-    clientSecret: 'b9c751d03573533b9e6cf50704c917ecf035b822',
-    repo: 'kabibi.github.io',
-    owner: 'Kabibi',
-    admin: ['Kabibi'],
-    id: md5(location.pathname),
-    
-      language: 'zh-CN',
-    
-    distractionFreeMode: 'true'
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
   });
-  gitalk.render('gitalk-container');
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'fTeB9V5sfVjFhtRO94F2DNCL-gzGzoHsz',
+    appKey: 'FygR9J8SjMjPb7QRF9Ld54NH',
+    placeholder: '说点什么～',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn'
+  });
 </script>
+
+
+
 
   
 

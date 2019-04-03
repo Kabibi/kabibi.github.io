@@ -185,6 +185,10 @@
       </a>
     </div>
     
+      
+        <p class="site-subtitle">Reinforcement Learning</p>
+      
+    
     
   </div>
 
@@ -241,7 +245,7 @@
         
         
           
-          <li class="menu-item menu-item-categories">
+          <li class="menu-item menu-item-tags">
 
     
     
@@ -251,7 +255,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
 
@@ -313,9 +317,9 @@
     <link itemprop="mainEntityOfPage" href="http://kabibi.github.io/2019/04/03/矩阵求导/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chao Wen">
+      <meta itemprop="name" content="Aaron">
       <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/kenan.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -355,7 +359,7 @@
                 
               
 
-              <time title="创建时间：2019-04-03 11:45:28 / 修改时间：12:36:19" itemprop="dateCreated datePublished" datetime="2019-04-03T11:45:28+08:00">2019-04-03</time>
+              <time title="创建时间：2019-04-03 11:45:28 / 修改时间：18:59:40" itemprop="dateCreated datePublished" datetime="2019-04-03T11:45:28+08:00">2019-04-03</time>
             
 
             
@@ -370,9 +374,33 @@
           
             
             
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/04/03/矩阵求导/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/04/03/矩阵求导/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
+          
+            <span id="/2019/04/03/矩阵求导/" class="leancloud_visitors" data-flag-title="矩阵求导">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读次数：</span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -396,51 +424,28 @@
       
         
           
-            <h1 id="向量，矩阵，张量求导"><a href="#向量，矩阵，张量求导" class="headerlink" title="向量，矩阵，张量求导"></a>向量，矩阵，张量求导</h1><p><a href="http://cs231n.stanford.edu/vecDerivs.pdf" target="_blank" rel="noopener">http://cs231n.stanford.edu/vecDerivs.pdf</a></p>
-<h2 id="向量对向量求导"><a href="#向量对向量求导" class="headerlink" title="向量对向量求导"></a>向量对向量求导</h2><blockquote>
-<p>如何对 $y = Wx$ 求导？其中：</p>
-<ul>
-<li>$y: {C\times1}$</li>
-<li>$W: {C\times D}$</li>
-<li>$x: {D\times 1}$</li>
-</ul>
-</blockquote>
-<p>可以先通过计算一种特例，比如 $\frac{\partial{y_7}}{\partial{x_3}}$ 来更好地理解, $y_7$ 可以写成<br>$$y_7 = \sum_{j=1}^{D}W_{7,j} x_j =W_{7,1}x_1 + W_{7,2}x_2 + W_{7,3}x_3+\cdots$$<br>所以$\frac{\partial{y_7}}{\partial{x_3}}=W_{7,3}$。进而，$\frac{\partial{y}}{\partial{x}} = W$</p>
-<p>PS: 标量对向量求导的维度为 $1<em>n$; 向量对标量求导的维度为 $n</em>1$; </p>
-<h2 id="向量对矩阵求导"><a href="#向量对矩阵求导" class="headerlink" title="向量对矩阵求导"></a>向量对矩阵求导</h2><blockquote>
-<p>$y = xW$, 如何求$\frac{\partial{y}}{\partial{W}}$？其中：</p>
-<ul>
-<li>$y: {1\times C}$</li>
-<li>$W: {D\times C}$</li>
-<li>$x: {1\times D}$</li>
-</ul>
-</blockquote>
-<p>依然先计算特例：$\frac{\partial{y_3}}{\partial{W_{78}}}$, 首先<br>$$<br>y_3 = x_1 W_{13} + x_2W_{23} + \dots + x_D W_{D3}<br>$$<br>所以可以看到$\frac{\partial{y_3}}{\partial{W_{78}}}=0$，进一步又发现<br>$$<br>\frac{\partial{y_j}}{\partial{W_{ij}}} = x_i<br>$$<br>于是令 $F_{i,j,k}=\frac{\partial{y_i}}{\partial{W_{jk}}}$，有<br>$$<br>F_{i,j,i} = x_j<br>$$<br>张量 $F$ 的其余项均为0，因此可以定义一个二维矩阵 $G_{i,j} = F_{i,j,i}$ 来表示 $\frac{\partial{y}}{\partial{W}}$的结果。</p>
-<hr>
-<p>PS：Representing the important part of derivative arrays in a compact way is critical to efficient implementations of neural networks.</p>
-<h2 id="矩阵对矩阵求导"><a href="#矩阵对矩阵求导" class="headerlink" title="矩阵对矩阵求导"></a>矩阵对矩阵求导</h2><blockquote>
-<p>$Y=XW$, 如何求$\frac{\partial{Y_{a,b}}}{\partial{X_{c,d}}}$？其中：</p>
-<ul>
-<li>$Y: {n\times C}$</li>
-<li>$W: {D\times C}$</li>
-<li>$x: {n\times D}$</li>
-</ul>
-</blockquote>
-<p>依然进行展开：<br>$$<br>Y_{i,j} = \sum_{k=1}^D X_{i,k}W_{k,j}<br>$$<br>于是有<br>$$<br>\frac{\partial{Y_{i,j}}}{\partial{X_{i,k}}} = W_{k,j} \tag{1}<br>$$<br>因此<br>$$<br>\frac{\partial{Y_{a,b}}}{\partial{X_{c,d}}} =<br>\begin{cases}<br>W_{d,b}, \qquad \text{when}\ a=c\\<br>0, \qquad \text{when}\ a\neq c<br>\end{cases}<br>$$<br>可以发现</p>
-<ol>
-<li>实际上 $\frac{\partial{Y_{a,b}}}{\partial{X_{c,d}}}$所有的结果都包含在 $W$ 中。</li>
-<li>$\frac{\partial{Y_{i,j}}}{\partial{X_{i,k}}}$ 与 $X,Y$ 的行索引没有关系。</li>
-<li>In fact, the matrix W holds all of these partials as it is–we just have to remember to index into it according to Equation 1 to obtain the specific partial derivative that we want.</li>
-</ol>
-<h2 id="使用链式法则"><a href="#使用链式法则" class="headerlink" title="使用链式法则"></a>使用链式法则</h2><blockquote>
-<p>$y=Vm$, 其中 $m=Wx$, 求 $\frac{\partial{y}}{\partial{x}}$?</p>
-</blockquote>
-<p>依然先从特例开始：<br>$$<br>\begin{aligned}<br>\frac{\partial{y_i}}{\partial{x_j}} &amp;= \frac{\partial{y_i}}{\partial{m}}\frac{\partial{m}}{\partial{x_j}} \\<br>&amp;= \sum_{k=1}^M \frac{\partial{y_i}}{\partial{m_k}}\frac{\partial{m_k}}{\partial{x_j}} \\<br>&amp;= \sum_{k=1}^M V_{i,k}W_{k,j} \\<br>&amp;= V_{i,:}W_{:,j}<br>\end{aligned}<br>$$<br>因此<br>$$<br>\frac{\partial{y}}{\partial{x}} = VW<br>$$</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li>为了求得最终的导数结果，往往需要先求中间的结果，例如先求$\frac{\partial{y_i}}{\partial{x_j}}$, 再求$\frac{\partial{y}}{\partial{x}}$</li>
-</ol>
+            <p>
+              向量，矩阵，张量求导参考 http://cs231n.stanford.edu/vecDerivs.pdf
+向量对向量求导
+如何对 $y = Wx$ 求导？其中：
 
+$y: {C\times1}$
+$W: {C\times D}$
+$x: {D\times 1}$
+
+
+可以先通过计算一种特例，比如 $\frac{\partial{y_7}}{\partial{x_3}}$ 来更好地理解, $y_7$ 可以写成$$y_7 = \sum_{j=1}^{D}W_{7,j} x_j =W_{7,1}x_1 + W_
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/04/03/矩阵求导/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -511,7 +516,9 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">Chao Wen</p>
+              <img class="site-author-image" itemprop="image" src="/images/kenan.jpeg" alt="Aaron">
+            
+              <p class="site-author-name" itemprop="name">Aaron</p>
               <div class="site-description motion-element" itemprop="description"></div>
           </div>
 
@@ -589,7 +596,7 @@
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Chao Wen</span>
+  <span class="author" itemprop="copyrightHolder">Aaron</span>
 
   
 
@@ -711,6 +718,36 @@
   
 
   
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'fTeB9V5sfVjFhtRO94F2DNCL-gzGzoHsz',
+    appKey: 'FygR9J8SjMjPb7QRF9Ld54NH',
+    placeholder: '说点什么～',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
 
 
 
