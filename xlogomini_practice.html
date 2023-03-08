@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .question-container {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            margin-left: 50%;
+            margin-right: 10%;
+        }
+
+        .question {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 50px;
+            margin-left: 20px;
+        }
+
+        .options {
+            display: inline-block;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        .options input {
+            margin-top: 10px;
+        }
+
+        .textbox {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* top: 10%; */
+            position: fixed;
+        }
+
+        .image-container1 {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 80%;
+            /* set the width of the image to fill the container */
+            height: 80%;
+            /* set the height of the image to fill the container */
+            object-fit: contain;
+            /* scale the image while maintaining aspect ratio */
+        }
+
+        figure {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        figcaption {
+            font-weight: bold;
+            font-size: x-large;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <title>XLogo-Mini Quality Annotations</title>
+</head>
+
+<body>
+<h1 id="header">Feedback</h1>
+
+<div class="image-container">
+    <div class="image-container1">
+        <figure>
+            <img src="image1.jpg" id="T_in" width="100" height="100"/>
+            <figcaption>Reference Task</figcaption>
+        </figure>
+
+        <figure>
+            <img src="image2.jpg" id="T_out" width="150" height="150"/>
+            <figcaption>Synthesized Task</figcaption>
+        </figure>
+    </div>
+
+    <div class="image-container1">
+        <figure>
+            <img src="image3.jpg" id="C_in" width="150" height="150"/>
+            <figcaption>Reference Code</figcaption>
+        </figure>
+
+        <figure>
+            <img src="image4.jpg" id="C_out" width="150" height="150"/>
+            <figcaption>Synthesized Code</figcaption>
+        </figure>
+    </div>
+</div>
+
+<div class="question-container">
+    <div class="question">
+        <div class="options">
+            <h3>1. Overall rating of the synthesized task</h3>
+            <input type="radio" name="question1" value="option1" disabled>-1, &nbsp;&nbsp;Poor quality, task does not meet the stated
+            requirements and expectations<br>
+            <input type="radio"  name="question1" value="option2" disabled>&nbsp;0, &nbsp;&nbsp;Satisfactory quality, task meets the minimum
+            requirements, but not adequate for students<br>
+            <input type="radio" name="question1" value="option3" disabled>&nbsp;1, &nbsp;&nbsp;Excellent quality, task meets or exceeds all
+            expectations and requirements<br>
+<!--            <input type="text" name="question1_textbox">-->
+        </div>
+    </div>
+
+    <div class="question">
+        <div class="options">
+            <h3>2. Difficulty of the synthesized task w.r.t reference task</h3>
+            <input type="radio" name="question2" value="option1" disabled>-1, &nbsp;&nbsp; Easier than the reference task<br>
+            <input type="radio" name="question2" value="option2" disabled>&nbsp;0, &nbsp;&nbsp; Similar difficulty to the reference task<br>
+            <input type="radio" name="question2" value="option3" disabled>&nbsp;1, &nbsp;&nbsp; More difficult than the reference task<br>
+<!--            <input type="text" name="question2_textbox">-->
+        </div>
+    </div>
+
+    <div class="question">
+        <div class="options">
+            <h3>3. Rating of synthesized tasks in terms of concepts covered</h3>
+            <input type="radio" name="question3" value="option1" disabled>-1, &nbsp;&nbsp;Misses many important or relevant concepts that are essential<br>
+            <input type="radio" name="question3" value="option2" disabled>&nbsp;0, &nbsp;&nbsp;Contains a few unnecessary or irrelevant concepts that are not included in the reference task<br>
+            <input type="radio" name="question3" value="option3" disabled>&nbsp;1, &nbsp;&nbsp;The concepts are the same as the reference task<br>
+<!--            <input type="text" name="question3_textbox">-->
+        </div>
+    </div>
+
+    <div class="question">
+        <div class="options">
+            <h3>4. If there are distractors (e.g., walls, forbidden objects/grids), are they useful?</h3>
+            <input type="radio" name="question4" value="option1" disabled>-1, &nbsp;&nbsp;Not useful, distractors are not helpful for achieving the learning objectives<br>
+            <input type="radio" name="question4" value="option2" disabled>&nbsp;0, &nbsp;&nbsp;Potentially useful, distractors may or may not be helpful depending on the context<br>
+            <input type="radio" name="question4" value="option3" disabled>&nbsp;1, &nbsp;&nbsp;Very useful, distractors are essential for achieving the learning objectives<br>
+            <!-- <input type="text" name="question4_textbox"> -->
+        </div>
+    </div>
+
+    <div class="question">
+        <div class="options">
+            <h3>5. Rating of synthesized code w.r.t reference code</h3>
+            <input type="radio" name="question5" value="option1" disabled>-1, &nbsp;&nbsp;Poor quality, synthesized code has many redundant commands and is very confusing<br>
+            <input type="radio" name="question5" value="option2" disabled>&nbsp;0, &nbsp;&nbsp;Acceptable quality, The synthesized code meets the basic requirement, but may contain a few unnecessary or irrelevant commands that could be removed to improve its quality<br>
+            <input type="radio" name="question5" value="option3" disabled>&nbsp;1, &nbsp;&nbsp;Good quality, the synthesized code includes all necessary commands without any irrelevant ones<br>
+            <!-- <input type="text" name="question4_textbox"> -->
+        </div>
+    </div>
+
+
+    <script>
+        var params = {};
+        location.search.slice(1).split("&").forEach(function (pair) {
+            pair = pair.split("=");
+            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+        });
+        // document.getElementById("T_in").src = `content/${params['chap']}/1_task.p1.png`;
+        document.getElementById("T_in").src = `content/${params['taskid']}_task.png`;
+        document.getElementById("T_out").src = `content/${params['taskid']}_task.p${params['pracid']}.png`;
+        document.getElementById("C_in").src = `content/${params['taskid']}_code.png`;
+        document.getElementById("C_out").src = `content/${params['taskid']}_code.p${params['pracid']}.png`;
+        document.getElementById('header').textContent = `Task${params['taskid']}: p${params['pracid']}`;
+    </script>
+</body>
+
+</html>
