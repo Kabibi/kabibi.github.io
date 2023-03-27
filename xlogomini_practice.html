@@ -4,12 +4,10 @@
 <head>
     <style>
         .header-container {
-            /* text-align: center; */
             display: flex;
-            flex-direction: row;;
+            flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            
         }
 
         /* Style the buttons */
@@ -21,7 +19,8 @@
         }
 
         #prev-button,
-        #next-button {
+        #next-button,
+        #task-list {
             padding: 10px 20px;
             font-size: 16px;
             border-radius: 5px;
@@ -31,10 +30,19 @@
             margin-right: 10px;
         }
 
+        #task-list {
+            background-color: red;
+        }
+
         #prev-button:hover,
-        #next-button:hover {
+        #next-button:hover
+        {
             cursor: pointer;
             background-color: #3e8e41;
+        }
+
+        #task-list:hover {
+            background-color: rgb(177, 41, 41);
         }
 
         /* Style the image containers */
@@ -58,11 +66,11 @@
             font-size: 20px;
             border: 1px solid black;
             display: inline-block;
-            width: 250px;
-            height: 380px;
+            width: 200px;
+            height: 390px;
         }
 
-        pre{
+        pre {
             margin-top: 0px;
         }
 
@@ -87,9 +95,10 @@
 
         /* Style the image captions */
         figcaption {
+            min-height: 80px;
             text-align: center;
             margin-bottom: 10px;
-            /* font-size: 20px; */
+            /* font-size: 18px; */
         }
     </style>
     <title>XLogo-Mini Quality Annotations</title>
@@ -99,6 +108,7 @@
     <div class="header-container">
         <h1 id="header">Feedback</h1>
         <div class="button-container">
+            <button id="task-list" onclick="location.href='toc.html'">Task List</button>
             <button id="prev-button">&#8592; Previous</button>
             <button id="next-button">Next &#8594;</button>
         </div>
@@ -142,8 +152,8 @@
                     document.getElementById("T_in").src = data[`${taskid}_task.p0`]['base64image'];
                     document.getElementById("T_out").src = data[`${taskid}_task.p${pracid}`]['base64image'];
 
-                    document.getElementById("T_in_cap").innerHTML = "<h3>Reference Task</h3>" + data[`${taskid}_task.p0`]['description'];
-                    document.getElementById("T_out_cap").innerHTML = "<h3>Synthesized Task</h3>" + data[`${taskid}_task.p${pracid}`]['description'];
+                    document.getElementById("T_in_cap").innerHTML = "<h3>Reference Task</h3>" + `Task ${taskid}: ` + data[`${taskid}_task.p0`]['description'];
+                    document.getElementById("T_out_cap").innerHTML = "<h3>Synthesized Task</h3>" + `Task${taskid}.p${pracid}: ` + data[`${taskid}_task.p${pracid}`]['description'];
                 }
 
                 var params = {};
