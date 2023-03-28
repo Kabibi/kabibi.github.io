@@ -80,6 +80,10 @@
             padding: 20px;
         }
 
+        li {
+            line-height: 1.5;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -127,15 +131,10 @@
         <div class="column">
             <p>
                 In this study, we aim to evaluate the quality of automatically synthesized tasks and their solution
-                codes for
-                the category of XLogo Mini. We have picked 30 reference tasks from the XLogo Mini platform and
-                synthesized 6 tasks for each of them. We would like to survey the quality of each of these synthesized
-                tasks
-                compared
-                to their reference task.
+                codes for the category of XLogo Mini. We have picked 30 reference tasks and synthesized 6 tasks for each of them. We would like to survey the quality of each of these synthesized tasks compared to their reference task.
             </p>
             <p>
-                The survey has 3 steps and they are described below.
+                The survey has <strong>3 steps</strong> and they are described below.
             </p>
         </div>
 
@@ -143,8 +142,8 @@
             <h2>Step 1: Check Reference Task/Code</h2>
             <div class="panel">
                 <p>We present one of the reference tasks and its solution code on the left panel of the page. The task
-                    is presented below the “Reference Task” header and its solution code is presented under the
-                    “Reference Code” header. Carefully view the task and its solution code.
+                    is presented below the “<strong> Reference Task</strong>” header and its solution code is presented under the
+                    “<strong>Reference Code</strong>” header. Carefully view the task and its solution code.
                 </p>
                 <img src="img/step1.png" alt="Example Image" style="width: 100%; text-align: center;">
             </div>
@@ -153,63 +152,57 @@
             <h2>Step 2: Check Synthesized Task/Code</h2>
             <div class="panel">
                 <p>We present a synthesized task and its solution code, for the given reference task, on the right
-                    panel. The task is presented below the “Synthesized Task” header and its solution code is presented
-                    under the “Synthesized Code” header. Carefully view the task and its solution code.</p>
+                    panel. The task is presented below the “<strong>Synthesized Task</strong>” header and its solution code is presented
+                    under the “<strong>Synthesized Code</strong>” header. Carefully view the task and its solution code.</p>
                 <img src="img/step2.png" alt="Example Image" style="width: 100%; text-align: center;">
             </div>
         </div>
-    </div>
-    <div class="container">
         <div class="column">
             <h2>Step 3: Finish the Survey Questions</h2>
             <div class="panel">
-                <p>You are provided with a google sheet ($NAME_expertFeedback_$DATE.xlxs) with the survey questions to
-                    be answered for each synthesized task. Each row in the sheet corresponds to a specific synthesized
-                    task. For each task, we present 6 questions. These questions must be answered on a 3-point Likert
-                    scale. The rating can be picked from the given dropdown menu in each cell of the google sheet. 
+                <p>You are provided with a <strong>google sheet</strong> with the survey questions to be answered for each synthesized task. Each row in the sheet corresponds to a specific synthesized
+                    task. For each task, we present 6 questions. For each question, the rating can be picked from the given dropdown menu in each cell of the google sheet.
                 </p>
-                <p>We describe each question below.</p>
+                <p>Here are the questions:</p>
 
                 <h3>Q1: Overall rating of the synthesized task</h3>
                 <ul>
-                    <li>-1 (Poor quality, task does not meet the stated requirements and expectations)</li>
-                    <li>0 (Satisfactory quality, task meets the minimum requirements, but not adequate for students)
+                    <li>-1 (<strong>Poor</strong> quality, task does not meet the stated requirements and expectations)</li>
+                    <li>0 (<strong>Satisfactory</strong> quality, task meets the minimum requirements, but not adequate for students)
                     </li>
-                    <li>1 (Excellent quality, task meets or exceeds all expectations and requirements)</li>
+                    <li>1 (<strong>Excellent</strong> quality, task meets or exceeds all expectations and requirements)</li>
                 </ul>
                 <h3>Q2: Difficulty of the synthesized task w.r.t reference task</h3>
                 <ul>
-                    <li>-1 (Easier than the reference task)</li>
-                    <li>0 (Similar difficulty to the reference task)</li>
-                    <li>1 (More difficult than the reference task)</li>
+                    <li>-1 (<strong>Easier</strong> than the reference task)</li>
+                    <li>0 (<strong>Similar </strong> difficulty to the reference task)</li>
+                    <li>1 (<strong>More difficult</strong> than the reference task)</li>
                 </ul>
                 <h3>Q3: Rating of synthesized tasks in terms of concepts covered</h3>
                 <ul>
-                    <li>-1 (Misses many important or relevant concepts that are essential)</li>
-                    <li>0 (Contains a few unnecessary or irrelevant concepts that are not included in the reference
+                    <li>-1 (<strong>Misses many</strong> important or relevant concepts that are essential)</li>
+                    <li>0 (Contains <strong>a few unnecessary</strong> or irrelevant concepts that are not included in the reference
                         task.)</li>
-                    <li>1 (The concepts are the same as the reference task)</li>
+                    <li>1 (Includes the <strong>same concepts</strong> as the reference task, or contains additional <strong>necessary</strong> concepts)</li>
                 </ul>
                 <h3>Q4: If there are distractors (e.g., walls, forbidden objects/grids), are they useful?</h3>
                 <ul>
-                    <li>-1 (Not useful, all the distractors are not helpful for achieving the learning objectives)</li>
-                    <li>0 (Partially useful, some distractors are useful while others may not be useful.)</li>
-                    <li>1 (Very useful, all distractors are essential for achieving the learning objectives)</li>
+                    <li>-1 (<strong>Not useful</strong>, all the distractors are not helpful for achieving the learning objectives)</li>
+                    <li>0 (<strong>Partially useful</strong>, some distractors are useful while others may not be useful.)</li>
+                    <li>1 (<strong>Very useful</strong>, all distractors are essential for achieving the learning objectives)</li>
                 </ul>
                 <h3>Q5: Rating of synthesized code w.r.t reference code</h3>
                 <ul>
-                    <li>-1 (Poor quality, synthesized code has many redundant commands and is very confusing)</li>
-                    <li>0 (Acceptable quality, The synthesized code meets the basic requirement, but may contain a few
+                    <li>-1 (<strong>Poor</strong> quality, synthesized code has many redundant commands and is very confusing)</li>
+                    <li>0 (<strong>Acceptable</strong> quality, The synthesized code meets the basic requirement, but may contain a few
                         unnecessary or irrelevant commands that could be removed to improve its quality.)</li>
-                    <li>1 (Good quality, the synthesized code includes all necessary commands without any irrelevant
+                    <li>1 (<strong>Good</strong> quality, the synthesized code includes all necessary commands without any irrelevant
                         ones.)</li>
                 </ul>
                 <img src="img/step3.png" alt="Example Image" style="width: 100%; text-align: center;">
             </div>
         </div>
-    </div>
 
-    <div class="container">
         <div class="column">
             <h2>Guidelines</h2>
             <div class="panel">
@@ -224,12 +217,9 @@
 
             </div>
         </div>
+
     </div>
-
     <button class="start-button" onclick="location.href='toc.html'">Start</button>
-
-
-
 </body>
 
 </html>
