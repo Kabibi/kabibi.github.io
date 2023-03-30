@@ -167,10 +167,10 @@
 
                 <h3>Q1: Overall rating of the synthesized task</h3>
                 <ul>
-                    <li>-1 (<strong>Poor</strong> quality, task cannot be solved or is very confusing)</li>
-                    <li>0 (<strong>Satisfactory</strong> quality, task can be solved, but a teacher won't present this task to students)
+                    <li>-1 (<strong>Poor</strong> quality, task cannot be solved or is very confusing, a teacher won't present this task to students)</li>
+                    <li>0 (<strong>Satisfactory</strong> quality, a teacher would present this task to students with some modifications)
                     </li>
-                    <li>1 (<strong>Excellent</strong> quality, a teacher would present this task to students)</li>
+                    <li>1 (<strong>Excellent</strong> quality, a teacher can present this task to students without any adjustments)</li>
                 </ul>
                 <h3>Q2: Difficulty of the synthesized task w.r.t reference task</h3>
                 <ul>
@@ -178,26 +178,25 @@
                     <li>0 (<strong>Similar </strong> difficulty to the reference task)</li>
                     <li>1 (<strong>More difficult</strong> than the reference task)</li>
                 </ul>
-                <h3>Q3: Rating of synthesized tasks in terms of concepts covered (e.g., shapes, colors, code structure, etc.)</h3>
+                <h3>Q3: Rating of the synthesized task in terms of concepts covered (e.g., shapes, colors, code structure, etc.) w.r.t. the reference task</h3>
                 <ul>
                     <li>-1 (<strong>Misses many</strong> important or relevant concepts that are essential)</li>
                     <li>0 (Contains <strong>a few unnecessary</strong> or irrelevant concepts that are not included in the reference
                         task.)</li>
                     <li>1 (Includes the <strong>same concepts</strong> as the reference task, or contains additional <strong>necessary</strong> concepts)</li>
                 </ul>
-                <h3>Q4: If there are distractors (e.g., walls, forbidden objects/grids), are they useful?</h3>
+                <h3>Q4: If there are distractors in the synthesized task (e.g., walls, forbidden objects/grids), are they useful?</h3>
                 <ul>
+                    <li>There are no distractors</li>
                     <li>-1 (<strong>Not useful</strong>, all the distractors are not helpful for achieving the learning objectives)</li>
                     <li>0 (<strong>Partially useful</strong>, some distractors are useful while others may not be useful.)</li>
                     <li>1 (<strong>Very useful</strong>, all distractors are essential for achieving the learning objectives)</li>
                 </ul>
                 <h3>Q5: Rating of synthesized code w.r.t reference code</h3>
                 <ul>
-                    <li>-1 (<strong>Poor</strong> quality, synthesized code has many redundant commands and is very confusing)</li>
-                    <li>0 (<strong>Acceptable</strong> quality, The synthesized code meets the basic requirement, but may contain a few
-                        unnecessary or irrelevant commands that could be removed to improve its quality.)</li>
-                    <li>1 (<strong>Good</strong> quality, the synthesized code includes all necessary commands without any irrelevant
-                        ones.)</li>
+                    <li>-1 (<strong>Poor</strong> quality, synthesized code cannot solve the task, or violates the constraints in the task description)</li>
+                    <li>0 (<strong>Acceptable</strong> quality, the synthesized code can solve the task and satisfies the code constraints (if any), but contains unnecessary commands)</li>
+                    <li>1 (<strong>Good</strong> quality, the synthesized code can solve the task, satisfies the code constraints (if any) and doesn't include any unnecessary commands.)</li>
                 </ul>
                 <img src="img/step3.png" alt="Example Image" style="width: 100%; text-align: center;">
             </div>
@@ -214,7 +213,12 @@
                     <strong>webpage</strong> which describes each task and the <strong>google sheet</strong> to enter
                     the rating for the task.
                 </p>
-
+                <p>
+                    3. For each synthesized task, it typically takes <strong>3-5 minutes</strong> to complete these three steps.
+                </p>
+                <p>
+                    4. Kindly provide your <strong>"Overall Comments"</strong> in the google sheet (last column). Your comments will be valuable for us.
+                </p>
             </div>
         </div>
 

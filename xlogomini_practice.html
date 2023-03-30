@@ -35,8 +35,7 @@
         }
 
         #prev-button:hover,
-        #next-button:hover
-        {
+        #next-button:hover {
             cursor: pointer;
             background-color: #3e8e41;
         }
@@ -143,8 +142,19 @@
         fetch('./content/data.json')
             .then(response => response.json())
             .then(data => {
+                function findChapter(taskid, taskIds) {
+                    for (const chapter in taskIds) {
+                        if (taskIds.hasOwnProperty(chapter)) {
+                            if (taskIds[chapter].includes(taskid)) {
+                                return chapter;
+                            }
+                        }
+                    }
+                    return null; // Return null if the taskid is not found in any chapter
+                }
+
                 function openPrac(taskid, pracid) {
-                    document.getElementById('header').textContent = `Task${taskid}: p${pracid}`;
+                    document.getElementById('header').innerHTML = `${findChapter(taskid, taskIds)}: Task${taskid}.p${pracid}`;
 
                     document.getElementById("C_in").innerHTML = data[`${taskid}_code.p0`];
                     document.getElementById("C_out").innerHTML = data[`${taskid}_code.p${pracid}`];
@@ -176,7 +186,7 @@
                         let taskIdIndex = allIds.indexOf(`${taskid}`) - 1;
                         if (taskIdIndex >= 0) {
                             taskid = allIds[taskIdIndex];
-                            pracid = 6; // Or whatever the maximum number of practice IDs is for taskid
+                            pracid = 7;
                         } else {
                             taskid = allIds[0];
                             pracid = 1;
@@ -186,7 +196,7 @@
                 });
 
                 nextButton.addEventListener("click", function () {
-                    let maxPracticeIds = 6; // Or whatever the maximum number of practice IDs is for the current task ID
+                    let maxPracticeIds = 7;
                     if (pracid < maxPracticeIds) {
                         pracid++;
                     } else {
