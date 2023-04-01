@@ -37,21 +37,21 @@
   </div>
 
   <div class="list-group">
-    <!-- <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=1&parcid=1">Task1.p1</a><br>
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=1&parcid=2">Task1.p1</a><br>
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=1&parcid=3">Task1.p1</a><br>
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=1&parcid=4">Task1.p1</a><br>
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=1&parcid=5">Task1.p1</a><br>
+    <!-- <a class="list-group-item" href="annotation.html?chap=1&taskid=1&parcid=1">Task1.p1</a><br>
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=1&parcid=2">Task1.p1</a><br>
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=1&parcid=3">Task1.p1</a><br>
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=1&parcid=4">Task1.p1</a><br>
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=1&parcid=5">Task1.p1</a><br>
 
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=3&parcid=1">Task1.p1</a><br>
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=3&parcid=2">Task1.p1</a><br>
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=3&parcid=3">Task1.p1</a><br>
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=3&parcid=4">Task1.p1</a><br>
-    <a class="list-group-item" href="xlogomini_practice.html?chap=1&taskid=3&parcid=5">Task1.p1</a><br> -->
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=3&parcid=1">Task1.p1</a><br>
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=3&parcid=2">Task1.p1</a><br>
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=3&parcid=3">Task1.p1</a><br>
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=3&parcid=4">Task1.p1</a><br>
+    <a class="list-group-item" href="annotation.html?chap=1&taskid=3&parcid=5">Task1.p1</a><br> -->
   </div>
 
   <script type="module">
-    import { taskIds, pracIds, baseUrl } from "./data.js"
+    import { taskIds, pracIds, baseUrl, isDrawTask } from "./data.js"
     const listGroup = document.getElementsByClassName("list-group")[0];
 
     for (let chap in taskIds) {
@@ -59,11 +59,16 @@
       h3.textContent = chap.charAt(0).toUpperCase() + chap.slice(1);
       taskIds[chap].forEach(taskId => {
         pracIds.forEach(pracId => {
-          const a = document.createElement("a");
-          a.href = `${baseUrl}?chap=${chap}&taskid=${taskId}&pracid=${pracId}`
-          a.textContent = `Task${taskId}.p${pracId}`;
-          listGroup.appendChild(a);
-          listGroup.appendChild(document.createElement("br"));
+          // TODO
+          if (!isDrawTask(taskId) || pracId < 7) {
+            const a = document.createElement("a");
+            a.href = `${baseUrl}?chap=${chap}&taskid=${taskId}&pracid=${pracId}`
+            a.textContent = `Task${taskId}.p${pracId}`;
+            listGroup.appendChild(a);
+            listGroup.appendChild(document.createElement("br"));
+          } else {
+            console.log(`Task ${taskId}`);
+          }
         })
         listGroup.appendChild(document.createElement("br"));
       })

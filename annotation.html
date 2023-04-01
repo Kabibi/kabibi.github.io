@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Style the buttons */
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #prev-button,
+        #next-button,
+        #task-list {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            margin-right: 10px;
+        }
+
+        #task-list {
+            background-color: red;
+        }
+
+        #prev-button:hover,
+        #next-button:hover {
+            cursor: pointer;
+            background-color: #3e8e41;
+        }
+
+        #task-list:hover {
+            background-color: rgb(177, 41, 41);
+        }
+
+        /* Style the image containers */
+        .image-container {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        #T_in,
+        #T_out {
+            box-sizing: border-box;
+            width: 220px;
+            height: 220px;
+        }
+
+        #C_in,
+        #C_out {
+            padding-left: 10px;
+            padding-top: 10px;
+            font-size: 20px;
+            border: 1px solid black;
+            display: inline-block;
+            width: 200px;
+            height: 390px;
+        }
+
+        pre {
+            margin-top: 0px;
+        }
+
+        .image-container1 {
+            width: 30%;
+            border: 3px solid black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0px;
+        }
+
+        #T_in,
+        #T_out {
+            border: None;
+        }
+
+        img {
+            display: block;
+            margin: auto;
+        }
+
+        /* Style the image captions */
+        figcaption {
+            min-height: 80px;
+            text-align: center;
+            margin-bottom: 10px;
+            /* font-size: 18px; */
+        }
+    </style>
+    <title>XLogo-Mini Quality Annotations</title>
+</head>
+
+<body>
+    <div class="header-container">
+        <h1 id="header">Feedback</h1>
+        <div class="button-container">
+            <button id="task-list" onclick="location.href='toc.html'">Task List</button>
+            <button id="prev-button">&#8592; Previous</button>
+            <button id="next-button">Next &#8594;</button>
+        </div>
+    </div>
+
+
+    <div class="image-container">
+        <div class="image-container1">
+            <figure class="task-box">
+                <figcaption id="T_in_cap">Reference Task</figcaption>
+                <img src="image1.jpg" id="T_in" width="100" height="100" />
+            </figure>
+
+            <h3>Reference Code</h3>
+            <pre id="C_in"></pre>
+        </div>
+
+        <div class="image-container1">
+            <figure class="task-box">
+                <figcaption id="T_out_cap">Synthesized Task</figcaption>
+                <img src="image2.jpg" id="T_out" width="100" height="100" />
+            </figure>
+
+            <h3>Synthesized Code</h3>
+            <pre id="C_out"></pre>
+        </div>
+    </div>
+
+    <script type="module">
+        import { taskIds, allIds, isDrawTask } from "./data.js"
+
+        fetch('./content/data_v3.1_0330.json')
+            .then(response => response.json())
+            .then(data => {
+                function findChapter(taskid, taskIds) {
+                    for (const chapter in taskIds) {
+                        if (taskIds.hasOwnProperty(chapter)) {
+                            if (taskIds[chapter].includes(taskid)) {
+                                return chapter;
+                            }
+                        }
+                    }
+                    return null; // Return null if the taskid is not found in any chapter
+                }
+
+                function openPrac(taskid, pracid) {
+                    document.getElementById('header').innerHTML = `${findChapter(taskid, taskIds)}: Task${taskid}.p${pracid}`;
+
+                    document.getElementById("C_in").innerHTML = data[`${taskid}_code.p0`];
+                    document.getElementById("C_out").innerHTML = data[`${taskid}_code.p${pracid}`];
+
+                    document.getElementById("T_in").src = data[`${taskid}_task.p0`]['base64image'];
+                    document.getElementById("T_out").src = data[`${taskid}_task.p${pracid}`]['base64image'];
+
+                    document.getElementById("T_in_cap").innerHTML = "<h3>Reference Task</h3>" + `Task ${taskid}: ` + data[`${taskid}_task.p0`]['description'];
+                    document.getElementById("T_out_cap").innerHTML = "<h3>Synthesized Task</h3>" + `Task${taskid}.p${pracid}: ` + data[`${taskid}_task.p${pracid}`]['description'];
+                }
+
+                var params = {};
+                location.search.slice(1).split("&").forEach(function (pair) {
+                    pair = pair.split("=");
+                    params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+                });
+                openPrac(params['taskid'], params['pracid']);
+
+                const prevButton = document.getElementById("prev-button");
+                const nextButton = document.getElementById("next-button");
+
+                var pracid = params['pracid'];
+                var taskid = params['taskid'];
+
+                prevButton.addEventListener("click", function () {
+                    if (pracid > 1) {
+                        pracid--;
+                    } else {
+                        let taskIdIndex = allIds.indexOf(`${taskid}`) - 1;
+                        if (taskIdIndex >= 0) {
+                            taskid = allIds[taskIdIndex];
+                            pracid = isDrawTask(taskid) ? 6 : 8;
+                        } else {
+                            taskid = allIds[0];
+                            pracid = 1;
+                        }
+                    }
+                    openPrac(taskid, pracid);
+                });
+
+                nextButton.addEventListener("click", function () {
+
+                    let maxPracticeIds = isDrawTask(taskid) ? 6 : 8;
+
+                    if (pracid < maxPracticeIds) {
+                        pracid++;
+                    } else {
+                        let taskIdIndex = allIds.indexOf(`${taskid}`) + 1;
+                        if (taskIdIndex < allIds.length) {
+                            taskid = allIds[taskIdIndex];
+                        } else {
+                            taskid++;
+                        }
+                        pracid = 1;
+                    }
+                    openPrac(taskid, pracid);
+                });
+
+
+            });
+
+
+    </script>
+</body>
+
+</html>

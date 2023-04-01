@@ -26,6 +26,13 @@ export const taskIds = {
 
 export const allIds = Object.values(taskIds).flat();
 
-export const pracIds = [1, 2, 3, 4, 5, 6];
+export const pracIds = [1, 2, 3, 4, 5, 6, 7, 8];
 // export const pracIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-export const baseUrl = "xlogomini_practice.html";
+export const baseUrl = "annotation.html";
+
+export function isDrawTask(taskId) {
+  if (!/^\d+$/.test(taskId) || taskId <= 49 || (taskId >= 80 && taskId <= 89)) {
+    return false;
+  }
+  return true;
+}
