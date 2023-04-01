@@ -139,7 +139,8 @@
     <script type="module">
         import { taskIds, allIds, isDrawTask } from "./data.js"
 
-        fetch('./content/data_v3.1_0330.json')
+        fetch('./content/data_v3.json')
+        // fetch('./content/data_v3.1_0330.json')
             .then(response => response.json())
             .then(data => {
                 function findChapter(taskid, taskIds) {
